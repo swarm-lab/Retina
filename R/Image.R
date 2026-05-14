@@ -23,7 +23,10 @@ Image <- R6::R6Class("Image",
     depth = function() rt_image_depth(private$.ptr),
 
     #' @field depth_name Human-readable depth string (e.g. \code{"CV_8U"}).
-    depth_name = function() depth_name(rt_image_depth(private$.ptr)),
+    depth_name = function() {
+      c("CV_8U", "CV_8S", "CV_16U", "CV_16S",
+        "CV_32S", "CV_32F", "CV_64F", "CV_16F")[rt_image_depth(private$.ptr) + 1L]
+    },
 
     #' @field gpu Logical; TRUE if the image is currently on the GPU.
     gpu = function() rt_image_is_gpu(private$.ptr),
