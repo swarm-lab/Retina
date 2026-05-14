@@ -56,6 +56,13 @@ Image <- R6::R6Class("Image",
       }
     },
 
+    #' @description Convert the image to a 3D integer array (nrow x ncol x nchan).
+    #'   Values are in [0, 255] for 8-bit images.
+    #' @return An integer array with dimensions \code{[nrow, ncol, nchan]}.
+    to_array = function() {
+      rt_image_to_array(private$.ptr)
+    },
+
     #' @description Display the image using R's graphics device.
     #' @param ... Additional arguments passed to \code{grid::grid.raster()}.
     #' @return \code{self} invisibly.

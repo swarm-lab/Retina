@@ -45,6 +45,40 @@ external_pointer<RtImage> rt_image_from_array(integers arr, std::string colorspa
   return {new RtImage(std::move(mat), colorspace)};
 }
 
+// ── Conversion to R ───────────────────────────────────────────────────────────
+
+[[cpp11::register]]
+integers rt_image_to_array(external_pointer<RtImage> img) {
+  cv::Mat mat;
+  if (img->is_gpu()) {
+    std::get<cv::UMat>(img->buffer).copyTo(mat);
+  } else {
+    mat = std::get<cv::Mat>(img->buffer);
+  }
+
+  int nrow  = mat.rows;
+  int ncol  = mat.cols;
+  int nchan = mat.channels();
+
+  writable::integers result(nrow * ncol * nchan);
+
+  std::vector<cv::Mat> channels(nchan);
+  cv::split(mat, channels);
+
+  // R arrays are column-major: R element [i, j, c] -> i + j*nrow + c*nrow*ncol
+  for (int c = 0; c < nchan; c++) {
+    for (int j = 0; j < ncol; j++) {
+      for (int i = 0; i < nrow; i++) {
+        result[i + j * nrow + c * nrow * ncol] =
+          static_cast<int>(channels[c].at<uchar>(i, j));
+      }
+    }
+  }
+
+  result.attr("dim") = writable::integers({nrow, ncol, nchan});
+  return result;
+}
+
 // ── I/O ───────────────────────────────────────────────────────────────────────
 
 [[cpp11::register]]

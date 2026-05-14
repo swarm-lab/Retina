@@ -40,6 +40,17 @@ test_that("assignment does NOT copy (reference semantics)", {
   expect_equal(img1$colorspace, "RGB")
 })
 
+test_that("to_array() recovers original pixel values from array-constructed image", {
+  arr <- array(0L, dim = c(10L, 10L, 3L))
+  arr[,,1] <- 100L; arr[,,2] <- 150L; arr[,,3] <- 200L
+  img <- Image$new(arr)
+  result <- img$to_array()
+  expect_equal(dim(result), c(10L, 10L, 3L))
+  expect_equal(result[1, 1, 1], 100L)
+  expect_equal(result[1, 1, 2], 150L)
+  expect_equal(result[1, 1, 3], 200L)
+})
+
 test_that("to_gpu() and to_cpu() toggle gpu property", {
   skip_if_not(Retina:::.rt_caps$cuda, "No CUDA-capable GPU available")
   img <- make_test_image()
