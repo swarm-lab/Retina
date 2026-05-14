@@ -169,6 +169,71 @@ Image <- R6::R6Class("Image",
       invisible(self)
     },
 
+    #' @description Per-channel mean pixel value.
+    #' @return Named numeric vector of length \code{nchan}.
+    mean = function() {
+      setNames(rt_image_mean(private$.ptr),
+               rt_channel_names(self$colorspace, self$nchan))
+    },
+
+    #' @description Per-channel minimum pixel value.
+    #' @return Named numeric vector of length \code{nchan}.
+    min = function() {
+      setNames(rt_image_min(private$.ptr),
+               rt_channel_names(self$colorspace, self$nchan))
+    },
+
+    #' @description Per-channel maximum pixel value.
+    #' @return Named numeric vector of length \code{nchan}.
+    max = function() {
+      setNames(rt_image_max(private$.ptr),
+               rt_channel_names(self$colorspace, self$nchan))
+    },
+
+    #' @description Per-channel standard deviation (population).
+    #' @return Named numeric vector of length \code{nchan}.
+    sd = function() {
+      setNames(rt_image_sd(private$.ptr),
+               rt_channel_names(self$colorspace, self$nchan))
+    },
+
+    #' @description Per-channel variance (population).
+    #' @return Named numeric vector of length \code{nchan}.
+    var = function() {
+      setNames(rt_image_var(private$.ptr),
+               rt_channel_names(self$colorspace, self$nchan))
+    },
+
+    #' @description Per-channel pixel sum.
+    #' @return Named numeric vector of length \code{nchan}.
+    sum = function() {
+      setNames(rt_image_sum(private$.ptr),
+               rt_channel_names(self$colorspace, self$nchan))
+    },
+
+    #' @description Per-channel median pixel value.
+    #' @return Named numeric vector of length \code{nchan}.
+    median = function() {
+      setNames(rt_image_median(private$.ptr),
+               rt_channel_names(self$colorspace, self$nchan))
+    },
+
+    #' @description Per-channel quantiles.
+    #' @param probs Numeric vector of probabilities in \code{[0, 1]}.
+    #'   Defaults to \code{0.5} (median).
+    #' @return A matrix with \code{length(probs)} rows and \code{nchan} columns.
+    #'   Row names are percentages (e.g. \code{"25%"}); column names are channel names.
+    quantile = function(probs = 0.5) {
+      if (any(probs < 0 | probs > 1))
+        stop("probs must be between 0 and 1", call. = FALSE)
+      raw <- rt_image_quantile(private$.ptr, probs)
+      matrix(raw,
+             nrow = length(probs),
+             ncol = self$nchan,
+             dimnames = list(paste0(probs * 100, "%"),
+                             rt_channel_names(self$colorspace, self$nchan)))
+    },
+
     #' @description Print a summary of the image.
     #' @param ... Ignored.
     #' @return \code{self} invisibly.
