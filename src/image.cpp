@@ -15,7 +15,13 @@ external_pointer<RtImage> rt_image_read(std::string path) {
   if (mat.empty())
     stop("Failed to read image from '%s'. Check the path and file format.",
          path.c_str());
-  return {new RtImage(std::move(mat))};
+  std::string cs;
+  switch (mat.channels()) {
+    case 1:  cs = "GRAY"; break;
+    case 4:  cs = "BGRA"; break;
+    default: cs = "BGR";  break;
+  }
+  return {new RtImage(std::move(mat), cs)};
 }
 
 [[cpp11::register]]
