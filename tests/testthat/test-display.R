@@ -12,8 +12,9 @@ test_that("rt_image_to_native_raster() preserves orientation (non-square)", {
   img <- Image$new(arr)
   nr <- Retina:::rt_image_to_native_raster(img$.__enclos_env__$private$.ptr)
   expect_equal(dim(nr), c(6L, 4L))  # height x width, not transposed
-  # Top-left pixel in nativeRaster (offset 0) must be red (0xFFFF0000)
-  expect_equal(nr[1L], -65536L)  # 0xFFFF0000 as signed int
+  # Top-left pixel in nativeRaster (offset 0) must be red.
+  # R native format: 0xAABBGGRR, so red = 0xFF0000FF = -16776961L
+  expect_equal(nr[1L], -16776961L)
 })
 
 test_that("plot() renders without error", {

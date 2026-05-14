@@ -35,14 +35,15 @@ integers rt_image_to_native_raster(external_pointer<RtImage> img) {
   writable::integers result(nrow * ncol);
 
   // nativeRaster is row-major: pixel(row=i, col=j) → index i*ncol + j
-  // Packed as 0xAARRGGBB; OpenCV BGR: px[0]=B, px[1]=G, px[2]=R
+  // R native color format: 0xAABBGGRR  (R_RGBA macro: r | g<<8 | b<<16 | a<<24)
+  // OpenCV BGR: px[0]=B, px[1]=G, px[2]=R
   for (int i = 0; i < nrow; i++) {
     for (int j = 0; j < ncol; j++) {
       cv::Vec3b px = bgr.at<cv::Vec3b>(i, j);
       uint32_t packed = 0xFF000000u
-        | (static_cast<uint32_t>(px[2]) << 16)  // R
-        | (static_cast<uint32_t>(px[1]) << 8)   // G
-        |  static_cast<uint32_t>(px[0]);         // B
+        | (static_cast<uint32_t>(px[0]) << 16)  // B → bits 16-23
+        | (static_cast<uint32_t>(px[1]) << 8)   // G → bits  8-15
+        |  static_cast<uint32_t>(px[2]);         // R → bits  0-7
       result[i * ncol + j] = static_cast<int>(packed);
     }
   }
