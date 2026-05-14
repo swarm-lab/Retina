@@ -39,3 +39,20 @@ test_that("assignment does NOT copy (reference semantics)", {
   img2$colorspace <- "RGB"
   expect_equal(img1$colorspace, "RGB")
 })
+
+test_that("to_gpu() and to_cpu() toggle gpu property", {
+  skip_if_not(Retina:::.rt_caps$cuda, "No CUDA-capable GPU available")
+  img <- make_test_image()
+  expect_false(img$gpu)
+  img$to_gpu()
+  expect_true(img$gpu)
+  img$to_cpu()
+  expect_false(img$gpu)
+})
+
+test_that("to_gpu() returns self invisibly for chaining", {
+  skip_if_not(Retina:::.rt_caps$cuda, "No CUDA-capable GPU available")
+  img <- make_test_image()
+  result <- img$to_gpu()
+  expect_identical(result, img)
+})

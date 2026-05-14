@@ -56,6 +56,20 @@ Image <- R6::R6Class("Image",
       }
     },
 
+    #' @description Upload the image to GPU memory (cv::UMat). No-op if already on GPU.
+    #' @return \code{self} invisibly.
+    to_gpu = function() {
+      rt_image_to_gpu(private$.ptr)
+      invisible(self)
+    },
+
+    #' @description Download the image from GPU to CPU memory (cv::Mat). No-op if already on CPU.
+    #' @return \code{self} invisibly.
+    to_cpu = function() {
+      rt_image_to_cpu(private$.ptr)
+      invisible(self)
+    },
+
     #' @description Create a deep copy of this image.
     #' @return A new \code{Image} with independent C++ storage.
     copy = function() {

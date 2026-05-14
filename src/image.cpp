@@ -45,6 +45,18 @@ external_pointer<RtImage> rt_image_from_array(integers arr, std::string colorspa
   return {new RtImage(std::move(mat), colorspace)};
 }
 
+// ── GPU toggle ────────────────────────────────────────────────────────────────
+
+[[cpp11::register]]
+void rt_image_to_gpu(external_pointer<RtImage> img) {
+  img->to_gpu();
+}
+
+[[cpp11::register]]
+void rt_image_to_cpu(external_pointer<RtImage> img) {
+  img->to_cpu();
+}
+
 // ── Clone ─────────────────────────────────────────────────────────────────────
 
 [[cpp11::register]]
