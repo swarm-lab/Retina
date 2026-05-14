@@ -43,7 +43,7 @@ Image <- R6::R6Class("Image",
     #'   (OpenCV assumes BGR for color images).
     initialize = function(x, colorspace = "BGR") {
       if (is.character(x)) {
-        private$.ptr <- rt_image_read(x)
+        private$.ptr <- rt_image_read(path.expand(x))
       } else if (is.array(x) || is.matrix(x)) {
         if (!is.integer(x))
           storage.mode(x) <- "integer"
@@ -77,7 +77,7 @@ Image <- R6::R6Class("Image",
     #' @param path Character. Output file path (e.g. \code{"output.png"}, \code{"output.jpg"}).
     #' @return \code{self} invisibly.
     write = function(path) {
-      rt_image_write(private$.ptr, path)
+      rt_image_write(private$.ptr, path.expand(path))
       invisible(self)
     },
 
