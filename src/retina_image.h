@@ -17,6 +17,9 @@ struct RtImage {
   explicit RtImage(cv::UMat umat, std::string cs = "BGR")
     : buffer(std::move(umat)), colorspace(std::move(cs)) {}
 
+  explicit RtImage(std::variant<cv::Mat, cv::UMat> buf, std::string cs = "BGR")
+    : buffer(std::move(buf)), colorspace(std::move(cs)) {}
+
   bool is_gpu() const {
     return std::holds_alternative<cv::UMat>(buffer);
   }

@@ -56,6 +56,12 @@ Image <- R6::R6Class("Image",
       }
     },
 
+    #' @description Create a deep copy of this image.
+    #' @return A new \code{Image} with independent C++ storage.
+    copy = function() {
+      Image$new(rt_image_clone(private$.ptr))
+    },
+
     #' @description Print a summary of the image.
     print = function(...) {
       cat("<Image>\n")

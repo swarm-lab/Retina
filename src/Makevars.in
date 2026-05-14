@@ -1,3 +1,3 @@
 CXX_STD = CXX17
-PKG_CPPFLAGS = @CV_CFLAGS@
+PKG_CPPFLAGS = @CV_CFLAGS@ -include retina_image.h
 PKG_LIBS = @CV_LIBS@

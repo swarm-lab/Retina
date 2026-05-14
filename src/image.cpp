@@ -45,6 +45,18 @@ external_pointer<RtImage> rt_image_from_array(integers arr, std::string colorspa
   return {new RtImage(std::move(mat), colorspace)};
 }
 
+// ── Clone ─────────────────────────────────────────────────────────────────────
+
+[[cpp11::register]]
+external_pointer<RtImage> rt_image_clone(external_pointer<RtImage> img) {
+  auto cloned = std::visit([](const auto& buf) -> std::variant<cv::Mat, cv::UMat> {
+    std::decay_t<decltype(buf)> dst;
+    buf.copyTo(dst);
+    return dst;
+  }, img->buffer);
+  return {new RtImage(std::move(cloned), img->colorspace)};
+}
+
 // ── Properties ────────────────────────────────────────────────────────────────
 
 [[cpp11::register]]

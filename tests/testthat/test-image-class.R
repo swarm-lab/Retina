@@ -18,3 +18,24 @@ test_that("Image properties return correct values", {
   expect_equal(img$colorspace, "BGR")
   expect_false(img$gpu)
 })
+
+test_that("copy() produces an independent deep copy", {
+  img1 <- make_test_image()
+  img2 <- img1$copy()
+
+  expect_false(identical(img1, img2))
+  expect_equal(img1$nrow,  img2$nrow)
+  expect_equal(img1$ncol,  img2$ncol)
+  expect_equal(img1$nchan, img2$nchan)
+
+  img2$colorspace <- "RGB"
+  expect_equal(img1$colorspace, "BGR")
+  expect_equal(img2$colorspace, "RGB")
+})
+
+test_that("assignment does NOT copy (reference semantics)", {
+  img1 <- make_test_image()
+  img2 <- img1
+  img2$colorspace <- "RGB"
+  expect_equal(img1$colorspace, "RGB")
+})
