@@ -1,0 +1,70 @@
+#' Image class
+#'
+#' An R6 class representing a single image, backed by an OpenCV \code{cv::Mat}
+#' (CPU) or \code{cv::UMat} (GPU).
+#'
+#' @export
+Image <- R6::R6Class("Image",
+  cloneable = FALSE,
+  private = list(
+    .ptr = NULL
+  ),
+  active = list(
+    #' @field nrow Number of rows (height in pixels).
+    nrow = function() rt_image_nrow(private$.ptr),
+
+    #' @field ncol Number of columns (width in pixels).
+    ncol = function() rt_image_ncol(private$.ptr),
+
+    #' @field nchan Number of channels.
+    nchan = function() rt_image_nchan(private$.ptr),
+
+    #' @field depth Bit depth code (0=CV_8U, 1=CV_8S, 2=CV_16U, ...).
+    depth = function() rt_image_depth(private$.ptr),
+
+    #' @field gpu Logical; TRUE if the image is currently on the GPU.
+    gpu = function() rt_image_is_gpu(private$.ptr),
+
+    #' @field colorspace Character string describing the color space (e.g. "BGR", "GRAY").
+    colorspace = function(value) {
+      if (missing(value)) {
+        rt_image_colorspace(private$.ptr)
+      } else {
+        rt_image_set_colorspace(private$.ptr, value)
+        invisible(self)
+      }
+    }
+  ),
+  public = list(
+    #' @description Create a new Image.
+    #' @param x A file path (character), a 3D integer array (nrow x ncol x nchan),
+    #'   or a 2D integer matrix. For arrays, values must be in [0, 255].
+    #' @param colorspace Color space label string. Ignored when reading from file
+    #'   (OpenCV assumes BGR for color images).
+    initialize = function(x, colorspace = "BGR") {
+      if (is.character(x)) {
+        private$.ptr <- rt_image_read(x)
+      } else if (is.array(x) || is.matrix(x)) {
+        if (!is.integer(x))
+          storage.mode(x) <- "integer"
+        private$.ptr <- rt_image_from_array(x, colorspace)
+      } else if (inherits(x, "externalptr")) {
+        private$.ptr <- x
+      } else {
+        stop("x must be a file path (character), an array/matrix, or an external pointer.",
+             call. = FALSE)
+      }
+    },
+
+    #' @description Print a summary of the image.
+    print = function(...) {
+      cat("<Image>\n")
+      cat("  Size      :", self$ncol, "x", self$nrow, "\n")
+      cat("  Channels  :", self$nchan, "\n")
+      cat("  Depth     :", self$depth, "\n")
+      cat("  Colorspace:", self$colorspace, "\n")
+      cat("  GPU       :", self$gpu, "\n")
+      invisible(self)
+    }
+  )
+)
