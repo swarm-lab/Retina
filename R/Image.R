@@ -234,6 +234,190 @@ Image <- R6::R6Class("Image",
                              rt_channel_names(self$colorspace, self$nchan)))
     },
 
+    #' @description Add another image or a scalar to this image.
+    #' @param other An \code{Image} or a numeric vector (length 1 or \code{nchan}).
+    #' @return A new \code{Image}.
+    add = function(other) {
+      Image$new(.rt_arith(private$.ptr, other, self$nchan,
+                          rt_image_add_image, rt_image_add_scalar))
+    },
+
+    #' @description Add in place.
+    #' @param other An \code{Image} or a numeric vector (length 1 or \code{nchan}).
+    #' @return \code{self} invisibly.
+    add_ = function(other) {
+      private$.ptr <- .rt_arith(private$.ptr, other, self$nchan,
+                                rt_image_add_image, rt_image_add_scalar)
+      invisible(self)
+    },
+
+    #' @description Subtract another image or a scalar from this image.
+    #' @param other An \code{Image} or a numeric vector (length 1 or \code{nchan}).
+    #' @return A new \code{Image}.
+    subtract = function(other) {
+      Image$new(.rt_arith(private$.ptr, other, self$nchan,
+                          rt_image_subtract_image, rt_image_subtract_scalar))
+    },
+
+    #' @description Subtract in place.
+    #' @param other An \code{Image} or a numeric vector (length 1 or \code{nchan}).
+    #' @return \code{self} invisibly.
+    subtract_ = function(other) {
+      private$.ptr <- .rt_arith(private$.ptr, other, self$nchan,
+                                rt_image_subtract_image, rt_image_subtract_scalar)
+      invisible(self)
+    },
+
+    #' @description Multiply this image element-wise by another image or a scalar.
+    #' @param other An \code{Image} or a numeric vector (length 1 or \code{nchan}).
+    #' @return A new \code{Image}.
+    multiply = function(other) {
+      Image$new(.rt_arith(private$.ptr, other, self$nchan,
+                          rt_image_multiply_image, rt_image_multiply_scalar))
+    },
+
+    #' @description Multiply in place.
+    #' @param other An \code{Image} or a numeric vector (length 1 or \code{nchan}).
+    #' @return \code{self} invisibly.
+    multiply_ = function(other) {
+      private$.ptr <- .rt_arith(private$.ptr, other, self$nchan,
+                                rt_image_multiply_image, rt_image_multiply_scalar)
+      invisible(self)
+    },
+
+    #' @description Divide this image element-wise by another image or a scalar.
+    #' @param other An \code{Image} or a numeric vector (length 1 or \code{nchan}).
+    #' @return A new \code{Image}.
+    divide = function(other) {
+      Image$new(.rt_arith(private$.ptr, other, self$nchan,
+                          rt_image_divide_image, rt_image_divide_scalar))
+    },
+
+    #' @description Divide in place.
+    #' @param other An \code{Image} or a numeric vector (length 1 or \code{nchan}).
+    #' @return \code{self} invisibly.
+    divide_ = function(other) {
+      private$.ptr <- .rt_arith(private$.ptr, other, self$nchan,
+                                rt_image_divide_image, rt_image_divide_scalar)
+      invisible(self)
+    },
+
+    #' @description Compute the absolute difference with another image or a scalar.
+    #' @param other An \code{Image} or a numeric vector (length 1 or \code{nchan}).
+    #' @return A new \code{Image}.
+    absdiff = function(other) {
+      Image$new(.rt_arith(private$.ptr, other, self$nchan,
+                          rt_image_absdiff_image, rt_image_absdiff_scalar))
+    },
+
+    #' @description Absolute difference in place.
+    #' @param other An \code{Image} or a numeric vector (length 1 or \code{nchan}).
+    #' @return \code{self} invisibly.
+    absdiff_ = function(other) {
+      private$.ptr <- .rt_arith(private$.ptr, other, self$nchan,
+                                rt_image_absdiff_image, rt_image_absdiff_scalar)
+      invisible(self)
+    },
+
+    #' @description Weighted addition of two images: \code{w1*self + w2*other + gamma}.
+    #' @param other An \code{Image}.
+    #' @param w1 Numeric scalar. Weight for this image.
+    #' @param w2 Numeric scalar. Weight for \code{other}.
+    #' @param gamma Numeric scalar. Brightness offset added after blending. Default 0.
+    #' @return A new \code{Image}.
+    add_weighted = function(other, w1, w2, gamma = 0) {
+      if (!inherits(other, "Image"))
+        stop("other must be an Image", call. = FALSE)
+      if (!is.numeric(w1) || length(w1) != 1L ||
+          !is.numeric(w2) || length(w2) != 1L ||
+          !is.numeric(gamma) || length(gamma) != 1L)
+        stop("w1, w2, and gamma must each be a single numeric value", call. = FALSE)
+      Image$new(rt_image_add_weighted(private$.ptr, as.double(w1),
+                                      .rt_ptr(other), as.double(w2),
+                                      as.double(gamma)))
+    },
+
+    #' @description Weighted addition in place.
+    #' @param other An \code{Image}.
+    #' @param w1 Numeric scalar. Weight for this image.
+    #' @param w2 Numeric scalar. Weight for \code{other}.
+    #' @param gamma Numeric scalar. Brightness offset. Default 0.
+    #' @return \code{self} invisibly.
+    add_weighted_ = function(other, w1, w2, gamma = 0) {
+      if (!inherits(other, "Image"))
+        stop("other must be an Image", call. = FALSE)
+      if (!is.numeric(w1) || length(w1) != 1L ||
+          !is.numeric(w2) || length(w2) != 1L ||
+          !is.numeric(gamma) || length(gamma) != 1L)
+        stop("w1, w2, and gamma must each be a single numeric value", call. = FALSE)
+      private$.ptr <- rt_image_add_weighted(private$.ptr, as.double(w1),
+                                            .rt_ptr(other), as.double(w2),
+                                            as.double(gamma))
+      invisible(self)
+    },
+
+    #' @description Bitwise AND with another image or a scalar.
+    #' @param other An \code{Image} or a numeric vector (length 1 or \code{nchan}).
+    #' @return A new \code{Image}.
+    bitwise_and = function(other) {
+      Image$new(.rt_arith(private$.ptr, other, self$nchan,
+                          rt_image_bitwise_and_image, rt_image_bitwise_and_scalar))
+    },
+
+    #' @description Bitwise AND in place.
+    #' @param other An \code{Image} or a numeric vector (length 1 or \code{nchan}).
+    #' @return \code{self} invisibly.
+    bitwise_and_ = function(other) {
+      private$.ptr <- .rt_arith(private$.ptr, other, self$nchan,
+                                rt_image_bitwise_and_image, rt_image_bitwise_and_scalar)
+      invisible(self)
+    },
+
+    #' @description Bitwise OR with another image or a scalar.
+    #' @param other An \code{Image} or a numeric vector (length 1 or \code{nchan}).
+    #' @return A new \code{Image}.
+    bitwise_or = function(other) {
+      Image$new(.rt_arith(private$.ptr, other, self$nchan,
+                          rt_image_bitwise_or_image, rt_image_bitwise_or_scalar))
+    },
+
+    #' @description Bitwise OR in place.
+    #' @param other An \code{Image} or a numeric vector (length 1 or \code{nchan}).
+    #' @return \code{self} invisibly.
+    bitwise_or_ = function(other) {
+      private$.ptr <- .rt_arith(private$.ptr, other, self$nchan,
+                                rt_image_bitwise_or_image, rt_image_bitwise_or_scalar)
+      invisible(self)
+    },
+
+    #' @description Bitwise XOR with another image or a scalar.
+    #' @param other An \code{Image} or a numeric vector (length 1 or \code{nchan}).
+    #' @return A new \code{Image}.
+    bitwise_xor = function(other) {
+      Image$new(.rt_arith(private$.ptr, other, self$nchan,
+                          rt_image_bitwise_xor_image, rt_image_bitwise_xor_scalar))
+    },
+
+    #' @description Bitwise XOR in place.
+    #' @param other An \code{Image} or a numeric vector (length 1 or \code{nchan}).
+    #' @return \code{self} invisibly.
+    bitwise_xor_ = function(other) {
+      private$.ptr <- .rt_arith(private$.ptr, other, self$nchan,
+                                rt_image_bitwise_xor_image, rt_image_bitwise_xor_scalar)
+      invisible(self)
+    },
+
+    #' @description Bitwise NOT (invert all bits).
+    #' @return A new \code{Image}.
+    bitwise_not = function() Image$new(rt_image_bitwise_not(private$.ptr)),
+
+    #' @description Bitwise NOT in place.
+    #' @return \code{self} invisibly.
+    bitwise_not_ = function() {
+      private$.ptr <- rt_image_bitwise_not(private$.ptr)
+      invisible(self)
+    },
+
     #' @description Print a summary of the image.
     #' @param ... Ignored.
     #' @return \code{self} invisibly.
