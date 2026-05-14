@@ -56,6 +56,16 @@ Image <- R6::R6Class("Image",
       }
     },
 
+    #' @description Display the image using R's graphics device.
+    #' @param ... Additional arguments passed to \code{grid::grid.raster()}.
+    #' @return \code{self} invisibly.
+    plot = function(...) {
+      nr <- rt_image_to_native_raster(private$.ptr)
+      grid::grid.newpage()
+      grid::grid.raster(nr, ...)
+      invisible(self)
+    },
+
     #' @description Write the image to a file. Format is inferred from the file extension.
     #' @param path Character. Output file path (e.g. \code{"output.png"}, \code{"output.jpg"}).
     #' @return \code{self} invisibly.
