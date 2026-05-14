@@ -33,6 +33,7 @@ An R6 class representing a single image, backed by an OpenCV \code{cv::Mat}
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-Image-new}{\code{Image$new()}}
+\item \href{#method-Image-to_array}{\code{Image$to_array()}}
 \item \href{#method-Image-plot}{\code{Image$plot()}}
 \item \href{#method-Image-write}{\code{Image$write()}}
 \item \href{#method-Image-to_gpu}{\code{Image$to_gpu()}}
@@ -60,6 +61,20 @@ or a 2D integer matrix. For arrays, values must be in [0, 255].}
 (OpenCV assumes BGR for color images).}
 }
 \if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-to_array"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-to_array}{}}}
+\subsection{Method \code{to_array()}}{
+Convert the image to a 3D integer array (nrow x ncol x nchan).
+  Values are in [0, 255] for 8-bit images.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$to_array()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+An integer array with dimensions \code{[nrow, ncol, nchan]}.
 }
 }
 \if{html}{\out{<hr>}}
@@ -150,5 +165,15 @@ Print a summary of the image.
 \if{html}{\out{<div class="r">}}\preformatted{Image$print(...)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{...}}{Ignored.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{self} invisibly.
+}
 }
 }

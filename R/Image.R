@@ -102,6 +102,8 @@ Image <- R6::R6Class("Image",
     },
 
     #' @description Print a summary of the image.
+    #' @param ... Ignored.
+    #' @return \code{self} invisibly.
     print = function(...) {
       cat("<Image>\n")
       cat("  Size      :", self$ncol, "x", self$nrow, "\n")
