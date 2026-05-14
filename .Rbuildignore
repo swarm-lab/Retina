@@ -1,0 +1,6 @@
+^\.git$
+^\.github$
+^docs$
+^\.Rbuildignore$
+^\.gitignore$
+^.*\.Rproj$

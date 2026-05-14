@@ -1,0 +1,28 @@
+Package: Retina
+Type: Package
+Title: Computer Vision Library for R
+Version: 0.1.0
+Date: 2026-05-14
+Authors@R: person("Simon", "Garnier", email = "garnier@njit.edu",
+    role = c("aut", "cre"), comment = c(ORCID = "0000-0002-3886-3974"))
+Description: An OpenCV-based computer vision library providing an idiomatic R
+    interface to image and video processing. Images are managed as R6 objects
+    backed by OpenCV's cv::Mat (CPU) or cv::UMat (GPU).
+License: GPL-3
+Encoding: UTF-8
+Depends:
+    R (>= 4.1.0)
+Imports:
+    R6,
+    ROpenCVLite (>= 4.90.2),
+    grid
+LinkingTo: cpp11
+RoxygenNote: 7.3.2
+Suggests:
+    testthat (>= 3.0.0),
+    knitr,
+    rmarkdown
+Config/testthat/edition: 3
+VignetteBuilder: knitr
+URL: https://github.com/swarm-lab/Retina
+BugReports: https://github.com/swarm-lab/Retina/issues

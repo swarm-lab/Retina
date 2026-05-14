@@ -1,0 +1,16 @@
+#!/bin/sh
+echo "Checking for ROpenCVLite..."
+
+CV_CFLAGS=$(${R_HOME}/bin/Rscript -e "cat(ROpenCVLite::opencvConfig(output='cflags'))" 2>/dev/null)
+CV_LIBS=$(${R_HOME}/bin/Rscript -e "cat(ROpenCVLite::opencvConfig(output='libs'))" 2>/dev/null)
+
+if [ -z "$CV_CFLAGS" ]; then
+  echo "ERROR: Could not determine OpenCV CFLAGS. Is ROpenCVLite installed and has installOpenCV() been run successfully?" >&2
+  exit 1
+fi
+
+sed -e "s|@CV_CFLAGS@|${CV_CFLAGS}|g" \
+    -e "s|@CV_LIBS@|${CV_LIBS}|g" \
+    src/Makevars.in > src/Makevars
+
+echo "OpenCV configuration complete."
