@@ -110,6 +110,67 @@ Image <- R6::R6Class("Image",
       Image$new(rt_image_clone(private$.ptr))
     },
 
+    #' @description Convert to a new color space. Returns a new Image.
+    #' @param from Character. Source color space (e.g. \code{"BGR"}, \code{"GRAY"}).
+    #' @param to Character. Target color space.
+    #' @return A new \code{Image}.
+    convert_color = function(from, to) {
+      Image$new(rt_image_convert_color(private$.ptr, from, to))
+    },
+
+    #' @description Convert to a new color space in place.
+    #' @param from Character. Source color space.
+    #' @param to Character. Target color space.
+    #' @return \code{self} invisibly.
+    convert_color_ = function(from, to) {
+      private$.ptr <- rt_image_convert_color(private$.ptr, from, to)
+      invisible(self)
+    },
+
+    #' @description Convert to grayscale. Returns a new Image.
+    #' @return A new \code{Image} with colorspace \code{"GRAY"}.
+    to_gray = function() Image$new(rt_image_convert_color(private$.ptr, self$colorspace, "GRAY")),
+
+    #' @description Convert to grayscale in place.
+    #' @return \code{self} invisibly.
+    to_gray_ = function() {
+      private$.ptr <- rt_image_convert_color(private$.ptr, self$colorspace, "GRAY")
+      invisible(self)
+    },
+
+    #' @description Convert to BGR. Returns a new Image.
+    #' @return A new \code{Image} with colorspace \code{"BGR"}.
+    to_bgr = function() Image$new(rt_image_convert_color(private$.ptr, self$colorspace, "BGR")),
+
+    #' @description Convert to BGR in place.
+    #' @return \code{self} invisibly.
+    to_bgr_ = function() {
+      private$.ptr <- rt_image_convert_color(private$.ptr, self$colorspace, "BGR")
+      invisible(self)
+    },
+
+    #' @description Convert to HSV. Returns a new Image.
+    #' @return A new \code{Image} with colorspace \code{"HSV"}.
+    to_hsv = function() Image$new(rt_image_convert_color(private$.ptr, self$colorspace, "HSV")),
+
+    #' @description Convert to HSV in place.
+    #' @return \code{self} invisibly.
+    to_hsv_ = function() {
+      private$.ptr <- rt_image_convert_color(private$.ptr, self$colorspace, "HSV")
+      invisible(self)
+    },
+
+    #' @description Convert to LAB color space. Returns a new Image.
+    #' @return A new \code{Image} with colorspace \code{"LAB"}.
+    to_lab = function() Image$new(rt_image_convert_color(private$.ptr, self$colorspace, "LAB")),
+
+    #' @description Convert to LAB color space in place.
+    #' @return \code{self} invisibly.
+    to_lab_ = function() {
+      private$.ptr <- rt_image_convert_color(private$.ptr, self$colorspace, "LAB")
+      invisible(self)
+    },
+
     #' @description Print a summary of the image.
     #' @param ... Ignored.
     #' @return \code{self} invisibly.
