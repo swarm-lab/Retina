@@ -45,6 +45,12 @@ test_that("dim() returns c(nrow, ncol, nchan)", {
   expect_equal(dim(img), c(10L, 10L, 3L))
 })
 
+test_that("nrow() and ncol() work via dim()", {
+  img <- Image$new(array(0L, dim = c(6L, 4L, 3L)))
+  expect_equal(nrow(img), 6L)
+  expect_equal(ncol(img), 4L)
+})
+
 test_that("to_array() recovers original pixel values from array-constructed image", {
   arr <- array(0L, dim = c(10L, 10L, 3L))
   arr[,,1] <- 100L; arr[,,2] <- 150L; arr[,,3] <- 200L
