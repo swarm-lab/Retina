@@ -34,15 +34,16 @@ integers rt_image_to_native_raster(external_pointer<RtImage> img) {
   int nrow = bgr.rows, ncol = bgr.cols;
   writable::integers result(nrow * ncol);
 
-  // Pack as 0xAARRGGBB (nativeRaster column-major: row varies fastest)
-  for (int j = 0; j < ncol; j++) {
-    for (int i = 0; i < nrow; i++) {
+  // nativeRaster is row-major: pixel(row=i, col=j) → index i*ncol + j
+  // Packed as 0xAARRGGBB; OpenCV BGR: px[0]=B, px[1]=G, px[2]=R
+  for (int i = 0; i < nrow; i++) {
+    for (int j = 0; j < ncol; j++) {
       cv::Vec3b px = bgr.at<cv::Vec3b>(i, j);
       uint32_t packed = 0xFF000000u
         | (static_cast<uint32_t>(px[2]) << 16)  // R
         | (static_cast<uint32_t>(px[1]) << 8)   // G
         |  static_cast<uint32_t>(px[0]);         // B
-      result[i + j * nrow] = static_cast<int>(packed);
+      result[i * ncol + j] = static_cast<int>(packed);
     }
   }
 
