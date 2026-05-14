@@ -15,9 +15,10 @@ Depends:
 Imports:
     R6,
     ROpenCVLite (>= 4.90.2),
-    grid
+    grid,
+    grDevices
 LinkingTo: cpp11
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Suggests:
     testthat (>= 3.0.0),
     knitr,
