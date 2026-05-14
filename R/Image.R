@@ -56,6 +56,14 @@ Image <- R6::R6Class("Image",
       }
     },
 
+    #' @description Write the image to a file. Format is inferred from the file extension.
+    #' @param path Character. Output file path (e.g. \code{"output.png"}, \code{"output.jpg"}).
+    #' @return \code{self} invisibly.
+    write = function(path) {
+      rt_image_write(private$.ptr, path)
+      invisible(self)
+    },
+
     #' @description Upload the image to GPU memory (cv::UMat). No-op if already on GPU.
     #' @return \code{self} invisibly.
     to_gpu = function() {

@@ -45,6 +45,22 @@ external_pointer<RtImage> rt_image_from_array(integers arr, std::string colorspa
   return {new RtImage(std::move(mat), colorspace)};
 }
 
+// ── I/O ───────────────────────────────────────────────────────────────────────
+
+[[cpp11::register]]
+void rt_image_write(external_pointer<RtImage> img, std::string path) {
+  bool was_gpu = img->is_gpu();
+  if (was_gpu) img->to_cpu();
+
+  bool ok = cv::imwrite(path, std::get<cv::Mat>(img->buffer));
+
+  if (was_gpu) img->to_gpu();
+
+  if (!ok)
+    stop("Failed to write image to '%s'. Check the path and format.",
+         path.c_str());
+}
+
 // ── GPU toggle ────────────────────────────────────────────────────────────────
 
 [[cpp11::register]]
