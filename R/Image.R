@@ -222,7 +222,7 @@ Image <- R6::R6Class("Image",
     #' @param probs Numeric vector of probabilities in \code{[0, 1]}.
     #'   Defaults to \code{0.5} (median).
     #' @return A matrix with \code{length(probs)} rows and \code{nchan} columns.
-    #'   Row names are percentages (e.g. \code{"25%"}); column names are channel names.
+    #'   Row names are percentages (e.g. \code{"25\%"}); column names are channel names.
     quantile = function(probs = 0.5) {
       if (any(probs < 0 | probs > 1))
         stop("probs must be between 0 and 1", call. = FALSE)
