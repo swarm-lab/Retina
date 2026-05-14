@@ -3,22 +3,22 @@
 
 test_that("convert_color BGR->GRAY returns 1-channel image with colorspace GRAY", {
   img <- make_test_image()
-  gray <- img$convert_color("BGR", "GRAY")
+  gray <- img$convert_color("GRAY")
   expect_equal(gray$nchan, 1L)
   expect_equal(gray$colorspace, "GRAY")
 })
 
 test_that("convert_color_ modifies in place and returns self", {
   img <- make_test_image()
-  result <- img$convert_color_("BGR", "GRAY")
+  result <- img$convert_color_("GRAY")
   expect_identical(result, img)
   expect_equal(img$nchan, 1L)
   expect_equal(img$colorspace, "GRAY")
 })
 
-test_that("to_gray() matches convert_color(BGR, GRAY)", {
+test_that("to_gray() matches convert_color(GRAY)", {
   img <- make_test_image()
-  gray1 <- img$convert_color("BGR", "GRAY")
+  gray1 <- img$convert_color("GRAY")
   gray2 <- img$to_gray()
   expect_equal(gray1$to_array(), gray2$to_array())
 })
@@ -83,7 +83,7 @@ test_that("round-trip BGR->HSV->BGR pixel values within tolerance 2", {
   expect_true(all(abs(as.integer(arr_orig) - as.integer(arr_rt)) <= 2L))
 })
 
-test_that("convert_color with unsupported pair throws informative error", {
+test_that("convert_color with unsupported target throws informative error", {
   img <- make_test_image()
-  expect_error(img$convert_color("BGR", "XYZ"), "unsupported color space conversion")
+  expect_error(img$convert_color("XYZ"), "unsupported color space conversion")
 })

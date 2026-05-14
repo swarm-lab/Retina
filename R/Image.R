@@ -111,19 +111,17 @@ Image <- R6::R6Class("Image",
     },
 
     #' @description Convert to a new color space. Returns a new Image.
-    #' @param from Character. Source color space (e.g. \code{"BGR"}, \code{"GRAY"}).
-    #' @param to Character. Target color space.
+    #' @param to Character. Target color space (e.g. \code{"GRAY"}, \code{"HSV"}).
     #' @return A new \code{Image}.
-    convert_color = function(from, to) {
-      Image$new(rt_image_convert_color(private$.ptr, from, to))
+    convert_color = function(to) {
+      Image$new(rt_image_convert_color(private$.ptr, self$colorspace, to))
     },
 
     #' @description Convert to a new color space in place.
-    #' @param from Character. Source color space.
     #' @param to Character. Target color space.
     #' @return \code{self} invisibly.
-    convert_color_ = function(from, to) {
-      private$.ptr <- rt_image_convert_color(private$.ptr, from, to)
+    convert_color_ = function(to) {
+      private$.ptr <- rt_image_convert_color(private$.ptr, self$colorspace, to)
       invisible(self)
     },
 
