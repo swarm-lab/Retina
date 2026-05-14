@@ -1,3 +1,6 @@
+#' @export
+dim.Image <- function(x) c(x$nrow, x$ncol, x$nchan)
+
 #' Image class
 #'
 #' An R6 class representing a single image, backed by an OpenCV \code{cv::Mat}

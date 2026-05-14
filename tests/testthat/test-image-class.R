@@ -40,6 +40,11 @@ test_that("assignment does NOT copy (reference semantics)", {
   expect_equal(img1$colorspace, "RGB")
 })
 
+test_that("dim() returns c(nrow, ncol, nchan)", {
+  img <- make_test_image()
+  expect_equal(dim(img), c(10L, 10L, 3L))
+})
+
 test_that("to_array() recovers original pixel values from array-constructed image", {
   arr <- array(0L, dim = c(10L, 10L, 3L))
   arr[,,1] <- 100L; arr[,,2] <- 150L; arr[,,3] <- 200L
