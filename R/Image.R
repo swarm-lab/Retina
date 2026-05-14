@@ -22,6 +22,9 @@ Image <- R6::R6Class("Image",
     #' @field depth Bit depth code (0=CV_8U, 1=CV_8S, 2=CV_16U, ...).
     depth = function() rt_image_depth(private$.ptr),
 
+    #' @field depth_name Human-readable depth string (e.g. \code{"CV_8U"}).
+    depth_name = function() depth_name(rt_image_depth(private$.ptr)),
+
     #' @field gpu Logical; TRUE if the image is currently on the GPU.
     gpu = function() rt_image_is_gpu(private$.ptr),
 
@@ -108,7 +111,7 @@ Image <- R6::R6Class("Image",
       cat("<Image>\n")
       cat("  Size      :", self$ncol, "x", self$nrow, "\n")
       cat("  Channels  :", self$nchan, "\n")
-      cat("  Depth     :", self$depth, "\n")
+      cat("  Depth     :", self$depth_name, "\n")
       cat("  Colorspace:", self$colorspace, "\n")
       cat("  GPU       :", self$gpu, "\n")
       invisible(self)

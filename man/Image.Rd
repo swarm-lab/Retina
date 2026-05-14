@@ -23,6 +23,8 @@ An R6 class representing a single image, backed by an OpenCV \code{cv::Mat}
 
 \item{\code{depth}}{Bit depth code (0=CV_8U, 1=CV_8S, 2=CV_16U, ...).}
 
+\item{\code{depth_name}}{Human-readable depth string (e.g. \code{"CV_8U"}).}
+
 \item{\code{gpu}}{Logical; TRUE if the image is currently on the GPU.}
 
 \item{\code{colorspace}}{Character string describing the color space (e.g. "BGR", "GRAY").}
