@@ -654,7 +654,8 @@ Image <- R6::R6Class("Image",
     #' @param ddepth Character. Output depth: \code{"CV_16S"}, \code{"CV_32F"},
     #'   or \code{"CV_64F"}. Default \code{"CV_32F"}.
     #' @param scale Single positive numeric. Optional scale factor for the
-    #'   computed derivatives. Default 1.
+    #'   computed derivatives. Must be positive (use \code{convert_depth} +
+    #'   arithmetic to invert gradient sign). Default 1.
     #' @param delta Single numeric. Optional delta added to results before
     #'   storing. Default 0.
     #' @param border_type Character. Pixel extrapolation method. One of
@@ -693,7 +694,9 @@ Image <- R6::R6Class("Image",
     #' @param ksize Integer. Sobel kernel aperture size: 1, 3, 5, or 7.
     #' @param ddepth Character. Output depth: \code{"CV_16S"}, \code{"CV_32F"},
     #'   or \code{"CV_64F"}. Default \code{"CV_32F"}.
-    #' @param scale Single positive numeric. Scale factor. Default 1.
+    #' @param scale Single positive numeric. Optional scale factor for the
+    #'   computed derivatives. Must be positive (use \code{convert_depth} +
+    #'   arithmetic to invert gradient sign). Default 1.
     #' @param delta Single numeric. Delta added to results. Default 0.
     #' @param border_type Character. Pixel extrapolation method. One of
     #'   \code{"default"}, \code{"reflect"}, \code{"reflect_101"},
@@ -732,7 +735,8 @@ Image <- R6::R6Class("Image",
     #'   Default 1.
     #' @param ddepth Character. Output depth: \code{"CV_16S"}, \code{"CV_32F"},
     #'   or \code{"CV_64F"}. Default \code{"CV_32F"}.
-    #' @param scale Single positive numeric. Optional scale factor. Default 1.
+    #' @param scale Single positive numeric. Optional scale factor. Must be
+    #'   positive. Default 1.
     #' @param delta Single numeric. Optional delta added to results. Default 0.
     #' @param border_type Character. Pixel extrapolation method. One of
     #'   \code{"default"}, \code{"reflect"}, \code{"reflect_101"},
@@ -762,7 +766,8 @@ Image <- R6::R6Class("Image",
     #' @param ksize Integer. Aperture size: 1, 3, 5, or 7. Default 1.
     #' @param ddepth Character. Output depth: \code{"CV_16S"}, \code{"CV_32F"},
     #'   or \code{"CV_64F"}. Default \code{"CV_32F"}.
-    #' @param scale Single positive numeric. Scale factor. Default 1.
+    #' @param scale Single positive numeric. Optional scale factor. Must be
+    #'   positive. Default 1.
     #' @param delta Single numeric. Delta added to results. Default 0.
     #' @param border_type Character. Pixel extrapolation method. One of
     #'   \code{"default"}, \code{"reflect"}, \code{"reflect_101"},

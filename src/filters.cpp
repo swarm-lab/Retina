@@ -60,7 +60,7 @@ static int cv_border_type(const std::string& border_type) {
   else if (border_type == "replicate")  return cv::BORDER_REPLICATE;
   else if (border_type == "constant")   return cv::BORDER_CONSTANT;
   else if (border_type == "wrap")       return cv::BORDER_WRAP;
-  else stop("unsupported border_type: %s", border_type.c_str());
+  else stop("border_type must be one of: default, reflect, reflect_101, replicate, constant, wrap");
   return -1;
 }
 
@@ -68,7 +68,7 @@ static int cv_ddepth(const std::string& ddepth) {
   if      (ddepth == "CV_16S") return CV_16S;
   else if (ddepth == "CV_32F") return CV_32F;
   else if (ddepth == "CV_64F") return CV_64F;
-  else stop("unsupported ddepth: %s", ddepth.c_str());
+  else stop("ddepth must be one of: CV_16S, CV_32F, CV_64F");
   return -1;
 }
 
