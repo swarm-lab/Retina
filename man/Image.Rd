@@ -43,6 +43,8 @@ An R6 class representing a single image, backed by an OpenCV \code{cv::Mat}
 \item \href{#method-Image-copy}{\code{Image$copy()}}
 \item \href{#method-Image-convert_color}{\code{Image$convert_color()}}
 \item \href{#method-Image-convert_color_}{\code{Image$convert_color_()}}
+\item \href{#method-Image-convert_depth}{\code{Image$convert_depth()}}
+\item \href{#method-Image-convert_depth_}{\code{Image$convert_depth_()}}
 \item \href{#method-Image-to_gray}{\code{Image$to_gray()}}
 \item \href{#method-Image-to_gray_}{\code{Image$to_gray_()}}
 \item \href{#method-Image-to_bgr}{\code{Image$to_bgr()}}
@@ -96,17 +98,26 @@ An R6 class representing a single image, backed by an OpenCV \code{cv::Mat}
 \subsection{Method \code{new()}}{
 Create a new Image.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Image$new(x, colorspace = "BGR")}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Image$new(x, colorspace = "BGR", depth = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{x}}{A file path (character), a 3D integer array (nrow x ncol x nchan),
-or a 2D integer matrix. For arrays, values must be in [0, 255].}
+\item{\code{x}}{A file path (character), a 3D array (nrow x ncol x nchan), or a
+2D matrix. Use an integer array for integer depths (\code{CV_8U},
+\code{CV_16U}, \code{CV_16S}) and a double array for float depths
+(\code{CV_32F}, \code{CV_64F}).}
 
 \item{\code{colorspace}}{Color space label string. Ignored when reading from file
 (OpenCV assumes BGR for color images).}
+
+\item{\code{depth}}{Character. Bit depth of the image. One of \code{"CV_8U"},
+\code{"CV_16U"}, \code{"CV_16S"}, \code{"CV_32F"}, \code{"CV_64F"}.
+If \code{NULL} (default), inferred from the array type: integer arrays
+default to \code{"CV_8U"}, double arrays to \code{"CV_32F"}, and a
+message is emitted. Ignored when \code{x} is a file path or external
+pointer.}
 }
 \if{html}{\out{</div>}}
 }
@@ -115,14 +126,16 @@ or a 2D integer matrix. For arrays, values must be in [0, 255].}
 \if{html}{\out{<a id="method-Image-to_array"></a>}}
 \if{latex}{\out{\hypertarget{method-Image-to_array}{}}}
 \subsection{Method \code{to_array()}}{
-Convert the image to a 3D integer array (nrow x ncol x nchan).
-  Values are in [0, 255] for 8-bit images.
+Convert the image to an array (nrow x ncol x nchan).
+  Returns an integer array for \code{CV_8U}, \code{CV_16U}, and
+  \code{CV_16S} images; a double array for \code{CV_32F} and
+  \code{CV_64F} images.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Image$to_array()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
-An integer array with dimensions \code{[nrow, ncol, nchan]}.
+An array with dimensions \code{[nrow, ncol, nchan]}.
 }
 }
 \if{html}{\out{<hr>}}
@@ -237,6 +250,52 @@ Convert to a new color space in place.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{to}}{Character. Target color space.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{self} invisibly.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-convert_depth"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-convert_depth}{}}}
+\subsection{Method \code{convert_depth()}}{
+Convert to a new bit depth. Returns a new Image.
+  Values are cast directly with no scaling: a CV_8U pixel with value 100
+  becomes 100.0 in CV_32F, not 0.392. Use \code{convert_depth} followed
+  by arithmetic if you need normalized floating-point values.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$convert_depth(to)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{to}}{Character. Target depth, one of \code{"CV_8U"}, \code{"CV_16U"},
+\code{"CV_16S"}, \code{"CV_32F"}, \code{"CV_64F"}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A new \code{Image}.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-convert_depth_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-convert_depth_}{}}}
+\subsection{Method \code{convert_depth_()}}{
+Convert to a new bit depth in place.
+  Values are cast directly with no scaling (see \code{convert_depth}).
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$convert_depth_(to)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{to}}{Character. Target depth, one of \code{"CV_8U"}, \code{"CV_16U"},
+\code{"CV_16S"}, \code{"CV_32F"}, \code{"CV_64F"}.}
 }
 \if{html}{\out{</div>}}
 }

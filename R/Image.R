@@ -46,10 +46,18 @@ Image <- R6::R6Class("Image",
   ),
   public = list(
     #' @description Create a new Image.
-    #' @param x A file path (character), a 3D integer array (nrow x ncol x nchan),
-    #'   or a 2D integer matrix. For arrays, values must be in [0, 255].
+    #' @param x A file path (character), a 3D array (nrow x ncol x nchan), or a
+    #'   2D matrix. Use an integer array for integer depths (\code{CV_8U},
+    #'   \code{CV_16U}, \code{CV_16S}) and a double array for float depths
+    #'   (\code{CV_32F}, \code{CV_64F}).
     #' @param colorspace Color space label string. Ignored when reading from file
     #'   (OpenCV assumes BGR for color images).
+    #' @param depth Character. Bit depth of the image. One of \code{"CV_8U"},
+    #'   \code{"CV_16U"}, \code{"CV_16S"}, \code{"CV_32F"}, \code{"CV_64F"}.
+    #'   If \code{NULL} (default), inferred from the array type: integer arrays
+    #'   default to \code{"CV_8U"}, double arrays to \code{"CV_32F"}, and a
+    #'   message is emitted. Ignored when \code{x} is a file path or external
+    #'   pointer.
     initialize = function(x, colorspace = "BGR", depth = NULL) {
       .valid_depths <- c("CV_8U", "CV_16U", "CV_16S", "CV_32F", "CV_64F")
       .int_depths   <- c("CV_8U", "CV_16U", "CV_16S")
