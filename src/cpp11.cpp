@@ -145,6 +145,20 @@ extern "C" SEXP _Retina_rt_has_cuda() {
     return cpp11::as_sexp(rt_has_cuda());
   END_CPP11
 }
+// channels.cpp
+cpp11::list rt_image_split_channels(external_pointer<RtImage> img);
+extern "C" SEXP _Retina_rt_image_split_channels(SEXP img) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_image_split_channels(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img)));
+  END_CPP11
+}
+// channels.cpp
+external_pointer<RtImage> rt_image_merge_channels(cpp11::list channel_ptrs, std::string colorspace);
+extern "C" SEXP _Retina_rt_image_merge_channels(SEXP channel_ptrs, SEXP colorspace) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_image_merge_channels(cpp11::as_cpp<cpp11::decay_t<cpp11::list>>(channel_ptrs), cpp11::as_cpp<cpp11::decay_t<std::string>>(colorspace)));
+  END_CPP11
+}
 // colorspace.cpp
 external_pointer<RtImage> rt_image_convert_color(external_pointer<RtImage> img, std::string from_cs, std::string to_cs);
 extern "C" SEXP _Retina_rt_image_convert_color(SEXP img, SEXP from_cs, SEXP to_cs) {
@@ -431,6 +445,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_Retina_rt_image_mean",               (DL_FUNC) &_Retina_rt_image_mean,               1},
     {"_Retina_rt_image_median",             (DL_FUNC) &_Retina_rt_image_median,             1},
     {"_Retina_rt_image_median_blur",        (DL_FUNC) &_Retina_rt_image_median_blur,        2},
+    {"_Retina_rt_image_merge_channels",     (DL_FUNC) &_Retina_rt_image_merge_channels,     2},
     {"_Retina_rt_image_min",                (DL_FUNC) &_Retina_rt_image_min,                1},
     {"_Retina_rt_image_multiply_image",     (DL_FUNC) &_Retina_rt_image_multiply_image,     2},
     {"_Retina_rt_image_multiply_scalar",    (DL_FUNC) &_Retina_rt_image_multiply_scalar,    2},
@@ -442,6 +457,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_Retina_rt_image_sd",                 (DL_FUNC) &_Retina_rt_image_sd,                 1},
     {"_Retina_rt_image_set_colorspace",     (DL_FUNC) &_Retina_rt_image_set_colorspace,     2},
     {"_Retina_rt_image_sobel",              (DL_FUNC) &_Retina_rt_image_sobel,              8},
+    {"_Retina_rt_image_split_channels",     (DL_FUNC) &_Retina_rt_image_split_channels,     1},
     {"_Retina_rt_image_subtract_image",     (DL_FUNC) &_Retina_rt_image_subtract_image,     2},
     {"_Retina_rt_image_subtract_scalar",    (DL_FUNC) &_Retina_rt_image_subtract_scalar,    2},
     {"_Retina_rt_image_sum",                (DL_FUNC) &_Retina_rt_image_sum,                1},

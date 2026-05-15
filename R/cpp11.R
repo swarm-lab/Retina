@@ -80,6 +80,14 @@ rt_has_cuda <- function() {
   .Call(`_Retina_rt_has_cuda`)
 }
 
+rt_image_split_channels <- function(img) {
+  .Call(`_Retina_rt_image_split_channels`, img)
+}
+
+rt_image_merge_channels <- function(channel_ptrs, colorspace) {
+  .Call(`_Retina_rt_image_merge_channels`, channel_ptrs, colorspace)
+}
+
 rt_image_convert_color <- function(img, from_cs, to_cs) {
   .Call(`_Retina_rt_image_convert_color`, img, from_cs, to_cs)
 }
