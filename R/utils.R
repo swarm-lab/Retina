@@ -16,8 +16,10 @@ rt_channel_names <- function(colorspace, nchan) {
 
 .rt_ptr <- function(img) img$.__enclos_env__$private$.ptr
 
-.rt_arith <- function(ptr, other, nchan, img_fn, scalar_fn) {
+.rt_arith <- function(ptr, other, nchan, self_depth, img_fn, scalar_fn) {
   if (inherits(other, "Image")) {
+    if (other$depth != self_depth)
+      stop("images must have the same depth", call. = FALSE)
     img_fn(ptr, .rt_ptr(other))
   } else if (is.numeric(other)) {
     if (length(other) != 1L && length(other) != nchan)

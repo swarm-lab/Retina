@@ -1,12 +1,12 @@
 img_uniform <- function() {
   arr <- array(100L, dim = c(10L, 10L, 3L))
-  Image$new(arr)
+  Image$new(arr, depth = "CV_8U")
 }
 
 img_impulse <- function() {
   arr <- array(0L, dim = c(10L, 10L, 3L))
   arr[5, 5, ] <- 255L
-  Image$new(arr)
+  Image$new(arr, depth = "CV_8U")
 }
 
 # ── blur ─────────────────────────────────────────────────────────────────────

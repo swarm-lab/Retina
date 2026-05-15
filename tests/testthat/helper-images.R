@@ -4,5 +4,5 @@ make_test_image <- function() {
   arr[,,1] <- 100L  # B
   arr[,,2] <- 150L  # G
   arr[,,3] <- 200L  # R
-  Image$new(arr, colorspace = "BGR")
+  Image$new(arr, colorspace = "BGR", depth = "CV_8U")
 }

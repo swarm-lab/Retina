@@ -25,7 +25,8 @@ external_pointer<RtImage> rt_image_read(std::string path) {
 }
 
 [[cpp11::register]]
-external_pointer<RtImage> rt_image_from_array(integers arr, std::string colorspace) {
+external_pointer<RtImage> rt_image_from_integer_array(
+    integers arr, std::string colorspace, std::string depth) {
   integers dim(static_cast<SEXP>(arr.attr("dim")));
   if (dim.size() < 2 || dim.size() > 3)
     stop("arr must be a 2D matrix or a 3D array.");
@@ -34,15 +35,55 @@ external_pointer<RtImage> rt_image_from_array(integers arr, std::string colorspa
   int ncol  = dim[1];
   int nchan = (dim.size() == 3) ? dim[2] : 1;
 
+  int cv_type;
+  if      (depth == "CV_8U")  cv_type = CV_8U;
+  else if (depth == "CV_16U") cv_type = CV_16U;
+  else if (depth == "CV_16S") cv_type = CV_16S;
+  else stop("unsupported depth for integer array: %s", depth.c_str());
+
   // R arrays are column-major; cv::Mat is row-major.
   // R element [i, j, c] -> index: i + j*nrow + c*nrow*ncol
   std::vector<cv::Mat> channels(nchan);
   for (int c = 0; c < nchan; c++) {
-    channels[c] = cv::Mat(nrow, ncol, CV_8U);
+    channels[c] = cv::Mat(nrow, ncol, cv_type);
     for (int j = 0; j < ncol; j++) {
       for (int i = 0; i < nrow; i++) {
-        channels[c].at<uchar>(i, j) =
-          (uchar)arr[i + j * nrow + c * nrow * ncol];
+        int val = arr[i + j * nrow + c * nrow * ncol];
+        if      (cv_type == CV_8U)  channels[c].at<uint8_t>(i, j)  = static_cast<uint8_t>(val);
+        else if (cv_type == CV_16U) channels[c].at<uint16_t>(i, j) = static_cast<uint16_t>(val);
+        else                        channels[c].at<int16_t>(i, j)  = static_cast<int16_t>(val);
+      }
+    }
+  }
+  cv::Mat mat;
+  cv::merge(channels, mat);
+  return {new RtImage(std::move(mat), colorspace)};
+}
+
+[[cpp11::register]]
+external_pointer<RtImage> rt_image_from_double_array(
+    doubles arr, std::string colorspace, std::string depth) {
+  integers dim(static_cast<SEXP>(arr.attr("dim")));
+  if (dim.size() < 2 || dim.size() > 3)
+    stop("arr must be a 2D matrix or a 3D array.");
+
+  int nrow  = dim[0];
+  int ncol  = dim[1];
+  int nchan = (dim.size() == 3) ? dim[2] : 1;
+
+  int cv_type;
+  if      (depth == "CV_32F") cv_type = CV_32F;
+  else if (depth == "CV_64F") cv_type = CV_64F;
+  else stop("unsupported depth for double array: %s", depth.c_str());
+
+  std::vector<cv::Mat> channels(nchan);
+  for (int c = 0; c < nchan; c++) {
+    channels[c] = cv::Mat(nrow, ncol, cv_type);
+    for (int j = 0; j < ncol; j++) {
+      for (int i = 0; i < nrow; i++) {
+        double val = arr[i + j * nrow + c * nrow * ncol];
+        if (cv_type == CV_32F) channels[c].at<float>(i, j)  = static_cast<float>(val);
+        else                   channels[c].at<double>(i, j) = val;
       }
     }
   }
@@ -54,7 +95,7 @@ external_pointer<RtImage> rt_image_from_array(integers arr, std::string colorspa
 // ── Conversion to R ───────────────────────────────────────────────────────────
 
 [[cpp11::register]]
-integers rt_image_to_array(external_pointer<RtImage> img) {
+integers rt_image_to_integer_array(external_pointer<RtImage> img) {
   cv::Mat mat;
   if (img->is_gpu()) {
     std::get<cv::UMat>(img->buffer).copyTo(mat);
@@ -65,6 +106,7 @@ integers rt_image_to_array(external_pointer<RtImage> img) {
   int nrow  = mat.rows;
   int ncol  = mat.cols;
   int nchan = mat.channels();
+  int depth = mat.depth();
 
   writable::integers result(nrow * ncol * nchan);
 
@@ -75,8 +117,47 @@ integers rt_image_to_array(external_pointer<RtImage> img) {
   for (int c = 0; c < nchan; c++) {
     for (int j = 0; j < ncol; j++) {
       for (int i = 0; i < nrow; i++) {
-        result[i + j * nrow + c * nrow * ncol] =
-          static_cast<int>(channels[c].at<uchar>(i, j));
+        int val;
+        if      (depth == CV_8U)  val = static_cast<int>(channels[c].at<uint8_t>(i, j));
+        else if (depth == CV_16U) val = static_cast<int>(channels[c].at<uint16_t>(i, j));
+        else if (depth == CV_16S) val = static_cast<int>(channels[c].at<int16_t>(i, j));
+        else stop("rt_image_to_integer_array called on non-integer depth");
+        result[i + j * nrow + c * nrow * ncol] = val;
+      }
+    }
+  }
+
+  result.attr("dim") = writable::integers({nrow, ncol, nchan});
+  return result;
+}
+
+[[cpp11::register]]
+doubles rt_image_to_double_array(external_pointer<RtImage> img) {
+  cv::Mat mat;
+  if (img->is_gpu()) {
+    std::get<cv::UMat>(img->buffer).copyTo(mat);
+  } else {
+    mat = std::get<cv::Mat>(img->buffer);
+  }
+
+  int nrow  = mat.rows;
+  int ncol  = mat.cols;
+  int nchan = mat.channels();
+  int depth = mat.depth();
+
+  writable::doubles result(nrow * ncol * nchan);
+
+  std::vector<cv::Mat> channels(nchan);
+  cv::split(mat, channels);
+
+  for (int c = 0; c < nchan; c++) {
+    for (int j = 0; j < ncol; j++) {
+      for (int i = 0; i < nrow; i++) {
+        double val;
+        if      (depth == CV_32F) val = static_cast<double>(channels[c].at<float>(i, j));
+        else if (depth == CV_64F) val = channels[c].at<double>(i, j);
+        else stop("rt_image_to_double_array called on non-float depth");
+        result[i + j * nrow + c * nrow * ncol] = val;
       }
     }
   }
@@ -150,4 +231,29 @@ std::string rt_image_colorspace(external_pointer<RtImage> img) {
 [[cpp11::register]]
 void rt_image_set_colorspace(external_pointer<RtImage> img, std::string cs) {
   img->colorspace = cs;
+}
+
+// ── Depth conversion ──────────────────────────────────────────────────────────
+
+[[cpp11::register]]
+external_pointer<RtImage> rt_image_convert_depth(
+    external_pointer<RtImage> img, std::string depth) {
+  int cv_type;
+  if      (depth == "CV_8U")  cv_type = CV_8U;
+  else if (depth == "CV_16U") cv_type = CV_16U;
+  else if (depth == "CV_16S") cv_type = CV_16S;
+  else if (depth == "CV_32F") cv_type = CV_32F;
+  else if (depth == "CV_64F") cv_type = CV_64F;
+  else stop("unsupported depth: %s", depth.c_str());
+
+  cv::Mat src;
+  if (img->is_gpu()) {
+    std::get<cv::UMat>(img->buffer).copyTo(src);
+  } else {
+    src = std::get<cv::Mat>(img->buffer);
+  }
+
+  cv::Mat dst;
+  src.convertTo(dst, cv_type);
+  return {new RtImage(std::move(dst), img->colorspace)};
 }

@@ -11,11 +11,12 @@ integers rt_image_to_native_raster(external_pointer<RtImage> img) {
     mat = std::get<cv::Mat>(img->buffer);
   }
 
-  // Normalize to 8-bit
+  // Normalize to 8-bit for display
   cv::Mat bgr8;
   if (mat.depth() != CV_8U) {
-    double scale = (mat.depth() == CV_16U) ? 1.0 / 256.0 : 255.0;
-    mat.convertTo(bgr8, CV_8U, scale);
+    cv::Mat normalized;
+    cv::normalize(mat, normalized, 0, 255, cv::NORM_MINMAX, CV_32F);
+    normalized.convertTo(bgr8, CV_8U);
   } else {
     bgr8 = mat;
   }

@@ -41,6 +41,52 @@ An R6 class representing a single image, backed by an OpenCV \code{cv::Mat}
 \item \href{#method-Image-to_gpu}{\code{Image$to_gpu()}}
 \item \href{#method-Image-to_cpu}{\code{Image$to_cpu()}}
 \item \href{#method-Image-copy}{\code{Image$copy()}}
+\item \href{#method-Image-convert_color}{\code{Image$convert_color()}}
+\item \href{#method-Image-convert_color_}{\code{Image$convert_color_()}}
+\item \href{#method-Image-to_gray}{\code{Image$to_gray()}}
+\item \href{#method-Image-to_gray_}{\code{Image$to_gray_()}}
+\item \href{#method-Image-to_bgr}{\code{Image$to_bgr()}}
+\item \href{#method-Image-to_bgr_}{\code{Image$to_bgr_()}}
+\item \href{#method-Image-to_hsv}{\code{Image$to_hsv()}}
+\item \href{#method-Image-to_hsv_}{\code{Image$to_hsv_()}}
+\item \href{#method-Image-to_lab}{\code{Image$to_lab()}}
+\item \href{#method-Image-to_lab_}{\code{Image$to_lab_()}}
+\item \href{#method-Image-mean}{\code{Image$mean()}}
+\item \href{#method-Image-min}{\code{Image$min()}}
+\item \href{#method-Image-max}{\code{Image$max()}}
+\item \href{#method-Image-sd}{\code{Image$sd()}}
+\item \href{#method-Image-var}{\code{Image$var()}}
+\item \href{#method-Image-sum}{\code{Image$sum()}}
+\item \href{#method-Image-median}{\code{Image$median()}}
+\item \href{#method-Image-quantile}{\code{Image$quantile()}}
+\item \href{#method-Image-add}{\code{Image$add()}}
+\item \href{#method-Image-add_}{\code{Image$add_()}}
+\item \href{#method-Image-subtract}{\code{Image$subtract()}}
+\item \href{#method-Image-subtract_}{\code{Image$subtract_()}}
+\item \href{#method-Image-multiply}{\code{Image$multiply()}}
+\item \href{#method-Image-multiply_}{\code{Image$multiply_()}}
+\item \href{#method-Image-divide}{\code{Image$divide()}}
+\item \href{#method-Image-divide_}{\code{Image$divide_()}}
+\item \href{#method-Image-absdiff}{\code{Image$absdiff()}}
+\item \href{#method-Image-absdiff_}{\code{Image$absdiff_()}}
+\item \href{#method-Image-add_weighted}{\code{Image$add_weighted()}}
+\item \href{#method-Image-add_weighted_}{\code{Image$add_weighted_()}}
+\item \href{#method-Image-bitwise_and}{\code{Image$bitwise_and()}}
+\item \href{#method-Image-bitwise_and_}{\code{Image$bitwise_and_()}}
+\item \href{#method-Image-bitwise_or}{\code{Image$bitwise_or()}}
+\item \href{#method-Image-bitwise_or_}{\code{Image$bitwise_or_()}}
+\item \href{#method-Image-bitwise_xor}{\code{Image$bitwise_xor()}}
+\item \href{#method-Image-bitwise_xor_}{\code{Image$bitwise_xor_()}}
+\item \href{#method-Image-bitwise_not}{\code{Image$bitwise_not()}}
+\item \href{#method-Image-bitwise_not_}{\code{Image$bitwise_not_()}}
+\item \href{#method-Image-blur}{\code{Image$blur()}}
+\item \href{#method-Image-blur_}{\code{Image$blur_()}}
+\item \href{#method-Image-gaussian_blur}{\code{Image$gaussian_blur()}}
+\item \href{#method-Image-gaussian_blur_}{\code{Image$gaussian_blur_()}}
+\item \href{#method-Image-median_blur}{\code{Image$median_blur()}}
+\item \href{#method-Image-median_blur_}{\code{Image$median_blur_()}}
+\item \href{#method-Image-bilateral_filter}{\code{Image$bilateral_filter()}}
+\item \href{#method-Image-bilateral_filter_}{\code{Image$bilateral_filter_()}}
 \item \href{#method-Image-print}{\code{Image$print()}}
 }
 }
@@ -156,6 +202,848 @@ Create a deep copy of this image.
 
 \subsection{Returns}{
 A new \code{Image} with independent C++ storage.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-convert_color"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-convert_color}{}}}
+\subsection{Method \code{convert_color()}}{
+Convert to a new color space. Returns a new Image.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$convert_color(to)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{to}}{Character. Target color space (e.g. \code{"GRAY"}, \code{"HSV"}).}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A new \code{Image}.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-convert_color_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-convert_color_}{}}}
+\subsection{Method \code{convert_color_()}}{
+Convert to a new color space in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$convert_color_(to)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{to}}{Character. Target color space.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{self} invisibly.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-to_gray"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-to_gray}{}}}
+\subsection{Method \code{to_gray()}}{
+Convert to grayscale. Returns a new Image.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$to_gray()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+A new \code{Image} with colorspace \code{"GRAY"}.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-to_gray_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-to_gray_}{}}}
+\subsection{Method \code{to_gray_()}}{
+Convert to grayscale in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$to_gray_()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+\code{self} invisibly.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-to_bgr"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-to_bgr}{}}}
+\subsection{Method \code{to_bgr()}}{
+Convert to BGR. Returns a new Image.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$to_bgr()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+A new \code{Image} with colorspace \code{"BGR"}.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-to_bgr_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-to_bgr_}{}}}
+\subsection{Method \code{to_bgr_()}}{
+Convert to BGR in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$to_bgr_()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+\code{self} invisibly.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-to_hsv"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-to_hsv}{}}}
+\subsection{Method \code{to_hsv()}}{
+Convert to HSV. Returns a new Image.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$to_hsv()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+A new \code{Image} with colorspace \code{"HSV"}.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-to_hsv_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-to_hsv_}{}}}
+\subsection{Method \code{to_hsv_()}}{
+Convert to HSV in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$to_hsv_()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+\code{self} invisibly.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-to_lab"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-to_lab}{}}}
+\subsection{Method \code{to_lab()}}{
+Convert to LAB color space. Returns a new Image.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$to_lab()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+A new \code{Image} with colorspace \code{"LAB"}.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-to_lab_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-to_lab_}{}}}
+\subsection{Method \code{to_lab_()}}{
+Convert to LAB color space in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$to_lab_()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+\code{self} invisibly.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-mean"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-mean}{}}}
+\subsection{Method \code{mean()}}{
+Per-channel mean pixel value.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$mean()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+Named numeric vector of length \code{nchan}.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-min"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-min}{}}}
+\subsection{Method \code{min()}}{
+Per-channel minimum pixel value.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$min()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+Named numeric vector of length \code{nchan}.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-max"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-max}{}}}
+\subsection{Method \code{max()}}{
+Per-channel maximum pixel value.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$max()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+Named numeric vector of length \code{nchan}.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-sd"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-sd}{}}}
+\subsection{Method \code{sd()}}{
+Per-channel standard deviation (population).
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$sd()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+Named numeric vector of length \code{nchan}.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-var"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-var}{}}}
+\subsection{Method \code{var()}}{
+Per-channel variance (population).
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$var()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+Named numeric vector of length \code{nchan}.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-sum"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-sum}{}}}
+\subsection{Method \code{sum()}}{
+Per-channel pixel sum.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$sum()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+Named numeric vector of length \code{nchan}.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-median"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-median}{}}}
+\subsection{Method \code{median()}}{
+Per-channel median pixel value.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$median()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+Named numeric vector of length \code{nchan}.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-quantile"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-quantile}{}}}
+\subsection{Method \code{quantile()}}{
+Per-channel quantiles.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$quantile(probs = 0.5)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{probs}}{Numeric vector of probabilities in \code{[0, 1]}.
+Defaults to \code{0.5} (median).}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A matrix with \code{length(probs)} rows and \code{nchan} columns.
+  Row names are percentages (e.g. \code{"25\%"}); column names are channel names.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-add"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-add}{}}}
+\subsection{Method \code{add()}}{
+Add another image or a scalar to this image.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$add(other)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{other}}{An \code{Image} or a numeric vector (length 1 or \code{nchan}).}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A new \code{Image}.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-add_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-add_}{}}}
+\subsection{Method \code{add_()}}{
+Add in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$add_(other)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{other}}{An \code{Image} or a numeric vector (length 1 or \code{nchan}).}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{self} invisibly.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-subtract"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-subtract}{}}}
+\subsection{Method \code{subtract()}}{
+Subtract another image or a scalar from this image.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$subtract(other)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{other}}{An \code{Image} or a numeric vector (length 1 or \code{nchan}).}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A new \code{Image}.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-subtract_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-subtract_}{}}}
+\subsection{Method \code{subtract_()}}{
+Subtract in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$subtract_(other)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{other}}{An \code{Image} or a numeric vector (length 1 or \code{nchan}).}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{self} invisibly.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-multiply"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-multiply}{}}}
+\subsection{Method \code{multiply()}}{
+Multiply this image element-wise by another image or a scalar.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$multiply(other)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{other}}{An \code{Image} or a numeric vector (length 1 or \code{nchan}).}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A new \code{Image}.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-multiply_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-multiply_}{}}}
+\subsection{Method \code{multiply_()}}{
+Multiply in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$multiply_(other)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{other}}{An \code{Image} or a numeric vector (length 1 or \code{nchan}).}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{self} invisibly.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-divide"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-divide}{}}}
+\subsection{Method \code{divide()}}{
+Divide this image element-wise by another image or a scalar.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$divide(other)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{other}}{An \code{Image} or a numeric vector (length 1 or \code{nchan}).}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A new \code{Image}.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-divide_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-divide_}{}}}
+\subsection{Method \code{divide_()}}{
+Divide in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$divide_(other)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{other}}{An \code{Image} or a numeric vector (length 1 or \code{nchan}).}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{self} invisibly.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-absdiff"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-absdiff}{}}}
+\subsection{Method \code{absdiff()}}{
+Compute the absolute difference with another image or a scalar.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$absdiff(other)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{other}}{An \code{Image} or a numeric vector (length 1 or \code{nchan}).}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A new \code{Image}.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-absdiff_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-absdiff_}{}}}
+\subsection{Method \code{absdiff_()}}{
+Absolute difference in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$absdiff_(other)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{other}}{An \code{Image} or a numeric vector (length 1 or \code{nchan}).}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{self} invisibly.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-add_weighted"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-add_weighted}{}}}
+\subsection{Method \code{add_weighted()}}{
+Weighted addition of two images: \code{w1*self + w2*other + gamma}.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$add_weighted(other, w1, w2, gamma = 0)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{other}}{An \code{Image}.}
+
+\item{\code{w1}}{Numeric scalar. Weight for this image.}
+
+\item{\code{w2}}{Numeric scalar. Weight for \code{other}.}
+
+\item{\code{gamma}}{Numeric scalar. Brightness offset added after blending. Default 0.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A new \code{Image}.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-add_weighted_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-add_weighted_}{}}}
+\subsection{Method \code{add_weighted_()}}{
+Weighted addition in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$add_weighted_(other, w1, w2, gamma = 0)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{other}}{An \code{Image}.}
+
+\item{\code{w1}}{Numeric scalar. Weight for this image.}
+
+\item{\code{w2}}{Numeric scalar. Weight for \code{other}.}
+
+\item{\code{gamma}}{Numeric scalar. Brightness offset. Default 0.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{self} invisibly.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-bitwise_and"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-bitwise_and}{}}}
+\subsection{Method \code{bitwise_and()}}{
+Bitwise AND with another image or a scalar.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$bitwise_and(other)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{other}}{An \code{Image} or a numeric vector (length 1 or \code{nchan}).}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A new \code{Image}.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-bitwise_and_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-bitwise_and_}{}}}
+\subsection{Method \code{bitwise_and_()}}{
+Bitwise AND in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$bitwise_and_(other)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{other}}{An \code{Image} or a numeric vector (length 1 or \code{nchan}).}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{self} invisibly.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-bitwise_or"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-bitwise_or}{}}}
+\subsection{Method \code{bitwise_or()}}{
+Bitwise OR with another image or a scalar.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$bitwise_or(other)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{other}}{An \code{Image} or a numeric vector (length 1 or \code{nchan}).}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A new \code{Image}.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-bitwise_or_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-bitwise_or_}{}}}
+\subsection{Method \code{bitwise_or_()}}{
+Bitwise OR in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$bitwise_or_(other)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{other}}{An \code{Image} or a numeric vector (length 1 or \code{nchan}).}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{self} invisibly.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-bitwise_xor"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-bitwise_xor}{}}}
+\subsection{Method \code{bitwise_xor()}}{
+Bitwise XOR with another image or a scalar.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$bitwise_xor(other)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{other}}{An \code{Image} or a numeric vector (length 1 or \code{nchan}).}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A new \code{Image}.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-bitwise_xor_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-bitwise_xor_}{}}}
+\subsection{Method \code{bitwise_xor_()}}{
+Bitwise XOR in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$bitwise_xor_(other)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{other}}{An \code{Image} or a numeric vector (length 1 or \code{nchan}).}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{self} invisibly.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-bitwise_not"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-bitwise_not}{}}}
+\subsection{Method \code{bitwise_not()}}{
+Bitwise NOT (invert all bits).
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$bitwise_not()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+A new \code{Image}.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-bitwise_not_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-bitwise_not_}{}}}
+\subsection{Method \code{bitwise_not_()}}{
+Bitwise NOT in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$bitwise_not_()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+\code{self} invisibly.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-blur"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-blur}{}}}
+\subsection{Method \code{blur()}}{
+Apply a normalised box filter (simple average blur).
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$blur(ksize)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{ksize}}{Length-2 integer vector \code{c(width, height)} of positive
+integers specifying the kernel size.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A new \code{Image}.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-blur_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-blur_}{}}}
+\subsection{Method \code{blur_()}}{
+Box blur in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$blur_(ksize)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{ksize}}{Length-2 integer vector \code{c(width, height)} of positive
+integers specifying the kernel size.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{self} invisibly.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-gaussian_blur"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-gaussian_blur}{}}}
+\subsection{Method \code{gaussian_blur()}}{
+Apply a Gaussian blur.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$gaussian_blur(ksize, sigma)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{ksize}}{Length-2 vector. Each element must be a positive odd integer
+or \code{0}. When \code{0}, the kernel size is inferred from
+\code{sigma} automatically.}
+
+\item{\code{sigma}}{Length-1 or length-2 positive numeric. Gaussian standard
+deviation in the X (and optionally Y) direction. A single value is
+applied to both axes.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A new \code{Image}.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-gaussian_blur_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-gaussian_blur_}{}}}
+\subsection{Method \code{gaussian_blur_()}}{
+Gaussian blur in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$gaussian_blur_(ksize, sigma)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{ksize}}{Length-2 vector. Each element must be a positive odd integer
+or \code{0}. When \code{0}, the kernel size is inferred from
+\code{sigma} automatically.}
+
+\item{\code{sigma}}{Length-1 or length-2 positive numeric. A single value is
+applied to both axes.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{self} invisibly.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-median_blur"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-median_blur}{}}}
+\subsection{Method \code{median_blur()}}{
+Apply a median blur.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$median_blur(ksize)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{ksize}}{Single positive odd integer. The kernel is always square
+(OpenCV constraint).}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A new \code{Image}.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-median_blur_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-median_blur_}{}}}
+\subsection{Method \code{median_blur_()}}{
+Median blur in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$median_blur_(ksize)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{ksize}}{Single positive odd integer. The kernel is always square
+(OpenCV constraint).}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{self} invisibly.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-bilateral_filter"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-bilateral_filter}{}}}
+\subsection{Method \code{bilateral_filter()}}{
+Apply a bilateral filter (edge-preserving smoothing).
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$bilateral_filter(d, sigma_color, sigma_space)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{d}}{Single integer. Diameter of the pixel neighbourhood. When
+\code{d <= 0}, the diameter is computed from \code{sigma_space}.}
+
+\item{\code{sigma_color}}{Single positive numeric. Filter sigma in colour space.}
+
+\item{\code{sigma_space}}{Single positive numeric. Filter sigma in coordinate
+space.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A new \code{Image}.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-bilateral_filter_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-bilateral_filter_}{}}}
+\subsection{Method \code{bilateral_filter_()}}{
+Bilateral filter in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$bilateral_filter_(d, sigma_color, sigma_space)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{d}}{Single integer. Diameter of the pixel neighbourhood. When
+\code{d <= 0}, the diameter is computed from \code{sigma_space}.}
+
+\item{\code{sigma_color}}{Single positive numeric. Filter sigma in colour space.}
+
+\item{\code{sigma_space}}{Single positive numeric. Filter sigma in coordinate
+space.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{self} invisibly.
 }
 }
 \if{html}{\out{<hr>}}

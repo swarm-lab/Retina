@@ -1,7 +1,7 @@
 make_img2 <- function() {
   arr <- array(0L, dim = c(10L, 10L, 3L))
   arr[,,1] <- 50L; arr[,,2] <- 50L; arr[,,3] <- 50L
-  Image$new(arr)
+  Image$new(arr, depth = "CV_8U")
 }
 
 # ── Image-image operations ───────────────────────────────────────────────────

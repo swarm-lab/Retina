@@ -50,13 +50,39 @@ Image <- R6::R6Class("Image",
     #'   or a 2D integer matrix. For arrays, values must be in [0, 255].
     #' @param colorspace Color space label string. Ignored when reading from file
     #'   (OpenCV assumes BGR for color images).
-    initialize = function(x, colorspace = "BGR") {
+    initialize = function(x, colorspace = "BGR", depth = NULL) {
+      .valid_depths <- c("CV_8U", "CV_16U", "CV_16S", "CV_32F", "CV_64F")
+      .int_depths   <- c("CV_8U", "CV_16U", "CV_16S")
+      .dbl_depths   <- c("CV_32F", "CV_64F")
       if (is.character(x)) {
         private$.ptr <- rt_image_read(path.expand(x))
       } else if (is.array(x) || is.matrix(x)) {
-        if (!is.integer(x))
-          storage.mode(x) <- "integer"
-        private$.ptr <- rt_image_from_array(x, colorspace)
+        if (is.double(x)) {
+          if (is.null(depth)) {
+            depth <- "CV_32F"
+            message("Depth not specified. Defaulting to CV_32F.")
+          }
+          if (!depth %in% .valid_depths)
+            stop("depth must be one of: CV_8U, CV_16U, CV_16S, CV_32F, CV_64F",
+                 call. = FALSE)
+          if (depth %in% .int_depths)
+            stop("use an integer array for integer depths (CV_8U, CV_16U, CV_16S)",
+                 call. = FALSE)
+          private$.ptr <- rt_image_from_double_array(x, colorspace, depth)
+        } else {
+          if (!is.integer(x)) storage.mode(x) <- "integer"
+          if (is.null(depth)) {
+            depth <- "CV_8U"
+            message("Depth not specified. Defaulting to CV_8U.")
+          }
+          if (!depth %in% .valid_depths)
+            stop("depth must be one of: CV_8U, CV_16U, CV_16S, CV_32F, CV_64F",
+                 call. = FALSE)
+          if (depth %in% .dbl_depths)
+            stop("use a double array for float depths (CV_32F, CV_64F)",
+                 call. = FALSE)
+          private$.ptr <- rt_image_from_integer_array(x, colorspace, depth)
+        }
       } else if (inherits(x, "externalptr")) {
         private$.ptr <- x
       } else {
@@ -65,11 +91,17 @@ Image <- R6::R6Class("Image",
       }
     },
 
-    #' @description Convert the image to a 3D integer array (nrow x ncol x nchan).
-    #'   Values are in [0, 255] for 8-bit images.
-    #' @return An integer array with dimensions \code{[nrow, ncol, nchan]}.
+    #' @description Convert the image to an array (nrow x ncol x nchan).
+    #'   Returns an integer array for \code{CV_8U}, \code{CV_16U}, and
+    #'   \code{CV_16S} images; a double array for \code{CV_32F} and
+    #'   \code{CV_64F} images.
+    #' @return An array with dimensions \code{[nrow, ncol, nchan]}.
     to_array = function() {
-      rt_image_to_array(private$.ptr)
+      if (self$depth %in% c(0L, 2L, 3L)) {
+        rt_image_to_integer_array(private$.ptr)
+      } else {
+        rt_image_to_double_array(private$.ptr)
+      }
     },
 
     #' @description Display the image using R's graphics device.
@@ -122,6 +154,29 @@ Image <- R6::R6Class("Image",
     #' @return \code{self} invisibly.
     convert_color_ = function(to) {
       private$.ptr <- rt_image_convert_color(private$.ptr, self$colorspace, to)
+      invisible(self)
+    },
+
+    #' @description Convert to a new bit depth. Returns a new Image.
+    #' @param to Character. Target depth, one of \code{"CV_8U"}, \code{"CV_16U"},
+    #'   \code{"CV_16S"}, \code{"CV_32F"}, \code{"CV_64F"}.
+    #' @return A new \code{Image}.
+    convert_depth = function(to) {
+      if (!to %in% c("CV_8U", "CV_16U", "CV_16S", "CV_32F", "CV_64F"))
+        stop("depth must be one of: CV_8U, CV_16U, CV_16S, CV_32F, CV_64F",
+             call. = FALSE)
+      Image$new(rt_image_convert_depth(private$.ptr, to))
+    },
+
+    #' @description Convert to a new bit depth in place.
+    #' @param to Character. Target depth, one of \code{"CV_8U"}, \code{"CV_16U"},
+    #'   \code{"CV_16S"}, \code{"CV_32F"}, \code{"CV_64F"}.
+    #' @return \code{self} invisibly.
+    convert_depth_ = function(to) {
+      if (!to %in% c("CV_8U", "CV_16U", "CV_16S", "CV_32F", "CV_64F"))
+        stop("depth must be one of: CV_8U, CV_16U, CV_16S, CV_32F, CV_64F",
+             call. = FALSE)
+      private$.ptr <- rt_image_convert_depth(private$.ptr, to)
       invisible(self)
     },
 
@@ -238,7 +293,7 @@ Image <- R6::R6Class("Image",
     #' @param other An \code{Image} or a numeric vector (length 1 or \code{nchan}).
     #' @return A new \code{Image}.
     add = function(other) {
-      Image$new(.rt_arith(private$.ptr, other, self$nchan,
+      Image$new(.rt_arith(private$.ptr, other, self$nchan, self$depth,
                           rt_image_add_image, rt_image_add_scalar))
     },
 
@@ -246,7 +301,7 @@ Image <- R6::R6Class("Image",
     #' @param other An \code{Image} or a numeric vector (length 1 or \code{nchan}).
     #' @return \code{self} invisibly.
     add_ = function(other) {
-      private$.ptr <- .rt_arith(private$.ptr, other, self$nchan,
+      private$.ptr <- .rt_arith(private$.ptr, other, self$nchan, self$depth,
                                 rt_image_add_image, rt_image_add_scalar)
       invisible(self)
     },
@@ -255,7 +310,7 @@ Image <- R6::R6Class("Image",
     #' @param other An \code{Image} or a numeric vector (length 1 or \code{nchan}).
     #' @return A new \code{Image}.
     subtract = function(other) {
-      Image$new(.rt_arith(private$.ptr, other, self$nchan,
+      Image$new(.rt_arith(private$.ptr, other, self$nchan, self$depth,
                           rt_image_subtract_image, rt_image_subtract_scalar))
     },
 
@@ -263,7 +318,7 @@ Image <- R6::R6Class("Image",
     #' @param other An \code{Image} or a numeric vector (length 1 or \code{nchan}).
     #' @return \code{self} invisibly.
     subtract_ = function(other) {
-      private$.ptr <- .rt_arith(private$.ptr, other, self$nchan,
+      private$.ptr <- .rt_arith(private$.ptr, other, self$nchan, self$depth,
                                 rt_image_subtract_image, rt_image_subtract_scalar)
       invisible(self)
     },
@@ -272,7 +327,7 @@ Image <- R6::R6Class("Image",
     #' @param other An \code{Image} or a numeric vector (length 1 or \code{nchan}).
     #' @return A new \code{Image}.
     multiply = function(other) {
-      Image$new(.rt_arith(private$.ptr, other, self$nchan,
+      Image$new(.rt_arith(private$.ptr, other, self$nchan, self$depth,
                           rt_image_multiply_image, rt_image_multiply_scalar))
     },
 
@@ -280,7 +335,7 @@ Image <- R6::R6Class("Image",
     #' @param other An \code{Image} or a numeric vector (length 1 or \code{nchan}).
     #' @return \code{self} invisibly.
     multiply_ = function(other) {
-      private$.ptr <- .rt_arith(private$.ptr, other, self$nchan,
+      private$.ptr <- .rt_arith(private$.ptr, other, self$nchan, self$depth,
                                 rt_image_multiply_image, rt_image_multiply_scalar)
       invisible(self)
     },
@@ -289,7 +344,7 @@ Image <- R6::R6Class("Image",
     #' @param other An \code{Image} or a numeric vector (length 1 or \code{nchan}).
     #' @return A new \code{Image}.
     divide = function(other) {
-      Image$new(.rt_arith(private$.ptr, other, self$nchan,
+      Image$new(.rt_arith(private$.ptr, other, self$nchan, self$depth,
                           rt_image_divide_image, rt_image_divide_scalar))
     },
 
@@ -297,7 +352,7 @@ Image <- R6::R6Class("Image",
     #' @param other An \code{Image} or a numeric vector (length 1 or \code{nchan}).
     #' @return \code{self} invisibly.
     divide_ = function(other) {
-      private$.ptr <- .rt_arith(private$.ptr, other, self$nchan,
+      private$.ptr <- .rt_arith(private$.ptr, other, self$nchan, self$depth,
                                 rt_image_divide_image, rt_image_divide_scalar)
       invisible(self)
     },
@@ -306,7 +361,7 @@ Image <- R6::R6Class("Image",
     #' @param other An \code{Image} or a numeric vector (length 1 or \code{nchan}).
     #' @return A new \code{Image}.
     absdiff = function(other) {
-      Image$new(.rt_arith(private$.ptr, other, self$nchan,
+      Image$new(.rt_arith(private$.ptr, other, self$nchan, self$depth,
                           rt_image_absdiff_image, rt_image_absdiff_scalar))
     },
 
@@ -314,7 +369,7 @@ Image <- R6::R6Class("Image",
     #' @param other An \code{Image} or a numeric vector (length 1 or \code{nchan}).
     #' @return \code{self} invisibly.
     absdiff_ = function(other) {
-      private$.ptr <- .rt_arith(private$.ptr, other, self$nchan,
+      private$.ptr <- .rt_arith(private$.ptr, other, self$nchan, self$depth,
                                 rt_image_absdiff_image, rt_image_absdiff_scalar)
       invisible(self)
     },
@@ -360,7 +415,7 @@ Image <- R6::R6Class("Image",
     #' @param other An \code{Image} or a numeric vector (length 1 or \code{nchan}).
     #' @return A new \code{Image}.
     bitwise_and = function(other) {
-      Image$new(.rt_arith(private$.ptr, other, self$nchan,
+      Image$new(.rt_arith(private$.ptr, other, self$nchan, self$depth,
                           rt_image_bitwise_and_image, rt_image_bitwise_and_scalar))
     },
 
@@ -368,7 +423,7 @@ Image <- R6::R6Class("Image",
     #' @param other An \code{Image} or a numeric vector (length 1 or \code{nchan}).
     #' @return \code{self} invisibly.
     bitwise_and_ = function(other) {
-      private$.ptr <- .rt_arith(private$.ptr, other, self$nchan,
+      private$.ptr <- .rt_arith(private$.ptr, other, self$nchan, self$depth,
                                 rt_image_bitwise_and_image, rt_image_bitwise_and_scalar)
       invisible(self)
     },
@@ -377,7 +432,7 @@ Image <- R6::R6Class("Image",
     #' @param other An \code{Image} or a numeric vector (length 1 or \code{nchan}).
     #' @return A new \code{Image}.
     bitwise_or = function(other) {
-      Image$new(.rt_arith(private$.ptr, other, self$nchan,
+      Image$new(.rt_arith(private$.ptr, other, self$nchan, self$depth,
                           rt_image_bitwise_or_image, rt_image_bitwise_or_scalar))
     },
 
@@ -385,7 +440,7 @@ Image <- R6::R6Class("Image",
     #' @param other An \code{Image} or a numeric vector (length 1 or \code{nchan}).
     #' @return \code{self} invisibly.
     bitwise_or_ = function(other) {
-      private$.ptr <- .rt_arith(private$.ptr, other, self$nchan,
+      private$.ptr <- .rt_arith(private$.ptr, other, self$nchan, self$depth,
                                 rt_image_bitwise_or_image, rt_image_bitwise_or_scalar)
       invisible(self)
     },
@@ -394,7 +449,7 @@ Image <- R6::R6Class("Image",
     #' @param other An \code{Image} or a numeric vector (length 1 or \code{nchan}).
     #' @return A new \code{Image}.
     bitwise_xor = function(other) {
-      Image$new(.rt_arith(private$.ptr, other, self$nchan,
+      Image$new(.rt_arith(private$.ptr, other, self$nchan, self$depth,
                           rt_image_bitwise_xor_image, rt_image_bitwise_xor_scalar))
     },
 
@@ -402,7 +457,7 @@ Image <- R6::R6Class("Image",
     #' @param other An \code{Image} or a numeric vector (length 1 or \code{nchan}).
     #' @return \code{self} invisibly.
     bitwise_xor_ = function(other) {
-      private$.ptr <- .rt_arith(private$.ptr, other, self$nchan,
+      private$.ptr <- .rt_arith(private$.ptr, other, self$nchan, self$depth,
                                 rt_image_bitwise_xor_image, rt_image_bitwise_xor_scalar)
       invisible(self)
     },
@@ -516,6 +571,8 @@ Image <- R6::R6Class("Image",
     #'   space.
     #' @return A new \code{Image}.
     bilateral_filter = function(d, sigma_color, sigma_space) {
+      if (!self$depth_name %in% c("CV_8U", "CV_32F"))
+        stop("bilateral_filter requires a CV_8U or CV_32F image", call. = FALSE)
       if (!is.numeric(d) || length(d) != 1L)
         stop("d must be a single integer", call. = FALSE)
       if (!is.numeric(sigma_color) || length(sigma_color) != 1L || sigma_color <= 0 ||
@@ -535,6 +592,8 @@ Image <- R6::R6Class("Image",
     #'   space.
     #' @return \code{self} invisibly.
     bilateral_filter_ = function(d, sigma_color, sigma_space) {
+      if (!self$depth_name %in% c("CV_8U", "CV_32F"))
+        stop("bilateral_filter requires a CV_8U or CV_32F image", call. = FALSE)
       if (!is.numeric(d) || length(d) != 1L)
         stop("d must be a single integer", call. = FALSE)
       if (!is.numeric(sigma_color) || length(sigma_color) != 1L || sigma_color <= 0 ||
