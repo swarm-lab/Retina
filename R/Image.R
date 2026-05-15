@@ -797,7 +797,7 @@ Image <- R6::R6Class("Image",
     #' @description Detect edges using the Canny algorithm. Returns a new
     #'   single-channel CV_8U Image with pixel values 0 (no edge) or 255
     #'   (edge). Input must be a single-channel grayscale image.
-    #' @param low_threshold Single positive numeric. Lower hysteresis threshold.
+    #' @param low_threshold Single non-negative numeric. Lower hysteresis threshold.
     #' @param high_threshold Single positive numeric. Upper hysteresis
     #'   threshold. Must be >= \code{low_threshold}.
     #' @param aperture_size Integer. Size of the Sobel kernel used internally:
@@ -827,7 +827,7 @@ Image <- R6::R6Class("Image",
     },
 
     #' @description Canny edge detection in place.
-    #' @param low_threshold Single positive numeric. Lower hysteresis threshold.
+    #' @param low_threshold Single non-negative numeric. Lower hysteresis threshold.
     #' @param high_threshold Single positive numeric. Upper hysteresis
     #'   threshold. Must be >= \code{low_threshold}.
     #' @param aperture_size Integer. Size of the Sobel kernel: 3, 5, or 7.
