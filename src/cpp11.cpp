@@ -187,6 +187,20 @@ extern "C" SEXP _Retina_rt_image_bilateral_filter(SEXP img, SEXP d, SEXP sigma_c
     return cpp11::as_sexp(rt_image_bilateral_filter(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<int>>(d), cpp11::as_cpp<cpp11::decay_t<double>>(sigma_color), cpp11::as_cpp<cpp11::decay_t<double>>(sigma_space)));
   END_CPP11
 }
+// filters.cpp
+external_pointer<RtImage> rt_image_sobel(external_pointer<RtImage> img, int dx, int dy, int ksize, std::string ddepth, double scale, double delta, std::string border_type);
+extern "C" SEXP _Retina_rt_image_sobel(SEXP img, SEXP dx, SEXP dy, SEXP ksize, SEXP ddepth, SEXP scale, SEXP delta, SEXP border_type) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_image_sobel(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<int>>(dx), cpp11::as_cpp<cpp11::decay_t<int>>(dy), cpp11::as_cpp<cpp11::decay_t<int>>(ksize), cpp11::as_cpp<cpp11::decay_t<std::string>>(ddepth), cpp11::as_cpp<cpp11::decay_t<double>>(scale), cpp11::as_cpp<cpp11::decay_t<double>>(delta), cpp11::as_cpp<cpp11::decay_t<std::string>>(border_type)));
+  END_CPP11
+}
+// filters.cpp
+external_pointer<RtImage> rt_image_laplacian(external_pointer<RtImage> img, int ksize, std::string ddepth, double scale, double delta, std::string border_type);
+extern "C" SEXP _Retina_rt_image_laplacian(SEXP img, SEXP ksize, SEXP ddepth, SEXP scale, SEXP delta, SEXP border_type) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_image_laplacian(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<int>>(ksize), cpp11::as_cpp<cpp11::decay_t<std::string>>(ddepth), cpp11::as_cpp<cpp11::decay_t<double>>(scale), cpp11::as_cpp<cpp11::decay_t<double>>(delta), cpp11::as_cpp<cpp11::decay_t<std::string>>(border_type)));
+  END_CPP11
+}
 // image.cpp
 bool rt_build_ok();
 extern "C" SEXP _Retina_rt_build_ok() {
@@ -404,6 +418,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_Retina_rt_image_from_integer_array", (DL_FUNC) &_Retina_rt_image_from_integer_array, 3},
     {"_Retina_rt_image_gaussian_blur",      (DL_FUNC) &_Retina_rt_image_gaussian_blur,      5},
     {"_Retina_rt_image_is_gpu",             (DL_FUNC) &_Retina_rt_image_is_gpu,             1},
+    {"_Retina_rt_image_laplacian",          (DL_FUNC) &_Retina_rt_image_laplacian,          6},
     {"_Retina_rt_image_max",                (DL_FUNC) &_Retina_rt_image_max,                1},
     {"_Retina_rt_image_mean",               (DL_FUNC) &_Retina_rt_image_mean,               1},
     {"_Retina_rt_image_median",             (DL_FUNC) &_Retina_rt_image_median,             1},
@@ -418,6 +433,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_Retina_rt_image_read",               (DL_FUNC) &_Retina_rt_image_read,               1},
     {"_Retina_rt_image_sd",                 (DL_FUNC) &_Retina_rt_image_sd,                 1},
     {"_Retina_rt_image_set_colorspace",     (DL_FUNC) &_Retina_rt_image_set_colorspace,     2},
+    {"_Retina_rt_image_sobel",              (DL_FUNC) &_Retina_rt_image_sobel,              8},
     {"_Retina_rt_image_subtract_image",     (DL_FUNC) &_Retina_rt_image_subtract_image,     2},
     {"_Retina_rt_image_subtract_scalar",    (DL_FUNC) &_Retina_rt_image_subtract_scalar,    2},
     {"_Retina_rt_image_sum",                (DL_FUNC) &_Retina_rt_image_sum,                1},

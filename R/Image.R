@@ -644,6 +644,151 @@ Image <- R6::R6Class("Image",
       invisible(self)
     },
 
+    #' @description Apply the Sobel operator to compute image gradients. Returns
+    #'   a new Image.
+    #' @param dx Non-negative integer. Order of x derivative.
+    #' @param dy Non-negative integer. Order of y derivative.
+    #'   \code{dx + dy} must be >= 1.
+    #' @param ksize Integer. Sobel kernel aperture size: 1, 3, 5, or 7.
+    #'   The limit of 7 is an OpenCV requirement.
+    #' @param ddepth Character. Output depth: \code{"CV_16S"}, \code{"CV_32F"},
+    #'   or \code{"CV_64F"}. Default \code{"CV_32F"}.
+    #' @param scale Single positive numeric. Optional scale factor for the
+    #'   computed derivatives. Default 1.
+    #' @param delta Single numeric. Optional delta added to results before
+    #'   storing. Default 0.
+    #' @param border_type Character. Pixel extrapolation method. One of
+    #'   \code{"default"}, \code{"reflect"}, \code{"reflect_101"},
+    #'   \code{"replicate"}, \code{"constant"}, \code{"wrap"}.
+    #' @return A new \code{Image}.
+    sobel = function(dx, dy, ksize = 3, ddepth = "CV_32F",
+                     scale = 1, delta = 0, border_type = "default") {
+      .valid_border <- c("default", "reflect", "reflect_101",
+                         "replicate", "constant", "wrap")
+      if (!is.numeric(dx) || !is.numeric(dy) ||
+          length(dx) != 1L || length(dy) != 1L ||
+          dx < 0 || dy < 0 || (dx + dy) < 1)
+        stop("dx and dy must be non-negative integers with dx + dy >= 1",
+             call. = FALSE)
+      if (!ksize %in% c(1L, 3L, 5L, 7L))
+        stop("ksize must be 1, 3, 5, or 7", call. = FALSE)
+      if (!ddepth %in% c("CV_16S", "CV_32F", "CV_64F"))
+        stop("ddepth must be one of: CV_16S, CV_32F, CV_64F", call. = FALSE)
+      if (!is.numeric(scale) || length(scale) != 1L || scale <= 0)
+        stop("scale must be a single positive numeric value", call. = FALSE)
+      if (!is.numeric(delta) || length(delta) != 1L)
+        stop("delta must be a single numeric value", call. = FALSE)
+      if (!border_type %in% .valid_border)
+        stop("border_type must be one of: default, reflect, reflect_101, replicate, constant, wrap",
+             call. = FALSE)
+      Image$new(rt_image_sobel(private$.ptr, as.integer(dx), as.integer(dy),
+                               as.integer(ksize), ddepth, as.double(scale),
+                               as.double(delta), border_type))
+    },
+
+    #' @description Sobel operator in place.
+    #' @param dx Non-negative integer. Order of x derivative.
+    #' @param dy Non-negative integer. Order of y derivative.
+    #'   \code{dx + dy} must be >= 1.
+    #' @param ksize Integer. Sobel kernel aperture size: 1, 3, 5, or 7.
+    #' @param ddepth Character. Output depth: \code{"CV_16S"}, \code{"CV_32F"},
+    #'   or \code{"CV_64F"}. Default \code{"CV_32F"}.
+    #' @param scale Single positive numeric. Scale factor. Default 1.
+    #' @param delta Single numeric. Delta added to results. Default 0.
+    #' @param border_type Character. Pixel extrapolation method. One of
+    #'   \code{"default"}, \code{"reflect"}, \code{"reflect_101"},
+    #'   \code{"replicate"}, \code{"constant"}, \code{"wrap"}.
+    #' @return \code{self} invisibly.
+    sobel_ = function(dx, dy, ksize = 3, ddepth = "CV_32F",
+                      scale = 1, delta = 0, border_type = "default") {
+      .valid_border <- c("default", "reflect", "reflect_101",
+                         "replicate", "constant", "wrap")
+      if (!is.numeric(dx) || !is.numeric(dy) ||
+          length(dx) != 1L || length(dy) != 1L ||
+          dx < 0 || dy < 0 || (dx + dy) < 1)
+        stop("dx and dy must be non-negative integers with dx + dy >= 1",
+             call. = FALSE)
+      if (!ksize %in% c(1L, 3L, 5L, 7L))
+        stop("ksize must be 1, 3, 5, or 7", call. = FALSE)
+      if (!ddepth %in% c("CV_16S", "CV_32F", "CV_64F"))
+        stop("ddepth must be one of: CV_16S, CV_32F, CV_64F", call. = FALSE)
+      if (!is.numeric(scale) || length(scale) != 1L || scale <= 0)
+        stop("scale must be a single positive numeric value", call. = FALSE)
+      if (!is.numeric(delta) || length(delta) != 1L)
+        stop("delta must be a single numeric value", call. = FALSE)
+      if (!border_type %in% .valid_border)
+        stop("border_type must be one of: default, reflect, reflect_101, replicate, constant, wrap",
+             call. = FALSE)
+      private$.ptr <- rt_image_sobel(private$.ptr, as.integer(dx), as.integer(dy),
+                                     as.integer(ksize), ddepth, as.double(scale),
+                                     as.double(delta), border_type)
+      invisible(self)
+    },
+
+    #' @description Apply the Laplacian operator to detect edges. Returns a new
+    #'   Image.
+    #' @param ksize Integer. Aperture size for the Laplacian kernel: 1, 3, 5,
+    #'   or 7. \code{ksize = 1} uses the 3-point central-difference stencil.
+    #'   Default 1.
+    #' @param ddepth Character. Output depth: \code{"CV_16S"}, \code{"CV_32F"},
+    #'   or \code{"CV_64F"}. Default \code{"CV_32F"}.
+    #' @param scale Single positive numeric. Optional scale factor. Default 1.
+    #' @param delta Single numeric. Optional delta added to results. Default 0.
+    #' @param border_type Character. Pixel extrapolation method. One of
+    #'   \code{"default"}, \code{"reflect"}, \code{"reflect_101"},
+    #'   \code{"replicate"}, \code{"constant"}, \code{"wrap"}.
+    #' @return A new \code{Image}.
+    laplacian = function(ksize = 1, ddepth = "CV_32F",
+                         scale = 1, delta = 0, border_type = "default") {
+      .valid_border <- c("default", "reflect", "reflect_101",
+                         "replicate", "constant", "wrap")
+      if (!ksize %in% c(1L, 3L, 5L, 7L))
+        stop("ksize must be 1, 3, 5, or 7", call. = FALSE)
+      if (!ddepth %in% c("CV_16S", "CV_32F", "CV_64F"))
+        stop("ddepth must be one of: CV_16S, CV_32F, CV_64F", call. = FALSE)
+      if (!is.numeric(scale) || length(scale) != 1L || scale <= 0)
+        stop("scale must be a single positive numeric value", call. = FALSE)
+      if (!is.numeric(delta) || length(delta) != 1L)
+        stop("delta must be a single numeric value", call. = FALSE)
+      if (!border_type %in% .valid_border)
+        stop("border_type must be one of: default, reflect, reflect_101, replicate, constant, wrap",
+             call. = FALSE)
+      Image$new(rt_image_laplacian(private$.ptr, as.integer(ksize), ddepth,
+                                   as.double(scale), as.double(delta),
+                                   border_type))
+    },
+
+    #' @description Laplacian operator in place.
+    #' @param ksize Integer. Aperture size: 1, 3, 5, or 7. Default 1.
+    #' @param ddepth Character. Output depth: \code{"CV_16S"}, \code{"CV_32F"},
+    #'   or \code{"CV_64F"}. Default \code{"CV_32F"}.
+    #' @param scale Single positive numeric. Scale factor. Default 1.
+    #' @param delta Single numeric. Delta added to results. Default 0.
+    #' @param border_type Character. Pixel extrapolation method. One of
+    #'   \code{"default"}, \code{"reflect"}, \code{"reflect_101"},
+    #'   \code{"replicate"}, \code{"constant"}, \code{"wrap"}.
+    #' @return \code{self} invisibly.
+    laplacian_ = function(ksize = 1, ddepth = "CV_32F",
+                          scale = 1, delta = 0, border_type = "default") {
+      .valid_border <- c("default", "reflect", "reflect_101",
+                         "replicate", "constant", "wrap")
+      if (!ksize %in% c(1L, 3L, 5L, 7L))
+        stop("ksize must be 1, 3, 5, or 7", call. = FALSE)
+      if (!ddepth %in% c("CV_16S", "CV_32F", "CV_64F"))
+        stop("ddepth must be one of: CV_16S, CV_32F, CV_64F", call. = FALSE)
+      if (!is.numeric(scale) || length(scale) != 1L || scale <= 0)
+        stop("scale must be a single positive numeric value", call. = FALSE)
+      if (!is.numeric(delta) || length(delta) != 1L)
+        stop("delta must be a single numeric value", call. = FALSE)
+      if (!border_type %in% .valid_border)
+        stop("border_type must be one of: default, reflect, reflect_101, replicate, constant, wrap",
+             call. = FALSE)
+      private$.ptr <- rt_image_laplacian(private$.ptr, as.integer(ksize),
+                                         ddepth, as.double(scale),
+                                         as.double(delta), border_type)
+      invisible(self)
+    },
+
     #' @description Print a summary of the image.
     #' @param ... Ignored.
     #' @return \code{self} invisibly.

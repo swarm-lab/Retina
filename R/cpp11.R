@@ -104,6 +104,14 @@ rt_image_bilateral_filter <- function(img, d, sigma_color, sigma_space) {
   .Call(`_Retina_rt_image_bilateral_filter`, img, d, sigma_color, sigma_space)
 }
 
+rt_image_sobel <- function(img, dx, dy, ksize, ddepth, scale, delta, border_type) {
+  .Call(`_Retina_rt_image_sobel`, img, dx, dy, ksize, ddepth, scale, delta, border_type)
+}
+
+rt_image_laplacian <- function(img, ksize, ddepth, scale, delta, border_type) {
+  .Call(`_Retina_rt_image_laplacian`, img, ksize, ddepth, scale, delta, border_type)
+}
+
 rt_build_ok <- function() {
   .Call(`_Retina_rt_build_ok`)
 }

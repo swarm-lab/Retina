@@ -50,3 +50,52 @@ external_pointer<RtImage> rt_image_bilateral_filter(
   cv::bilateralFilter(get_cpu_mat(img), dst, d, sigma_color, sigma_space);
   return {new RtImage(std::move(dst), img->colorspace)};
 }
+
+// ── Shared helpers ────────────────────────────────────────────────────────────
+
+static int cv_border_type(const std::string& border_type) {
+  if      (border_type == "default" ||
+           border_type == "reflect_101") return cv::BORDER_DEFAULT;
+  else if (border_type == "reflect")    return cv::BORDER_REFLECT;
+  else if (border_type == "replicate")  return cv::BORDER_REPLICATE;
+  else if (border_type == "constant")   return cv::BORDER_CONSTANT;
+  else if (border_type == "wrap")       return cv::BORDER_WRAP;
+  else stop("unsupported border_type: %s", border_type.c_str());
+  return -1;
+}
+
+static int cv_ddepth(const std::string& ddepth) {
+  if      (ddepth == "CV_16S") return CV_16S;
+  else if (ddepth == "CV_32F") return CV_32F;
+  else if (ddepth == "CV_64F") return CV_64F;
+  else stop("unsupported ddepth: %s", ddepth.c_str());
+  return -1;
+}
+
+// ── sobel ─────────────────────────────────────────────────────────────────────
+
+[[cpp11::register]]
+external_pointer<RtImage> rt_image_sobel(
+    external_pointer<RtImage> img,
+    int dx, int dy, int ksize,
+    std::string ddepth, double scale, double delta,
+    std::string border_type) {
+  cv::Mat dst;
+  cv::Sobel(get_cpu_mat(img), dst, cv_ddepth(ddepth), dx, dy, ksize,
+            scale, delta, cv_border_type(border_type));
+  return {new RtImage(std::move(dst), img->colorspace)};
+}
+
+// ── laplacian ─────────────────────────────────────────────────────────────────
+
+[[cpp11::register]]
+external_pointer<RtImage> rt_image_laplacian(
+    external_pointer<RtImage> img,
+    int ksize,
+    std::string ddepth, double scale, double delta,
+    std::string border_type) {
+  cv::Mat dst;
+  cv::Laplacian(get_cpu_mat(img), dst, cv_ddepth(ddepth), ksize,
+                scale, delta, cv_border_type(border_type));
+  return {new RtImage(std::move(dst), img->colorspace)};
+}
