@@ -117,7 +117,6 @@ Image <- R6::R6Class("Image",
     #' @return \code{self} invisibly.
     plot = function(...) {
       nr <- rt_image_to_native_raster(private$.ptr)
-      grid::grid.newpage()
       grid::grid.raster(nr, ...)
       invisible(self)
     },
