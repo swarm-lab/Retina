@@ -902,6 +902,131 @@ Image <- R6::R6Class("Image",
       invisible(self)
     },
 
+    #' @description Apply a morphological operation. Returns a new Image.
+    #' @param operation Character. One of \code{"erode"}, \code{"dilate"},
+    #'   \code{"open"}, \code{"close"}, \code{"gradient"}, \code{"tophat"},
+    #'   \code{"blackhat"}.
+    #' @param shape Character. Structuring element shape: \code{"rect"},
+    #'   \code{"cross"}, or \code{"ellipse"}. Ignored when \code{kernel} is
+    #'   supplied. Default \code{"rect"}.
+    #' @param size Positive odd integer. Side length of the structuring element.
+    #'   Ignored when \code{kernel} is supplied. Default \code{3L}.
+    #' @param kernel Optional numeric matrix used as the structuring element.
+    #'   Values are coerced to integers. Overrides
+    #'   \code{shape} and \code{size} when supplied.
+    #' @param iterations Positive integer. Number of times the operation is
+    #'   applied. Default \code{1L}.
+    #' @param border_type Character. Pixel extrapolation method. One of
+    #'   \code{"default"}, \code{"reflect"}, \code{"reflect_101"},
+    #'   \code{"replicate"}, \code{"constant"}, \code{"wrap"}.
+    #'   Default \code{"default"}.
+    #' @return A new \code{Image}.
+    #' @examples
+    #' \donttest{
+    #' img_path <- system.file("img", "flower.jpg", package = "Retina")
+    #' img <- Image$new(img_path)$convert_color("GRAY")
+    #' eroded <- img$morph("erode")
+    #' eroded$plot()
+    #' }
+    morph = function(operation, shape = "rect", size = 3L,
+                     kernel = NULL, iterations = 1L,
+                     border_type = "default") {
+      .valid_ops    <- c("erode", "dilate", "open", "close",
+                         "gradient", "tophat", "blackhat")
+      .valid_shapes <- c("rect", "cross", "ellipse")
+      .valid_border <- c("default", "reflect", "reflect_101",
+                         "replicate", "constant", "wrap")
+      if (!is.character(operation) || length(operation) != 1L ||
+          !operation %in% .valid_ops)
+        stop("operation must be one of: erode, dilate, open, close, gradient, tophat, blackhat",
+             call. = FALSE)
+      if (!is.character(shape) || length(shape) != 1L || !shape %in% .valid_shapes)
+        stop("shape must be one of: rect, cross, ellipse", call. = FALSE)
+      size <- as.integer(size)
+      if (length(size) != 1L || is.na(size) || size < 1L || size %% 2L == 0L)
+        stop("size must be a single positive odd integer", call. = FALSE)
+      if (!is.null(kernel) && !is.matrix(kernel))
+        stop("kernel must be a numeric matrix", call. = FALSE)
+      iterations <- as.integer(iterations)
+      if (length(iterations) != 1L || is.na(iterations) || iterations < 1L)
+        stop("iterations must be a single positive integer", call. = FALSE)
+      if (!is.character(border_type) || length(border_type) != 1L ||
+          !border_type %in% .valid_border)
+        stop("border_type must be one of: default, reflect, reflect_101, replicate, constant, wrap",
+             call. = FALSE)
+      if (is.null(kernel)) {
+        Image$new(rt_image_morph(private$.ptr, operation, shape, size,
+                                 iterations, border_type))
+      } else {
+        k <- matrix(as.integer(kernel), nrow = nrow(kernel))
+        Image$new(rt_image_morph_custom(private$.ptr, operation, k,
+                                        iterations, border_type))
+      }
+    },
+
+    #' @description Apply a morphological operation in place.
+    #' @param operation Character. One of \code{"erode"}, \code{"dilate"},
+    #'   \code{"open"}, \code{"close"}, \code{"gradient"}, \code{"tophat"},
+    #'   \code{"blackhat"}.
+    #' @param shape Character. Structuring element shape: \code{"rect"},
+    #'   \code{"cross"}, or \code{"ellipse"}. Ignored when \code{kernel} is
+    #'   supplied. Default \code{"rect"}.
+    #' @param size Positive odd integer. Side length of the structuring element.
+    #'   Ignored when \code{kernel} is supplied. Default \code{3L}.
+    #' @param kernel Optional numeric matrix used as the structuring element.
+    #'   Values are coerced to integers. Overrides
+    #'   \code{shape} and \code{size} when supplied.
+    #' @param iterations Positive integer. Number of times the operation is
+    #'   applied. Default \code{1L}.
+    #' @param border_type Character. Pixel extrapolation method. One of
+    #'   \code{"default"}, \code{"reflect"}, \code{"reflect_101"},
+    #'   \code{"replicate"}, \code{"constant"}, \code{"wrap"}.
+    #'   Default \code{"default"}.
+    #' @return \code{self} invisibly.
+    #' @examples
+    #' \donttest{
+    #' img_path <- system.file("img", "flower.jpg", package = "Retina")
+    #' img <- Image$new(img_path)$convert_color("GRAY")
+    #' img$morph_("erode")
+    #' img$plot()
+    #' }
+    morph_ = function(operation, shape = "rect", size = 3L,
+                      kernel = NULL, iterations = 1L,
+                      border_type = "default") {
+      .valid_ops    <- c("erode", "dilate", "open", "close",
+                         "gradient", "tophat", "blackhat")
+      .valid_shapes <- c("rect", "cross", "ellipse")
+      .valid_border <- c("default", "reflect", "reflect_101",
+                         "replicate", "constant", "wrap")
+      if (!is.character(operation) || length(operation) != 1L ||
+          !operation %in% .valid_ops)
+        stop("operation must be one of: erode, dilate, open, close, gradient, tophat, blackhat",
+             call. = FALSE)
+      if (!is.character(shape) || length(shape) != 1L || !shape %in% .valid_shapes)
+        stop("shape must be one of: rect, cross, ellipse", call. = FALSE)
+      size <- as.integer(size)
+      if (length(size) != 1L || is.na(size) || size < 1L || size %% 2L == 0L)
+        stop("size must be a single positive odd integer", call. = FALSE)
+      if (!is.null(kernel) && !is.matrix(kernel))
+        stop("kernel must be a numeric matrix", call. = FALSE)
+      iterations <- as.integer(iterations)
+      if (length(iterations) != 1L || is.na(iterations) || iterations < 1L)
+        stop("iterations must be a single positive integer", call. = FALSE)
+      if (!is.character(border_type) || length(border_type) != 1L ||
+          !border_type %in% .valid_border)
+        stop("border_type must be one of: default, reflect, reflect_101, replicate, constant, wrap",
+             call. = FALSE)
+      if (is.null(kernel)) {
+        private$.ptr <- rt_image_morph(private$.ptr, operation, shape, size,
+                                       iterations, border_type)
+      } else {
+        k <- matrix(as.integer(kernel), nrow = nrow(kernel))
+        private$.ptr <- rt_image_morph_custom(private$.ptr, operation, k,
+                                              iterations, border_type)
+      }
+      invisible(self)
+    },
+
     #' @description Print a summary of the image.
     #' @param ... Ignored.
     #' @return \code{self} invisibly.

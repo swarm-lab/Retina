@@ -352,6 +352,20 @@ extern "C" SEXP _Retina_rt_image_convert_depth(SEXP img, SEXP depth) {
     return cpp11::as_sexp(rt_image_convert_depth(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<std::string>>(depth)));
   END_CPP11
 }
+// morphology.cpp
+external_pointer<RtImage> rt_image_morph(external_pointer<RtImage> img, std::string op, std::string shape, int size, int iterations, std::string border_type);
+extern "C" SEXP _Retina_rt_image_morph(SEXP img, SEXP op, SEXP shape, SEXP size, SEXP iterations, SEXP border_type) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_image_morph(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<std::string>>(op), cpp11::as_cpp<cpp11::decay_t<std::string>>(shape), cpp11::as_cpp<cpp11::decay_t<int>>(size), cpp11::as_cpp<cpp11::decay_t<int>>(iterations), cpp11::as_cpp<cpp11::decay_t<std::string>>(border_type)));
+  END_CPP11
+}
+// morphology.cpp
+external_pointer<RtImage> rt_image_morph_custom(external_pointer<RtImage> img, std::string op, cpp11::integers custom_kernel, int iterations, std::string border_type);
+extern "C" SEXP _Retina_rt_image_morph_custom(SEXP img, SEXP op, SEXP custom_kernel, SEXP iterations, SEXP border_type) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_image_morph_custom(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<std::string>>(op), cpp11::as_cpp<cpp11::decay_t<cpp11::integers>>(custom_kernel), cpp11::as_cpp<cpp11::decay_t<int>>(iterations), cpp11::as_cpp<cpp11::decay_t<std::string>>(border_type)));
+  END_CPP11
+}
 // stats.cpp
 doubles rt_image_mean(external_pointer<RtImage> img);
 extern "C" SEXP _Retina_rt_image_mean(SEXP img) {
@@ -447,6 +461,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_Retina_rt_image_median_blur",        (DL_FUNC) &_Retina_rt_image_median_blur,        2},
     {"_Retina_rt_image_merge_channels",     (DL_FUNC) &_Retina_rt_image_merge_channels,     2},
     {"_Retina_rt_image_min",                (DL_FUNC) &_Retina_rt_image_min,                1},
+    {"_Retina_rt_image_morph",              (DL_FUNC) &_Retina_rt_image_morph,              6},
+    {"_Retina_rt_image_morph_custom",       (DL_FUNC) &_Retina_rt_image_morph_custom,       5},
     {"_Retina_rt_image_multiply_image",     (DL_FUNC) &_Retina_rt_image_multiply_image,     2},
     {"_Retina_rt_image_multiply_scalar",    (DL_FUNC) &_Retina_rt_image_multiply_scalar,    2},
     {"_Retina_rt_image_nchan",              (DL_FUNC) &_Retina_rt_image_nchan,              1},

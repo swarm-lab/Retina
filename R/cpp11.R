@@ -196,6 +196,14 @@ rt_image_convert_depth <- function(img, depth) {
   .Call(`_Retina_rt_image_convert_depth`, img, depth)
 }
 
+rt_image_morph <- function(img, op, shape, size, iterations, border_type) {
+  .Call(`_Retina_rt_image_morph`, img, op, shape, size, iterations, border_type)
+}
+
+rt_image_morph_custom <- function(img, op, custom_kernel, iterations, border_type) {
+  .Call(`_Retina_rt_image_morph_custom`, img, op, custom_kernel, iterations, border_type)
+}
+
 rt_image_mean <- function(img) {
   .Call(`_Retina_rt_image_mean`, img)
 }

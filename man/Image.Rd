@@ -79,6 +79,28 @@ img <- Image$new(img_path)$convert_color("GRAY")
 img$canny_(50, 150)
 img$plot()
 }
+
+## ------------------------------------------------
+## Method `Image$morph`
+## ------------------------------------------------
+
+\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)$convert_color("GRAY")
+eroded <- img$morph("erode")
+eroded$plot()
+}
+
+## ------------------------------------------------
+## Method `Image$morph_`
+## ------------------------------------------------
+
+\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)$convert_color("GRAY")
+img$morph_("erode")
+img$plot()
+}
 }
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
@@ -163,6 +185,8 @@ img$plot()
 \item \href{#method-Image-laplacian_}{\code{Image$laplacian_()}}
 \item \href{#method-Image-canny}{\code{Image$canny()}}
 \item \href{#method-Image-canny_}{\code{Image$canny_()}}
+\item \href{#method-Image-morph}{\code{Image$morph()}}
+\item \href{#method-Image-morph_}{\code{Image$morph_()}}
 \item \href{#method-Image-print}{\code{Image$print()}}
 }
 }
@@ -1497,6 +1521,128 @@ Default \code{FALSE}.}
 img_path <- system.file("img", "staircase.jpg", package = "Retina")
 img <- Image$new(img_path)$convert_color("GRAY")
 img$canny_(50, 150)
+img$plot()
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-morph"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-morph}{}}}
+\subsection{Method \code{morph()}}{
+Apply a morphological operation. Returns a new Image.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$morph(
+  operation,
+  shape = "rect",
+  size = 3L,
+  kernel = NULL,
+  iterations = 1L,
+  border_type = "default"
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{operation}}{Character. One of \code{"erode"}, \code{"dilate"},
+\code{"open"}, \code{"close"}, \code{"gradient"}, \code{"tophat"},
+\code{"blackhat"}.}
+
+\item{\code{shape}}{Character. Structuring element shape: \code{"rect"},
+\code{"cross"}, or \code{"ellipse"}. Ignored when \code{kernel} is
+supplied. Default \code{"rect"}.}
+
+\item{\code{size}}{Positive odd integer. Side length of the structuring element.
+Ignored when \code{kernel} is supplied. Default \code{3L}.}
+
+\item{\code{kernel}}{Optional numeric matrix used as the structuring element.
+Values are coerced to integers. Overrides
+\code{shape} and \code{size} when supplied.}
+
+\item{\code{iterations}}{Positive integer. Number of times the operation is
+applied. Default \code{1L}.}
+
+\item{\code{border_type}}{Character. Pixel extrapolation method. One of
+\code{"default"}, \code{"reflect"}, \code{"reflect_101"},
+\code{"replicate"}, \code{"constant"}, \code{"wrap"}.
+Default \code{"default"}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A new \code{Image}.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)$convert_color("GRAY")
+eroded <- img$morph("erode")
+eroded$plot()
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-morph_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-morph_}{}}}
+\subsection{Method \code{morph_()}}{
+Apply a morphological operation in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$morph_(
+  operation,
+  shape = "rect",
+  size = 3L,
+  kernel = NULL,
+  iterations = 1L,
+  border_type = "default"
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{operation}}{Character. One of \code{"erode"}, \code{"dilate"},
+\code{"open"}, \code{"close"}, \code{"gradient"}, \code{"tophat"},
+\code{"blackhat"}.}
+
+\item{\code{shape}}{Character. Structuring element shape: \code{"rect"},
+\code{"cross"}, or \code{"ellipse"}. Ignored when \code{kernel} is
+supplied. Default \code{"rect"}.}
+
+\item{\code{size}}{Positive odd integer. Side length of the structuring element.
+Ignored when \code{kernel} is supplied. Default \code{3L}.}
+
+\item{\code{kernel}}{Optional numeric matrix used as the structuring element.
+Values are coerced to integers. Overrides
+\code{shape} and \code{size} when supplied.}
+
+\item{\code{iterations}}{Positive integer. Number of times the operation is
+applied. Default \code{1L}.}
+
+\item{\code{border_type}}{Character. Pixel extrapolation method. One of
+\code{"default"}, \code{"reflect"}, \code{"reflect_101"},
+\code{"replicate"}, \code{"constant"}, \code{"wrap"}.
+Default \code{"default"}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{self} invisibly.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)$convert_color("GRAY")
+img$morph_("erode")
 img$plot()
 }
 }
