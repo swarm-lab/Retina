@@ -102,9 +102,9 @@ test_that("all stat methods return names matching BGR colorspace", {
   expect_equal(names(img$median()), c("B", "G", "R"))
 })
 
-test_that("stat methods return 'GRAY' name for grayscale image", {
+test_that("stat methods return 'Y' name for grayscale image", {
   img <- make_test_image()$to_gray()
-  expect_equal(names(img$mean()), "GRAY")
+  expect_equal(names(img$mean()), "Y")
 })
 
 test_that("quantile() rownames are formatted as percentages", {

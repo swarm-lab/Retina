@@ -7,7 +7,7 @@ rt_channel_names <- function(colorspace, nchan) {
     HSV   = c("H", "S", "V"),
     LAB   = c("L", "A", "B"),
     HLS   = c("H", "L", "S"),
-    GRAY  = "GRAY",
+    GRAY  = "Y",
     YCrCb = c("Y", "Cr", "Cb"),
     as.character(seq_len(nchan))
   )

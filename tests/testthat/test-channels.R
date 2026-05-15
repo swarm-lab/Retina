@@ -86,3 +86,26 @@ test_that("merge_channels() errors on multi-channel input element", {
 test_that("split_channels() errors on non-Image input", {
   expect_error(split_channels(42), "img must be an Image object")
 })
+
+test_that("split_channels() B channel contains correct pixel values", {
+  result <- split_channels(img_bgr())
+  expect_equal(result$B$to_array(), array(10L, dim = c(10L, 10L, 1L)))
+})
+
+test_that("split_channels() falls back to ch1/ch2/ch3 for unknown colorspace", {
+  arr <- array(100L, dim = c(10L, 10L, 3L))
+  img <- Image$new(arr, depth = "CV_8U")
+  img$colorspace <- "UNKNOWN_CS"
+  result <- split_channels(img)
+  expect_equal(names(result), c("ch1", "ch2", "ch3"))
+})
+
+test_that("merge_channels() warns for unnamed list", {
+  chs <- split_channels(img_bgr())
+  names(chs) <- NULL
+  expect_warning(
+    result <- merge_channels(chs),
+    "channel names do not match a known colorspace"
+  )
+  expect_equal(result$colorspace, "UNKNOWN")
+})
