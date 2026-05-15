@@ -113,10 +113,14 @@ Image <- R6::R6Class("Image",
     },
 
     #' @description Display the image using R's graphics device.
+    #' @param newpage Logical. If \code{TRUE} (default), clears the graphics
+    #'   device before drawing. Set to \code{FALSE} when composing multiple
+    #'   images in a layout using \code{grid} viewports.
     #' @param ... Additional arguments passed to \code{grid::grid.raster()}.
     #' @return \code{self} invisibly.
-    plot = function(...) {
+    plot = function(newpage = TRUE, ...) {
       nr <- rt_image_to_native_raster(private$.ptr)
+      if (newpage) grid::grid.newpage()
       grid::grid.raster(nr, ...)
       invisible(self)
     },

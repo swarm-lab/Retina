@@ -218,12 +218,16 @@ An array with dimensions \code{[nrow, ncol, nchan]}.
 \subsection{Method \code{plot()}}{
 Display the image using R's graphics device.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Image$plot(...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Image$plot(newpage = TRUE, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
+\item{\code{newpage}}{Logical. If \code{TRUE} (default), clears the graphics
+device before drawing. Set to \code{FALSE} when composing multiple
+images in a layout using \code{grid} viewports.}
+
 \item{\code{...}}{Additional arguments passed to \code{grid::grid.raster()}.}
 }
 \if{html}{\out{</div>}}
