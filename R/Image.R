@@ -418,6 +418,135 @@ Image <- R6::R6Class("Image",
       invisible(self)
     },
 
+    #' @description Apply a normalised box filter (simple average blur).
+    #' @param ksize Length-2 integer vector \code{c(width, height)} of positive
+    #'   integers specifying the kernel size.
+    #' @return A new \code{Image}.
+    blur = function(ksize) {
+      if (!is.numeric(ksize) || length(ksize) != 2L || any(ksize <= 0))
+        stop("ksize must be a length-2 vector of positive integers", call. = FALSE)
+      Image$new(rt_image_blur(private$.ptr,
+                              as.integer(ksize[1]), as.integer(ksize[2])))
+    },
+
+    #' @description Box blur in place.
+    #' @param ksize Length-2 integer vector \code{c(width, height)} of positive
+    #'   integers specifying the kernel size.
+    #' @return \code{self} invisibly.
+    blur_ = function(ksize) {
+      if (!is.numeric(ksize) || length(ksize) != 2L || any(ksize <= 0))
+        stop("ksize must be a length-2 vector of positive integers", call. = FALSE)
+      private$.ptr <- rt_image_blur(private$.ptr,
+                                    as.integer(ksize[1]), as.integer(ksize[2]))
+      invisible(self)
+    },
+
+    #' @description Apply a Gaussian blur.
+    #' @param ksize Length-2 vector. Each element must be a positive odd integer
+    #'   or \code{0}. When \code{0}, the kernel size is inferred from
+    #'   \code{sigma} automatically.
+    #' @param sigma Length-1 or length-2 positive numeric. Gaussian standard
+    #'   deviation in the X (and optionally Y) direction. A single value is
+    #'   applied to both axes.
+    #' @return A new \code{Image}.
+    gaussian_blur = function(ksize, sigma) {
+      if (!is.numeric(ksize) || length(ksize) != 2L ||
+          !all(ksize == 0 | (ksize > 0 & ksize %% 2 == 1)))
+        stop("ksize elements must each be odd and positive, or 0", call. = FALSE)
+      if (!is.numeric(sigma) || length(sigma) < 1L || length(sigma) > 2L)
+        stop("sigma must be length 1 or 2", call. = FALSE)
+      if (any(sigma <= 0))
+        stop("sigma values must be positive", call. = FALSE)
+      sigma <- rep(as.double(sigma), length.out = 2L)
+      Image$new(rt_image_gaussian_blur(private$.ptr,
+                                       as.integer(ksize[1]), as.integer(ksize[2]),
+                                       sigma[1], sigma[2]))
+    },
+
+    #' @description Gaussian blur in place.
+    #' @param ksize Length-2 vector. Each element must be a positive odd integer
+    #'   or \code{0}. When \code{0}, the kernel size is inferred from
+    #'   \code{sigma} automatically.
+    #' @param sigma Length-1 or length-2 positive numeric. A single value is
+    #'   applied to both axes.
+    #' @return \code{self} invisibly.
+    gaussian_blur_ = function(ksize, sigma) {
+      if (!is.numeric(ksize) || length(ksize) != 2L ||
+          !all(ksize == 0 | (ksize > 0 & ksize %% 2 == 1)))
+        stop("ksize elements must each be odd and positive, or 0", call. = FALSE)
+      if (!is.numeric(sigma) || length(sigma) < 1L || length(sigma) > 2L)
+        stop("sigma must be length 1 or 2", call. = FALSE)
+      if (any(sigma <= 0))
+        stop("sigma values must be positive", call. = FALSE)
+      sigma <- rep(as.double(sigma), length.out = 2L)
+      private$.ptr <- rt_image_gaussian_blur(private$.ptr,
+                                             as.integer(ksize[1]), as.integer(ksize[2]),
+                                             sigma[1], sigma[2])
+      invisible(self)
+    },
+
+    #' @description Apply a median blur.
+    #' @param ksize Single positive odd integer. The kernel is always square
+    #'   (OpenCV constraint).
+    #' @return A new \code{Image}.
+    median_blur = function(ksize) {
+      if (!is.numeric(ksize) || length(ksize) != 1L ||
+          ksize <= 0 || ksize %% 2 == 0)
+        stop("ksize must be a single positive odd integer", call. = FALSE)
+      Image$new(rt_image_median_blur(private$.ptr, as.integer(ksize)))
+    },
+
+    #' @description Median blur in place.
+    #' @param ksize Single positive odd integer. The kernel is always square
+    #'   (OpenCV constraint).
+    #' @return \code{self} invisibly.
+    median_blur_ = function(ksize) {
+      if (!is.numeric(ksize) || length(ksize) != 1L ||
+          ksize <= 0 || ksize %% 2 == 0)
+        stop("ksize must be a single positive odd integer", call. = FALSE)
+      private$.ptr <- rt_image_median_blur(private$.ptr, as.integer(ksize))
+      invisible(self)
+    },
+
+    #' @description Apply a bilateral filter (edge-preserving smoothing).
+    #' @param d Single integer. Diameter of the pixel neighbourhood. When
+    #'   \code{d <= 0}, the diameter is computed from \code{sigma_space}.
+    #' @param sigma_color Single positive numeric. Filter sigma in colour space.
+    #' @param sigma_space Single positive numeric. Filter sigma in coordinate
+    #'   space.
+    #' @return A new \code{Image}.
+    bilateral_filter = function(d, sigma_color, sigma_space) {
+      if (!is.numeric(d) || length(d) != 1L)
+        stop("d must be a single integer", call. = FALSE)
+      if (!is.numeric(sigma_color) || length(sigma_color) != 1L || sigma_color <= 0 ||
+          !is.numeric(sigma_space) || length(sigma_space) != 1L || sigma_space <= 0)
+        stop("sigma_color and sigma_space must each be a single positive numeric value",
+             call. = FALSE)
+      Image$new(rt_image_bilateral_filter(private$.ptr, as.integer(d),
+                                          as.double(sigma_color),
+                                          as.double(sigma_space)))
+    },
+
+    #' @description Bilateral filter in place.
+    #' @param d Single integer. Diameter of the pixel neighbourhood. When
+    #'   \code{d <= 0}, the diameter is computed from \code{sigma_space}.
+    #' @param sigma_color Single positive numeric. Filter sigma in colour space.
+    #' @param sigma_space Single positive numeric. Filter sigma in coordinate
+    #'   space.
+    #' @return \code{self} invisibly.
+    bilateral_filter_ = function(d, sigma_color, sigma_space) {
+      if (!is.numeric(d) || length(d) != 1L)
+        stop("d must be a single integer", call. = FALSE)
+      if (!is.numeric(sigma_color) || length(sigma_color) != 1L || sigma_color <= 0 ||
+          !is.numeric(sigma_space) || length(sigma_space) != 1L || sigma_space <= 0)
+        stop("sigma_color and sigma_space must each be a single positive numeric value",
+             call. = FALSE)
+      private$.ptr <- rt_image_bilateral_filter(private$.ptr, as.integer(d),
+                                                as.double(sigma_color),
+                                                as.double(sigma_space))
+      invisible(self)
+    },
+
     #' @description Print a summary of the image.
     #' @param ... Ignored.
     #' @return \code{self} invisibly.
