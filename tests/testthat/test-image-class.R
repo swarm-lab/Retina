@@ -197,3 +197,10 @@ test_that("to_array() round-trips negative values for CV_16S", {
   expect_true(is.integer(result))
   expect_equal(result[1, 1, 1], -100L)
 })
+
+test_that("convert_depth() preserves pixel values without scaling", {
+  img <- Image$new(array(100L, dim = c(5L, 5L, 3L)), depth = "CV_8U")
+  result <- img$convert_depth("CV_32F")
+  arr <- result$to_array()
+  expect_equal(arr[1, 1, 1], 100.0, tolerance = 1e-6)
+})

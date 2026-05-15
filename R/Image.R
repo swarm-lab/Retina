@@ -158,6 +158,9 @@ Image <- R6::R6Class("Image",
     },
 
     #' @description Convert to a new bit depth. Returns a new Image.
+    #'   Values are cast directly with no scaling: a CV_8U pixel with value 100
+    #'   becomes 100.0 in CV_32F, not 0.392. Use \code{convert_depth} followed
+    #'   by arithmetic if you need normalized floating-point values.
     #' @param to Character. Target depth, one of \code{"CV_8U"}, \code{"CV_16U"},
     #'   \code{"CV_16S"}, \code{"CV_32F"}, \code{"CV_64F"}.
     #' @return A new \code{Image}.
@@ -169,6 +172,7 @@ Image <- R6::R6Class("Image",
     },
 
     #' @description Convert to a new bit depth in place.
+    #'   Values are cast directly with no scaling (see \code{convert_depth}).
     #' @param to Character. Target depth, one of \code{"CV_8U"}, \code{"CV_16U"},
     #'   \code{"CV_16S"}, \code{"CV_32F"}, \code{"CV_64F"}.
     #' @return \code{self} invisibly.
@@ -415,6 +419,9 @@ Image <- R6::R6Class("Image",
     #' @param other An \code{Image} or a numeric vector (length 1 or \code{nchan}).
     #' @return A new \code{Image}.
     bitwise_and = function(other) {
+      if (!self$depth_name %in% c("CV_8U", "CV_16U", "CV_16S"))
+        stop("bitwise operations require an integer depth (CV_8U, CV_16U, or CV_16S)",
+             call. = FALSE)
       Image$new(.rt_arith(private$.ptr, other, self$nchan, self$depth,
                           rt_image_bitwise_and_image, rt_image_bitwise_and_scalar))
     },
@@ -423,6 +430,9 @@ Image <- R6::R6Class("Image",
     #' @param other An \code{Image} or a numeric vector (length 1 or \code{nchan}).
     #' @return \code{self} invisibly.
     bitwise_and_ = function(other) {
+      if (!self$depth_name %in% c("CV_8U", "CV_16U", "CV_16S"))
+        stop("bitwise operations require an integer depth (CV_8U, CV_16U, or CV_16S)",
+             call. = FALSE)
       private$.ptr <- .rt_arith(private$.ptr, other, self$nchan, self$depth,
                                 rt_image_bitwise_and_image, rt_image_bitwise_and_scalar)
       invisible(self)
@@ -432,6 +442,9 @@ Image <- R6::R6Class("Image",
     #' @param other An \code{Image} or a numeric vector (length 1 or \code{nchan}).
     #' @return A new \code{Image}.
     bitwise_or = function(other) {
+      if (!self$depth_name %in% c("CV_8U", "CV_16U", "CV_16S"))
+        stop("bitwise operations require an integer depth (CV_8U, CV_16U, or CV_16S)",
+             call. = FALSE)
       Image$new(.rt_arith(private$.ptr, other, self$nchan, self$depth,
                           rt_image_bitwise_or_image, rt_image_bitwise_or_scalar))
     },
@@ -440,6 +453,9 @@ Image <- R6::R6Class("Image",
     #' @param other An \code{Image} or a numeric vector (length 1 or \code{nchan}).
     #' @return \code{self} invisibly.
     bitwise_or_ = function(other) {
+      if (!self$depth_name %in% c("CV_8U", "CV_16U", "CV_16S"))
+        stop("bitwise operations require an integer depth (CV_8U, CV_16U, or CV_16S)",
+             call. = FALSE)
       private$.ptr <- .rt_arith(private$.ptr, other, self$nchan, self$depth,
                                 rt_image_bitwise_or_image, rt_image_bitwise_or_scalar)
       invisible(self)
@@ -449,6 +465,9 @@ Image <- R6::R6Class("Image",
     #' @param other An \code{Image} or a numeric vector (length 1 or \code{nchan}).
     #' @return A new \code{Image}.
     bitwise_xor = function(other) {
+      if (!self$depth_name %in% c("CV_8U", "CV_16U", "CV_16S"))
+        stop("bitwise operations require an integer depth (CV_8U, CV_16U, or CV_16S)",
+             call. = FALSE)
       Image$new(.rt_arith(private$.ptr, other, self$nchan, self$depth,
                           rt_image_bitwise_xor_image, rt_image_bitwise_xor_scalar))
     },
@@ -457,6 +476,9 @@ Image <- R6::R6Class("Image",
     #' @param other An \code{Image} or a numeric vector (length 1 or \code{nchan}).
     #' @return \code{self} invisibly.
     bitwise_xor_ = function(other) {
+      if (!self$depth_name %in% c("CV_8U", "CV_16U", "CV_16S"))
+        stop("bitwise operations require an integer depth (CV_8U, CV_16U, or CV_16S)",
+             call. = FALSE)
       private$.ptr <- .rt_arith(private$.ptr, other, self$nchan, self$depth,
                                 rt_image_bitwise_xor_image, rt_image_bitwise_xor_scalar)
       invisible(self)
@@ -464,11 +486,19 @@ Image <- R6::R6Class("Image",
 
     #' @description Bitwise NOT (invert all bits).
     #' @return A new \code{Image}.
-    bitwise_not = function() Image$new(rt_image_bitwise_not(private$.ptr)),
+    bitwise_not = function() {
+      if (!self$depth_name %in% c("CV_8U", "CV_16U", "CV_16S"))
+        stop("bitwise operations require an integer depth (CV_8U, CV_16U, or CV_16S)",
+             call. = FALSE)
+      Image$new(rt_image_bitwise_not(private$.ptr))
+    },
 
     #' @description Bitwise NOT in place.
     #' @return \code{self} invisibly.
     bitwise_not_ = function() {
+      if (!self$depth_name %in% c("CV_8U", "CV_16U", "CV_16S"))
+        stop("bitwise operations require an integer depth (CV_8U, CV_16U, or CV_16S)",
+             call. = FALSE)
       private$.ptr <- rt_image_bitwise_not(private$.ptr)
       invisible(self)
     },
