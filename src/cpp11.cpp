@@ -201,6 +201,13 @@ extern "C" SEXP _Retina_rt_image_laplacian(SEXP img, SEXP ksize, SEXP ddepth, SE
     return cpp11::as_sexp(rt_image_laplacian(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<int>>(ksize), cpp11::as_cpp<cpp11::decay_t<std::string>>(ddepth), cpp11::as_cpp<cpp11::decay_t<double>>(scale), cpp11::as_cpp<cpp11::decay_t<double>>(delta), cpp11::as_cpp<cpp11::decay_t<std::string>>(border_type)));
   END_CPP11
 }
+// filters.cpp
+external_pointer<RtImage> rt_image_canny(external_pointer<RtImage> img, double low_threshold, double high_threshold, int aperture_size, bool L2_gradient);
+extern "C" SEXP _Retina_rt_image_canny(SEXP img, SEXP low_threshold, SEXP high_threshold, SEXP aperture_size, SEXP L2_gradient) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_image_canny(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<double>>(low_threshold), cpp11::as_cpp<cpp11::decay_t<double>>(high_threshold), cpp11::as_cpp<cpp11::decay_t<int>>(aperture_size), cpp11::as_cpp<cpp11::decay_t<bool>>(L2_gradient)));
+  END_CPP11
+}
 // image.cpp
 bool rt_build_ok();
 extern "C" SEXP _Retina_rt_build_ok() {
@@ -407,6 +414,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_Retina_rt_image_bitwise_xor_image",  (DL_FUNC) &_Retina_rt_image_bitwise_xor_image,  2},
     {"_Retina_rt_image_bitwise_xor_scalar", (DL_FUNC) &_Retina_rt_image_bitwise_xor_scalar, 2},
     {"_Retina_rt_image_blur",               (DL_FUNC) &_Retina_rt_image_blur,               3},
+    {"_Retina_rt_image_canny",              (DL_FUNC) &_Retina_rt_image_canny,              5},
     {"_Retina_rt_image_clone",              (DL_FUNC) &_Retina_rt_image_clone,              1},
     {"_Retina_rt_image_colorspace",         (DL_FUNC) &_Retina_rt_image_colorspace,         1},
     {"_Retina_rt_image_convert_color",      (DL_FUNC) &_Retina_rt_image_convert_color,      3},

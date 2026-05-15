@@ -794,6 +794,69 @@ Image <- R6::R6Class("Image",
       invisible(self)
     },
 
+    #' @description Detect edges using the Canny algorithm. Returns a new
+    #'   single-channel CV_8U Image with pixel values 0 (no edge) or 255
+    #'   (edge). Input must be a single-channel grayscale image.
+    #' @param low_threshold Single positive numeric. Lower hysteresis threshold.
+    #' @param high_threshold Single positive numeric. Upper hysteresis
+    #'   threshold. Must be >= \code{low_threshold}.
+    #' @param aperture_size Integer. Size of the Sobel kernel used internally:
+    #'   3, 5, or 7. Default 3.
+    #' @param L2_gradient Logical scalar. If \code{TRUE}, use the L2 norm for
+    #'   gradient magnitude (more accurate but slower). Default \code{FALSE}.
+    #' @return A new \code{Image}.
+    canny = function(low_threshold, high_threshold,
+                     aperture_size = 3, L2_gradient = FALSE) {
+      if (self$nchan != 1L)
+        stop("canny requires a single-channel (grayscale) image — use convert_color('GRAY') first",
+             call. = FALSE)
+      if (!is.numeric(low_threshold) || length(low_threshold) != 1L || low_threshold <= 0)
+        stop("low_threshold must be a single positive numeric value", call. = FALSE)
+      if (!is.numeric(high_threshold) || length(high_threshold) != 1L || high_threshold <= 0)
+        stop("high_threshold must be a single positive numeric value", call. = FALSE)
+      if (low_threshold > high_threshold)
+        stop("low_threshold must be <= high_threshold", call. = FALSE)
+      if (!aperture_size %in% c(3L, 5L, 7L))
+        stop("aperture_size must be 3, 5, or 7", call. = FALSE)
+      if (!is.logical(L2_gradient) || length(L2_gradient) != 1L)
+        stop("L2_gradient must be a single logical value", call. = FALSE)
+      Image$new(rt_image_canny(private$.ptr, as.double(low_threshold),
+                               as.double(high_threshold),
+                               as.integer(aperture_size),
+                               as.logical(L2_gradient)))
+    },
+
+    #' @description Canny edge detection in place.
+    #' @param low_threshold Single positive numeric. Lower hysteresis threshold.
+    #' @param high_threshold Single positive numeric. Upper hysteresis
+    #'   threshold. Must be >= \code{low_threshold}.
+    #' @param aperture_size Integer. Size of the Sobel kernel: 3, 5, or 7.
+    #'   Default 3.
+    #' @param L2_gradient Logical scalar. Use L2 norm for gradient magnitude.
+    #'   Default \code{FALSE}.
+    #' @return \code{self} invisibly.
+    canny_ = function(low_threshold, high_threshold,
+                      aperture_size = 3, L2_gradient = FALSE) {
+      if (self$nchan != 1L)
+        stop("canny requires a single-channel (grayscale) image — use convert_color('GRAY') first",
+             call. = FALSE)
+      if (!is.numeric(low_threshold) || length(low_threshold) != 1L || low_threshold <= 0)
+        stop("low_threshold must be a single positive numeric value", call. = FALSE)
+      if (!is.numeric(high_threshold) || length(high_threshold) != 1L || high_threshold <= 0)
+        stop("high_threshold must be a single positive numeric value", call. = FALSE)
+      if (low_threshold > high_threshold)
+        stop("low_threshold must be <= high_threshold", call. = FALSE)
+      if (!aperture_size %in% c(3L, 5L, 7L))
+        stop("aperture_size must be 3, 5, or 7", call. = FALSE)
+      if (!is.logical(L2_gradient) || length(L2_gradient) != 1L)
+        stop("L2_gradient must be a single logical value", call. = FALSE)
+      private$.ptr <- rt_image_canny(private$.ptr, as.double(low_threshold),
+                                     as.double(high_threshold),
+                                     as.integer(aperture_size),
+                                     as.logical(L2_gradient))
+      invisible(self)
+    },
+
     #' @description Print a summary of the image.
     #' @param ... Ignored.
     #' @return \code{self} invisibly.

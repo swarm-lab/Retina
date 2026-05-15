@@ -89,6 +89,10 @@ An R6 class representing a single image, backed by an OpenCV \code{cv::Mat}
 \item \href{#method-Image-median_blur_}{\code{Image$median_blur_()}}
 \item \href{#method-Image-bilateral_filter}{\code{Image$bilateral_filter()}}
 \item \href{#method-Image-bilateral_filter_}{\code{Image$bilateral_filter_()}}
+\item \href{#method-Image-sobel}{\code{Image$sobel()}}
+\item \href{#method-Image-sobel_}{\code{Image$sobel_()}}
+\item \href{#method-Image-laplacian}{\code{Image$laplacian()}}
+\item \href{#method-Image-laplacian_}{\code{Image$laplacian_()}}
 \item \href{#method-Image-print}{\code{Image$print()}}
 }
 }
@@ -1098,6 +1102,180 @@ Bilateral filter in place.
 
 \item{\code{sigma_space}}{Single positive numeric. Filter sigma in coordinate
 space.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{self} invisibly.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-sobel"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-sobel}{}}}
+\subsection{Method \code{sobel()}}{
+Apply the Sobel operator to compute image gradients. Returns
+  a new Image.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$sobel(
+  dx,
+  dy,
+  ksize = 3,
+  ddepth = "CV_32F",
+  scale = 1,
+  delta = 0,
+  border_type = "default"
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{dx}}{Non-negative integer. Order of x derivative.}
+
+\item{\code{dy}}{Non-negative integer. Order of y derivative.
+\code{dx + dy} must be >= 1.}
+
+\item{\code{ksize}}{Integer. Sobel kernel aperture size: 1, 3, 5, or 7.
+The limit of 7 is an OpenCV requirement.}
+
+\item{\code{ddepth}}{Character. Output depth: \code{"CV_16S"}, \code{"CV_32F"},
+or \code{"CV_64F"}. Default \code{"CV_32F"}.}
+
+\item{\code{scale}}{Single positive numeric. Optional scale factor for the
+computed derivatives. Must be positive (use \code{convert_depth} +
+arithmetic to invert gradient sign). Default 1.}
+
+\item{\code{delta}}{Single numeric. Optional delta added to results before
+storing. Default 0.}
+
+\item{\code{border_type}}{Character. Pixel extrapolation method. One of
+\code{"default"}, \code{"reflect"}, \code{"reflect_101"},
+\code{"replicate"}, \code{"constant"}, \code{"wrap"}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A new \code{Image}.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-sobel_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-sobel_}{}}}
+\subsection{Method \code{sobel_()}}{
+Sobel operator in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$sobel_(
+  dx,
+  dy,
+  ksize = 3,
+  ddepth = "CV_32F",
+  scale = 1,
+  delta = 0,
+  border_type = "default"
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{dx}}{Non-negative integer. Order of x derivative.}
+
+\item{\code{dy}}{Non-negative integer. Order of y derivative.
+\code{dx + dy} must be >= 1.}
+
+\item{\code{ksize}}{Integer. Sobel kernel aperture size: 1, 3, 5, or 7.}
+
+\item{\code{ddepth}}{Character. Output depth: \code{"CV_16S"}, \code{"CV_32F"},
+or \code{"CV_64F"}. Default \code{"CV_32F"}.}
+
+\item{\code{scale}}{Single positive numeric. Optional scale factor for the
+computed derivatives. Must be positive (use \code{convert_depth} +
+arithmetic to invert gradient sign). Default 1.}
+
+\item{\code{delta}}{Single numeric. Delta added to results. Default 0.}
+
+\item{\code{border_type}}{Character. Pixel extrapolation method. One of
+\code{"default"}, \code{"reflect"}, \code{"reflect_101"},
+\code{"replicate"}, \code{"constant"}, \code{"wrap"}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{self} invisibly.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-laplacian"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-laplacian}{}}}
+\subsection{Method \code{laplacian()}}{
+Apply the Laplacian operator to detect edges. Returns a new
+  Image.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$laplacian(
+  ksize = 1,
+  ddepth = "CV_32F",
+  scale = 1,
+  delta = 0,
+  border_type = "default"
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{ksize}}{Integer. Aperture size for the Laplacian kernel: 1, 3, 5,
+or 7. \code{ksize = 1} uses the 3-point central-difference stencil.
+Default 1.}
+
+\item{\code{ddepth}}{Character. Output depth: \code{"CV_16S"}, \code{"CV_32F"},
+or \code{"CV_64F"}. Default \code{"CV_32F"}.}
+
+\item{\code{scale}}{Single positive numeric. Optional scale factor. Must be
+positive. Default 1.}
+
+\item{\code{delta}}{Single numeric. Optional delta added to results. Default 0.}
+
+\item{\code{border_type}}{Character. Pixel extrapolation method. One of
+\code{"default"}, \code{"reflect"}, \code{"reflect_101"},
+\code{"replicate"}, \code{"constant"}, \code{"wrap"}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A new \code{Image}.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-laplacian_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-laplacian_}{}}}
+\subsection{Method \code{laplacian_()}}{
+Laplacian operator in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$laplacian_(
+  ksize = 1,
+  ddepth = "CV_32F",
+  scale = 1,
+  delta = 0,
+  border_type = "default"
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{ksize}}{Integer. Aperture size: 1, 3, 5, or 7. Default 1.}
+
+\item{\code{ddepth}}{Character. Output depth: \code{"CV_16S"}, \code{"CV_32F"},
+or \code{"CV_64F"}. Default \code{"CV_32F"}.}
+
+\item{\code{scale}}{Single positive numeric. Optional scale factor. Must be
+positive. Default 1.}
+
+\item{\code{delta}}{Single numeric. Delta added to results. Default 0.}
+
+\item{\code{border_type}}{Character. Pixel extrapolation method. One of
+\code{"default"}, \code{"reflect"}, \code{"reflect_101"},
+\code{"replicate"}, \code{"constant"}, \code{"wrap"}.}
 }
 \if{html}{\out{</div>}}
 }

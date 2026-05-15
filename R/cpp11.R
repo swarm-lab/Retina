@@ -112,6 +112,10 @@ rt_image_laplacian <- function(img, ksize, ddepth, scale, delta, border_type) {
   .Call(`_Retina_rt_image_laplacian`, img, ksize, ddepth, scale, delta, border_type)
 }
 
+rt_image_canny <- function(img, low_threshold, high_threshold, aperture_size, L2_gradient) {
+  .Call(`_Retina_rt_image_canny`, img, low_threshold, high_threshold, aperture_size, L2_gradient)
+}
+
 rt_build_ok <- function() {
   .Call(`_Retina_rt_build_ok`)
 }

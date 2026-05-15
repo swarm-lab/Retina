@@ -99,3 +99,16 @@ external_pointer<RtImage> rt_image_laplacian(
                 scale, delta, cv_border_type(border_type));
   return {new RtImage(std::move(dst), img->colorspace)};
 }
+
+// ── canny ─────────────────────────────────────────────────────────────────────
+
+[[cpp11::register]]
+external_pointer<RtImage> rt_image_canny(
+    external_pointer<RtImage> img,
+    double low_threshold, double high_threshold,
+    int aperture_size, bool L2_gradient) {
+  cv::Mat dst;
+  cv::Canny(get_cpu_mat(img), dst, low_threshold, high_threshold,
+            aperture_size, L2_gradient);
+  return {new RtImage(std::move(dst), std::string("GRAY"))};
+}
