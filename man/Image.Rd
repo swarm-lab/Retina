@@ -12,6 +12,74 @@ Image class
 An R6 class representing a single image, backed by an OpenCV \code{cv::Mat}
 (CPU) or \code{cv::UMat} (GPU).
 }
+\examples{
+
+## ------------------------------------------------
+## Method `Image$sobel`
+## ------------------------------------------------
+
+\donttest{
+img_path <- system.file("img", "brick_wall.jpg", package = "Retina")
+img <- Image$new(img_path)
+grad_x <- img$sobel(1, 0)
+grad_x$plot()
+}
+
+## ------------------------------------------------
+## Method `Image$sobel_`
+## ------------------------------------------------
+
+\donttest{
+img_path <- system.file("img", "brick_wall.jpg", package = "Retina")
+img <- Image$new(img_path)
+img$sobel_(1, 0)
+img$plot()
+}
+
+## ------------------------------------------------
+## Method `Image$laplacian`
+## ------------------------------------------------
+
+\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)
+edges <- img$laplacian()
+edges$plot()
+}
+
+## ------------------------------------------------
+## Method `Image$laplacian_`
+## ------------------------------------------------
+
+\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)
+img$laplacian_()
+img$plot()
+}
+
+## ------------------------------------------------
+## Method `Image$canny`
+## ------------------------------------------------
+
+\donttest{
+img_path <- system.file("img", "staircase.jpg", package = "Retina")
+img <- Image$new(img_path)$convert_color("GRAY")
+edges <- img$canny(50, 150)
+edges$plot()
+}
+
+## ------------------------------------------------
+## Method `Image$canny_`
+## ------------------------------------------------
+
+\donttest{
+img_path <- system.file("img", "staircase.jpg", package = "Retina")
+img <- Image$new(img_path)$convert_color("GRAY")
+img$canny_(50, 150)
+img$plot()
+}
+}
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
@@ -93,6 +161,8 @@ An R6 class representing a single image, backed by an OpenCV \code{cv::Mat}
 \item \href{#method-Image-sobel_}{\code{Image$sobel_()}}
 \item \href{#method-Image-laplacian}{\code{Image$laplacian()}}
 \item \href{#method-Image-laplacian_}{\code{Image$laplacian_()}}
+\item \href{#method-Image-canny}{\code{Image$canny()}}
+\item \href{#method-Image-canny_}{\code{Image$canny_()}}
 \item \href{#method-Image-print}{\code{Image$print()}}
 }
 }
@@ -1157,6 +1227,19 @@ storing. Default 0.}
 \subsection{Returns}{
 A new \code{Image}.
 }
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img_path <- system.file("img", "brick_wall.jpg", package = "Retina")
+img <- Image$new(img_path)
+grad_x <- img$sobel(1, 0)
+grad_x$plot()
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Image-sobel_"></a>}}
@@ -1203,6 +1286,19 @@ arithmetic to invert gradient sign). Default 1.}
 \subsection{Returns}{
 \code{self} invisibly.
 }
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img_path <- system.file("img", "brick_wall.jpg", package = "Retina")
+img <- Image$new(img_path)
+img$sobel_(1, 0)
+img$plot()
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Image-laplacian"></a>}}
@@ -1244,6 +1340,19 @@ positive. Default 1.}
 \subsection{Returns}{
 A new \code{Image}.
 }
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)
+edges <- img$laplacian()
+edges$plot()
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Image-laplacian_"></a>}}
@@ -1282,6 +1391,115 @@ positive. Default 1.}
 \subsection{Returns}{
 \code{self} invisibly.
 }
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)
+img$laplacian_()
+img$plot()
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-canny"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-canny}{}}}
+\subsection{Method \code{canny()}}{
+Detect edges using the Canny algorithm. Returns a new
+  single-channel CV_8U Image with pixel values 0 (no edge) or 255
+  (edge). Input must be a single-channel grayscale image.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$canny(
+  low_threshold,
+  high_threshold,
+  aperture_size = 3,
+  L2_gradient = FALSE
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{low_threshold}}{Single non-negative numeric. Lower hysteresis threshold.}
+
+\item{\code{high_threshold}}{Single positive numeric. Upper hysteresis
+threshold. Must be >= \code{low_threshold}.}
+
+\item{\code{aperture_size}}{Integer. Size of the Sobel kernel used internally:
+3, 5, or 7. Default 3.}
+
+\item{\code{L2_gradient}}{Logical scalar. If \code{TRUE}, use the L2 norm for
+gradient magnitude (more accurate but slower). Default \code{FALSE}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A new \code{Image}.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img_path <- system.file("img", "staircase.jpg", package = "Retina")
+img <- Image$new(img_path)$convert_color("GRAY")
+edges <- img$canny(50, 150)
+edges$plot()
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-canny_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-canny_}{}}}
+\subsection{Method \code{canny_()}}{
+Canny edge detection in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$canny_(
+  low_threshold,
+  high_threshold,
+  aperture_size = 3,
+  L2_gradient = FALSE
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{low_threshold}}{Single non-negative numeric. Lower hysteresis threshold.}
+
+\item{\code{high_threshold}}{Single positive numeric. Upper hysteresis
+threshold. Must be >= \code{low_threshold}.}
+
+\item{\code{aperture_size}}{Integer. Size of the Sobel kernel: 3, 5, or 7.
+Default 3.}
+
+\item{\code{L2_gradient}}{Logical scalar. Use L2 norm for gradient magnitude.
+Default \code{FALSE}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{self} invisibly.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img_path <- system.file("img", "staircase.jpg", package = "Retina")
+img <- Image$new(img_path)$convert_color("GRAY")
+img$canny_(50, 150)
+img$plot()
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Image-print"></a>}}

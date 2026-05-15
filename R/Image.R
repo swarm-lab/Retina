@@ -662,6 +662,13 @@ Image <- R6::R6Class("Image",
     #'   \code{"default"}, \code{"reflect"}, \code{"reflect_101"},
     #'   \code{"replicate"}, \code{"constant"}, \code{"wrap"}.
     #' @return A new \code{Image}.
+    #' @examples
+    #' \donttest{
+    #' img_path <- system.file("img", "brick_wall.jpg", package = "Retina")
+    #' img <- Image$new(img_path)
+    #' grad_x <- img$sobel(1, 0)
+    #' grad_x$plot()
+    #' }
     sobel = function(dx, dy, ksize = 3, ddepth = "CV_32F",
                      scale = 1, delta = 0, border_type = "default") {
       .valid_border <- c("default", "reflect", "reflect_101",
@@ -702,6 +709,13 @@ Image <- R6::R6Class("Image",
     #'   \code{"default"}, \code{"reflect"}, \code{"reflect_101"},
     #'   \code{"replicate"}, \code{"constant"}, \code{"wrap"}.
     #' @return \code{self} invisibly.
+    #' @examples
+    #' \donttest{
+    #' img_path <- system.file("img", "brick_wall.jpg", package = "Retina")
+    #' img <- Image$new(img_path)
+    #' img$sobel_(1, 0)
+    #' img$plot()
+    #' }
     sobel_ = function(dx, dy, ksize = 3, ddepth = "CV_32F",
                       scale = 1, delta = 0, border_type = "default") {
       .valid_border <- c("default", "reflect", "reflect_101",
@@ -742,6 +756,13 @@ Image <- R6::R6Class("Image",
     #'   \code{"default"}, \code{"reflect"}, \code{"reflect_101"},
     #'   \code{"replicate"}, \code{"constant"}, \code{"wrap"}.
     #' @return A new \code{Image}.
+    #' @examples
+    #' \donttest{
+    #' img_path <- system.file("img", "flower.jpg", package = "Retina")
+    #' img <- Image$new(img_path)
+    #' edges <- img$laplacian()
+    #' edges$plot()
+    #' }
     laplacian = function(ksize = 1, ddepth = "CV_32F",
                          scale = 1, delta = 0, border_type = "default") {
       .valid_border <- c("default", "reflect", "reflect_101",
@@ -773,6 +794,13 @@ Image <- R6::R6Class("Image",
     #'   \code{"default"}, \code{"reflect"}, \code{"reflect_101"},
     #'   \code{"replicate"}, \code{"constant"}, \code{"wrap"}.
     #' @return \code{self} invisibly.
+    #' @examples
+    #' \donttest{
+    #' img_path <- system.file("img", "flower.jpg", package = "Retina")
+    #' img <- Image$new(img_path)
+    #' img$laplacian_()
+    #' img$plot()
+    #' }
     laplacian_ = function(ksize = 1, ddepth = "CV_32F",
                           scale = 1, delta = 0, border_type = "default") {
       .valid_border <- c("default", "reflect", "reflect_101",
@@ -805,6 +833,13 @@ Image <- R6::R6Class("Image",
     #' @param L2_gradient Logical scalar. If \code{TRUE}, use the L2 norm for
     #'   gradient magnitude (more accurate but slower). Default \code{FALSE}.
     #' @return A new \code{Image}.
+    #' @examples
+    #' \donttest{
+    #' img_path <- system.file("img", "staircase.jpg", package = "Retina")
+    #' img <- Image$new(img_path)$convert_color("GRAY")
+    #' edges <- img$canny(50, 150)
+    #' edges$plot()
+    #' }
     canny = function(low_threshold, high_threshold,
                      aperture_size = 3, L2_gradient = FALSE) {
       if (self$nchan != 1L)
@@ -835,6 +870,13 @@ Image <- R6::R6Class("Image",
     #' @param L2_gradient Logical scalar. Use L2 norm for gradient magnitude.
     #'   Default \code{FALSE}.
     #' @return \code{self} invisibly.
+    #' @examples
+    #' \donttest{
+    #' img_path <- system.file("img", "staircase.jpg", package = "Retina")
+    #' img <- Image$new(img_path)$convert_color("GRAY")
+    #' img$canny_(50, 150)
+    #' img$plot()
+    #' }
     canny_ = function(low_threshold, high_threshold,
                       aperture_size = 3, L2_gradient = FALSE) {
       if (self$nchan != 1L)
