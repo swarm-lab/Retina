@@ -810,8 +810,8 @@ Image <- R6::R6Class("Image",
       if (self$nchan != 1L)
         stop("canny requires a single-channel (grayscale) image — use convert_color('GRAY') first",
              call. = FALSE)
-      if (!is.numeric(low_threshold) || length(low_threshold) != 1L || low_threshold <= 0)
-        stop("low_threshold must be a single positive numeric value", call. = FALSE)
+      if (!is.numeric(low_threshold) || length(low_threshold) != 1L || low_threshold < 0)
+        stop("low_threshold must be a single non-negative numeric value", call. = FALSE)
       if (!is.numeric(high_threshold) || length(high_threshold) != 1L || high_threshold <= 0)
         stop("high_threshold must be a single positive numeric value", call. = FALSE)
       if (low_threshold > high_threshold)
@@ -840,8 +840,8 @@ Image <- R6::R6Class("Image",
       if (self$nchan != 1L)
         stop("canny requires a single-channel (grayscale) image — use convert_color('GRAY') first",
              call. = FALSE)
-      if (!is.numeric(low_threshold) || length(low_threshold) != 1L || low_threshold <= 0)
-        stop("low_threshold must be a single positive numeric value", call. = FALSE)
+      if (!is.numeric(low_threshold) || length(low_threshold) != 1L || low_threshold < 0)
+        stop("low_threshold must be a single non-negative numeric value", call. = FALSE)
       if (!is.numeric(high_threshold) || length(high_threshold) != 1L || high_threshold <= 0)
         stop("high_threshold must be a single positive numeric value", call. = FALSE)
       if (low_threshold > high_threshold)

@@ -38,9 +38,13 @@ test_that("canny() throws for multi-channel image", {
                "canny requires a single-channel")
 })
 
-test_that("canny() throws for non-positive low_threshold", {
+test_that("canny() throws for negative low_threshold", {
   expect_error(img_gray_uniform()$canny(-1, 50),
-               "low_threshold must be a single positive numeric value")
+               "low_threshold must be a single non-negative numeric value")
+})
+
+test_that("canny() accepts zero low_threshold", {
+  expect_no_error(img_gray_uniform()$canny(0, 50))
 })
 
 test_that("canny() throws for non-positive high_threshold", {
