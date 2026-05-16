@@ -19,12 +19,14 @@ randu(
 
 \item{nchan}{Integer. Number of channels (1-4). Default 1.}
 
-\item{depth}{Character. Bit depth. Default `"CV_8U"`.}
+\item{depth}{Character. Bit depth. One of `"CV_8U"`, `"CV_16U"`, `"CV_16S"`,
+`"CV_32F"`, `"CV_64F"`. Default `"CV_8U"`.}
 
 \item{colorspace}{Character. Color space label. Default `"GRAY"`.}
 
 \item{low, high}{Single numeric. Range of the uniform distribution.
-Default `low = 0`, `high = 255`.}
+Default `low = 0`, `high = 255`. These defaults are calibrated for
+`CV_8U` images; adjust for other depths (e.g. `high = 1` for `CV_32F`).}
 }
 \value{
 A new `Image` with pixel values drawn from Uniform(`low`, `high`).

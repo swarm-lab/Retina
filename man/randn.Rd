@@ -19,7 +19,8 @@ randn(
 
 \item{nchan}{Integer. Number of channels (1-4). Default 1.}
 
-\item{depth}{Character. Bit depth. Default `"CV_8U"`.}
+\item{depth}{Character. Bit depth. One of `"CV_8U"`, `"CV_16U"`, `"CV_16S"`,
+`"CV_32F"`, `"CV_64F"`. Default `"CV_8U"`.}
 
 \item{colorspace}{Character. Color space label. Default `"GRAY"`.}
 

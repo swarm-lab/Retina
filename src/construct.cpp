@@ -2,15 +2,6 @@
 #include <opencv2/opencv.hpp>
 using namespace cpp11;
 
-static cv::Mat get_cpu_mat(const external_pointer<RtImage>& img) {
-  if (img->is_gpu()) {
-    cv::Mat m;
-    std::get<cv::UMat>(img->buffer).copyTo(m);
-    return m;
-  }
-  return std::get<cv::Mat>(img->buffer);
-}
-
 static int cv_depth_code(const std::string& depth) {
   if      (depth == "CV_8U")  return CV_8U;
   else if (depth == "CV_8S")  return CV_8S;
@@ -19,6 +10,7 @@ static int cv_depth_code(const std::string& depth) {
   else if (depth == "CV_32S") return CV_32S;
   else if (depth == "CV_32F") return CV_32F;
   else if (depth == "CV_64F") return CV_64F;
+  else stop("depth must be one of: CV_8U, CV_8S, CV_16U, CV_16S, CV_32S, CV_32F, CV_64F");
   return -1;
 }
 

@@ -53,21 +53,48 @@ test_that("randn() produces a roughly normal distribution", {
 })
 
 test_that("zeros() errors on nrow < 1", {
-  expect_error(zeros(0L, 4L), "nrow")
+  expect_error(zeros(0L, 4L), "nrow must be a single positive integer")
 })
 
 test_that("zeros() errors on nchan > 4", {
-  expect_error(zeros(3L, 4L, nchan = 5L), "nchan")
+  expect_error(zeros(3L, 4L, nchan = 5L), "nchan must be a single positive integer <= 4")
 })
 
 test_that("zeros() errors on invalid depth", {
-  expect_error(zeros(3L, 4L, depth = "CV_128U"), "depth")
+  expect_error(zeros(3L, 4L, depth = "CV_128U"), "depth must be one of")
 })
 
 test_that("randu() errors when low >= high", {
-  expect_error(randu(3L, 3L, low = 5, high = 5), "low")
+  expect_error(randu(3L, 3L, low = 5, high = 5), "low must be strictly less than high")
 })
 
 test_that("randn() errors when sd <= 0", {
-  expect_error(randn(3L, 3L, sd = -1), "sd")
+  expect_error(randn(3L, 3L, sd = -1), "sd must be a single positive finite numeric")
+})
+
+test_that("ones() errors on invalid ncol", {
+  expect_error(ones(3L, 0L), "ncol must be a single positive integer")
+})
+
+test_that("zeros() returns an Image object", {
+  expect_s3_class(zeros(2L, 2L), "Image")
+})
+
+test_that("ones() returns an Image object", {
+  expect_s3_class(ones(2L, 2L), "Image")
+})
+
+test_that("randu() returns an Image object and handles 3 channels", {
+  img <- randu(10L, 10L, 3L, "CV_8U", "BGR")
+  expect_s3_class(img, "Image")
+  expect_equal(img$nchan, 3L)
+  arr <- img$to_array()
+  expect_gte(min(arr), 0)
+  expect_lte(max(arr), 255)
+})
+
+test_that("randn() returns an Image object and handles 3 channels", {
+  img <- randn(50L, 50L, 3L, "CV_8U", "BGR", mean = 128, sd = 20)
+  expect_s3_class(img, "Image")
+  expect_equal(img$nchan, 3L)
 })

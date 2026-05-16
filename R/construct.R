@@ -1,4 +1,4 @@
-.valid_depths <- c("CV_8U", "CV_8S", "CV_16U", "CV_16S", "CV_32S", "CV_32F", "CV_64F")
+.valid_depths <- c("CV_8U", "CV_16U", "CV_16S", "CV_32F", "CV_64F")
 
 .check_construct_args <- function(nrow, ncol, nchan, depth, colorspace) {
   if (length(nrow) != 1L || !isTRUE(nrow >= 1L) || !isTRUE(nrow == as.integer(nrow)))
@@ -18,8 +18,8 @@
 #'
 #' @param nrow,ncol Integer. Image dimensions in pixels.
 #' @param nchan Integer. Number of channels (1-4). Default 1.
-#' @param depth Character. Bit depth. One of `"CV_8U"`, `"CV_8S"`, `"CV_16U"`,
-#'   `"CV_16S"`, `"CV_32S"`, `"CV_32F"`, `"CV_64F"`. Default `"CV_8U"`.
+#' @param depth Character. Bit depth. One of `"CV_8U"`, `"CV_16U"`, `"CV_16S"`,
+#'   `"CV_32F"`, `"CV_64F"`. Default `"CV_8U"`.
 #' @param colorspace Character. Color space label. Default `"GRAY"`.
 #' @return A new `Image` with all pixels set to 0.
 #' @export
@@ -37,7 +37,8 @@ zeros <- function(nrow, ncol, nchan = 1L, depth = "CV_8U", colorspace = "GRAY") 
 #'
 #' @param nrow,ncol Integer. Image dimensions in pixels.
 #' @param nchan Integer. Number of channels (1-4). Default 1.
-#' @param depth Character. Bit depth. Default `"CV_8U"`.
+#' @param depth Character. Bit depth. One of `"CV_8U"`, `"CV_16U"`, `"CV_16S"`,
+#'   `"CV_32F"`, `"CV_64F"`. Default `"CV_8U"`.
 #' @param colorspace Character. Color space label. Default `"GRAY"`.
 #' @return A new `Image` with all pixels set to 1.
 #' @export
@@ -51,10 +52,12 @@ ones <- function(nrow, ncol, nchan = 1L, depth = "CV_8U", colorspace = "GRAY") {
 #'
 #' @param nrow,ncol Integer. Image dimensions in pixels.
 #' @param nchan Integer. Number of channels (1-4). Default 1.
-#' @param depth Character. Bit depth. Default `"CV_8U"`.
+#' @param depth Character. Bit depth. One of `"CV_8U"`, `"CV_16U"`, `"CV_16S"`,
+#'   `"CV_32F"`, `"CV_64F"`. Default `"CV_8U"`.
 #' @param colorspace Character. Color space label. Default `"GRAY"`.
 #' @param low,high Single numeric. Range of the uniform distribution.
-#'   Default `low = 0`, `high = 255`.
+#'   Default `low = 0`, `high = 255`. These defaults are calibrated for
+#'   `CV_8U` images; adjust for other depths (e.g. `high = 1` for `CV_32F`).
 #' @return A new `Image` with pixel values drawn from Uniform(`low`, `high`).
 #' @export
 randu <- function(nrow, ncol, nchan = 1L, depth = "CV_8U", colorspace = "GRAY",
@@ -74,7 +77,8 @@ randu <- function(nrow, ncol, nchan = 1L, depth = "CV_8U", colorspace = "GRAY",
 #'
 #' @param nrow,ncol Integer. Image dimensions in pixels.
 #' @param nchan Integer. Number of channels (1-4). Default 1.
-#' @param depth Character. Bit depth. Default `"CV_8U"`.
+#' @param depth Character. Bit depth. One of `"CV_8U"`, `"CV_16U"`, `"CV_16S"`,
+#'   `"CV_32F"`, `"CV_64F"`. Default `"CV_8U"`.
 #' @param colorspace Character. Color space label. Default `"GRAY"`.
 #' @param mean Single numeric. Mean of the Gaussian. Default 128.
 #' @param sd Single positive numeric. Standard deviation. Default 30.
