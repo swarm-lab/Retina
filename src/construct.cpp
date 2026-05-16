@@ -88,3 +88,19 @@ external_pointer<RtImage> rt_image_border(
                      cv_border_type_c(border_type), scalar);
   return {new RtImage(std::move(dst), img->colorspace)};
 }
+
+// ── fill ──────────────────────────────────────────────────────────────────────
+[[cpp11::register]]
+external_pointer<RtImage> rt_fill(int rows, int cols, int nchan,
+                                   std::string depth, std::string colorspace,
+                                   doubles value_vec) {
+  int type = CV_MAKETYPE(cv_depth_code(depth), nchan);
+  // value_vec is always length nchan (recycled on the R side).
+  // Build a 4-element Scalar, zero-padding unused channels.
+  double v0 = value_vec.size() > 0 ? value_vec[0] : 0.0;
+  double v1 = value_vec.size() > 1 ? value_vec[1] : 0.0;
+  double v2 = value_vec.size() > 2 ? value_vec[2] : 0.0;
+  double v3 = value_vec.size() > 3 ? value_vec[3] : 0.0;
+  cv::Mat mat(rows, cols, type, cv::Scalar(v0, v1, v2, v3));
+  return {new RtImage(std::move(mat), colorspace)};
+}

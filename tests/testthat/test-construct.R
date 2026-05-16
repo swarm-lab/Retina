@@ -166,3 +166,57 @@ test_that("border() accepts 'default' as a valid type", {
   expect_equal(b$nrow, 5L)
   expect_s3_class(b, "Image")
 })
+
+# ── Image$fill() ──────────────────────────────────────────────────────────────
+
+test_that("Image$fill() creates image with scalar value on all pixels", {
+  img <- Image$fill(128, 3L, 4L, 1L, "CV_8U", "GRAY")
+  expect_equal(img$nrow, 3L)
+  expect_equal(img$ncol, 4L)
+  expect_equal(img$nchan, 1L)
+  expect_equal(img$depth_name, "CV_8U")
+  expect_equal(img[1, 1], c(Y = 128))
+  expect_equal(img[3, 4], c(Y = 128))
+})
+
+test_that("Image$fill() with vector value fills each channel correctly", {
+  img <- Image$fill(c(10, 20, 30), 3L, 4L, 3L, "CV_8U", "BGR")
+  expect_equal(img[1, 1], c(B = 10, G = 20, R = 30))
+  expect_equal(img[3, 4], c(B = 10, G = 20, R = 30))
+})
+
+test_that("Image$fill() scalar recycles to all channels", {
+  img <- Image$fill(50, 2L, 2L, 3L, "CV_8U", "BGR")
+  expect_equal(img[1, 1], c(B = 50, G = 50, R = 50))
+})
+
+test_that("Image$fill() returns an Image", {
+  expect_s3_class(Image$fill(0, 2L, 2L), "Image")
+})
+
+test_that("Image$zeros() delegates to Image$fill()", {
+  z <- Image$zeros(3L, 4L, 3L, "CV_8U", "BGR")
+  f <- Image$fill(0, 3L, 4L, 3L, "CV_8U", "BGR")
+  expect_equal(z$to_array(), f$to_array())
+})
+
+test_that("Image$ones() delegates to Image$fill()", {
+  o <- Image$ones(2L, 2L, 1L, "CV_8U", "GRAY")
+  f <- Image$fill(1, 2L, 2L, 1L, "CV_8U", "GRAY")
+  expect_equal(o$to_array(), f$to_array())
+})
+
+test_that("Image$fill() errors on mismatched value length", {
+  expect_error(
+    Image$fill(c(1, 2), 3L, 3L, 3L),
+    "value length.*must equal nchan"
+  )
+})
+
+test_that("Image$fill() errors on NA value", {
+  expect_error(Image$fill(NA_real_, 3L, 3L), "value must be")
+})
+
+test_that("Image$fill() errors on empty value", {
+  expect_error(Image$fill(numeric(0), 3L, 3L), "value must be")
+})

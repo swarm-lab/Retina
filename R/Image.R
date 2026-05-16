@@ -1803,23 +1803,34 @@ Image <- R6::R6Class("Image",
     stop("colorspace must be a single character string", call. = FALSE)
 }
 
-# Create a zero-filled image.
-# nrow, ncol: image dimensions. nchan: channels (1-4). depth: one of CV_8U,
-# CV_16U, CV_16S, CV_32F, CV_64F. colorspace: color space label.
+# General fill constructor — all other constructors delegate to this one.
+# value: numeric scalar (recycled) or vector of length nchan. No NAs.
+Image$fill <- function(value, nrow, ncol, nchan = 1L, depth = "CV_8U",
+                       colorspace = "GRAY") {
+  .rt_check_construct_args(nrow, ncol, nchan, depth, colorspace)
+  if (!is.numeric(value) || length(value) < 1L || length(value) > 4L || anyNA(value))
+    stop("value must be a non-empty numeric vector (length 1-4) with no NAs",
+         call. = FALSE)
+  if (length(value) > 1L && length(value) != nchan)
+    stop("value length (", length(value), ") must equal nchan (", nchan, ") or be 1",
+         call. = FALSE)
+  value_recycled <- rep_len(as.double(value), as.integer(nchan))
+  Image$new(rt_fill(as.integer(nrow), as.integer(ncol),
+                    as.integer(nchan), depth, colorspace,
+                    value_recycled))
+}
+
+# Create a zero-filled image. Delegates to Image$fill(0, ...).
 Image$zeros <- function(nrow, ncol, nchan = 1L, depth = "CV_8U",
                         colorspace = "GRAY") {
-  .rt_check_construct_args(nrow, ncol, nchan, depth, colorspace)
-  Image$new(rt_zeros(as.integer(nrow), as.integer(ncol),
-                     as.integer(nchan), depth, colorspace))
+  Image$fill(0, nrow, ncol, nchan, depth, colorspace)
 }
 
 # Create an image filled with ones (value = 1, not depth maximum).
-# For CV_8U this is nearly black. Use Image$zeros()$set_to(v) for arbitrary fill.
+# Delegates to Image$fill(1, ...).
 Image$ones <- function(nrow, ncol, nchan = 1L, depth = "CV_8U",
                        colorspace = "GRAY") {
-  .rt_check_construct_args(nrow, ncol, nchan, depth, colorspace)
-  Image$new(rt_ones(as.integer(nrow), as.integer(ncol),
-                    as.integer(nchan), depth, colorspace))
+  Image$fill(1, nrow, ncol, nchan, depth, colorspace)
 }
 
 # Create an image filled with uniform random values in [low, high].

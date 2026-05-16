@@ -201,6 +201,13 @@ extern "C" SEXP _Retina_rt_image_border(SEXP img, SEXP top, SEXP bottom, SEXP le
     return cpp11::as_sexp(rt_image_border(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<int>>(top), cpp11::as_cpp<cpp11::decay_t<int>>(bottom), cpp11::as_cpp<cpp11::decay_t<int>>(left), cpp11::as_cpp<cpp11::decay_t<int>>(right), cpp11::as_cpp<cpp11::decay_t<std::string>>(border_type), cpp11::as_cpp<cpp11::decay_t<doubles>>(value)));
   END_CPP11
 }
+// construct.cpp
+external_pointer<RtImage> rt_fill(int rows, int cols, int nchan, std::string depth, std::string colorspace, doubles value_vec);
+extern "C" SEXP _Retina_rt_fill(SEXP rows, SEXP cols, SEXP nchan, SEXP depth, SEXP colorspace, SEXP value_vec) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_fill(cpp11::as_cpp<cpp11::decay_t<int>>(rows), cpp11::as_cpp<cpp11::decay_t<int>>(cols), cpp11::as_cpp<cpp11::decay_t<int>>(nchan), cpp11::as_cpp<cpp11::decay_t<std::string>>(depth), cpp11::as_cpp<cpp11::decay_t<std::string>>(colorspace), cpp11::as_cpp<cpp11::decay_t<doubles>>(value_vec)));
+  END_CPP11
+}
 // display.cpp
 integers rt_image_to_native_raster(external_pointer<RtImage> img);
 extern "C" SEXP _Retina_rt_image_to_native_raster(SEXP img) {
@@ -556,6 +563,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_Retina_rt_affine_from_points",       (DL_FUNC) &_Retina_rt_affine_from_points,       2},
     {"_Retina_rt_affine_rotate",            (DL_FUNC) &_Retina_rt_affine_rotate,            4},
     {"_Retina_rt_build_ok",                 (DL_FUNC) &_Retina_rt_build_ok,                 0},
+    {"_Retina_rt_fill",                     (DL_FUNC) &_Retina_rt_fill,                     6},
     {"_Retina_rt_has_cuda",                 (DL_FUNC) &_Retina_rt_has_cuda,                 0},
     {"_Retina_rt_has_module",               (DL_FUNC) &_Retina_rt_has_module,               1},
     {"_Retina_rt_image_absdiff_image",      (DL_FUNC) &_Retina_rt_image_absdiff_image,      2},
