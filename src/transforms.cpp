@@ -39,6 +39,8 @@ external_pointer<RtImage> rt_image_warp_affine(
     doubles m,
     int width, int height,
     std::string interpolation, std::string border_type) {
+  if (m.size() != 6) stop("m must be a 2x3 matrix (6 elements)");
+  if (width <= 0 || height <= 0) stop("width and height must be positive integers");
   // m arrives as a length-6 vector (R stores 2x3 matrix column-major)
   // Layout: m[0]=M(0,0), m[1]=M(1,0), m[2]=M(0,1), m[3]=M(1,1), m[4]=M(0,2), m[5]=M(1,2)
   cv::Mat M(2, 3, CV_64F);
@@ -59,6 +61,8 @@ external_pointer<RtImage> rt_image_warp_perspective(
     doubles m,
     int width, int height,
     std::string interpolation, std::string border_type) {
+  if (m.size() != 9) stop("m must be a 3x3 matrix (9 elements)");
+  if (width <= 0 || height <= 0) stop("width and height must be positive integers");
   // m arrives as a length-9 vector (R stores 3x3 matrix column-major)
   // Layout: m[i + j*3] = M(i, j)
   cv::Mat M(3, 3, CV_64F);
@@ -74,11 +78,11 @@ external_pointer<RtImage> rt_image_warp_perspective(
 // ── affine_rotate ─────────────────────────────────────────────────────────────
 
 [[cpp11::register]]
-doubles rt_affine_rotate(double angle, double cx, double cy) {
+doubles rt_affine_rotate(double angle, double cx, double cy, double scale) {
   // cx, cy are 1-based; subtract 1 for OpenCV
   cv::Mat M = cv::getRotationMatrix2D(
     cv::Point2f(static_cast<float>(cx - 1.0), static_cast<float>(cy - 1.0)),
-    angle, 1.0);
+    angle, scale);
   // Return as length-6 vector; R will reshape to 2x3 matrix column-major
   writable::doubles result(6);
   for (int i = 0; i < 2; i++)
@@ -91,6 +95,8 @@ doubles rt_affine_rotate(double angle, double cx, double cy) {
 
 [[cpp11::register]]
 doubles rt_affine_from_points(doubles src, doubles dst) {
+  if (src.size() != 6) stop("src must be a 3x2 matrix (6 elements)");
+  if (dst.size() != 6) stop("dst must be a 3x2 matrix (6 elements)");
   // src and dst are length-6 vectors from 3x2 R matrices (column-major)
   // col 0 = x values (indices 0,1,2), col 1 = y values (indices 3,4,5)
   std::vector<cv::Point2f> src_pts(3), dst_pts(3);
@@ -112,6 +118,8 @@ doubles rt_affine_from_points(doubles src, doubles dst) {
 
 [[cpp11::register]]
 doubles rt_perspective_from_points(doubles src, doubles dst) {
+  if (src.size() != 8) stop("src must be a 4x2 matrix (8 elements)");
+  if (dst.size() != 8) stop("dst must be a 4x2 matrix (8 elements)");
   // src and dst are length-8 vectors from 4x2 R matrices (column-major)
   // col 0 = x values (indices 0-3), col 1 = y values (indices 4-7)
   std::vector<cv::Point2f> src_pts(4), dst_pts(4);

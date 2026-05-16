@@ -260,8 +260,8 @@ rt_image_warp_perspective <- function(img, m, width, height, interpolation, bord
   .Call(`_Retina_rt_image_warp_perspective`, img, m, width, height, interpolation, border_type)
 }
 
-rt_affine_rotate <- function(angle, cx, cy) {
-  .Call(`_Retina_rt_affine_rotate`, angle, cx, cy)
+rt_affine_rotate <- function(angle, cx, cy, scale) {
+  .Call(`_Retina_rt_affine_rotate`, angle, cx, cy, scale)
 }
 
 rt_affine_from_points <- function(src, dst) {

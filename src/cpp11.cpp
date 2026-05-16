@@ -465,10 +465,10 @@ extern "C" SEXP _Retina_rt_image_warp_perspective(SEXP img, SEXP m, SEXP width, 
   END_CPP11
 }
 // transforms.cpp
-doubles rt_affine_rotate(double angle, double cx, double cy);
-extern "C" SEXP _Retina_rt_affine_rotate(SEXP angle, SEXP cx, SEXP cy) {
+doubles rt_affine_rotate(double angle, double cx, double cy, double scale);
+extern "C" SEXP _Retina_rt_affine_rotate(SEXP angle, SEXP cx, SEXP cy, SEXP scale) {
   BEGIN_CPP11
-    return cpp11::as_sexp(rt_affine_rotate(cpp11::as_cpp<cpp11::decay_t<double>>(angle), cpp11::as_cpp<cpp11::decay_t<double>>(cx), cpp11::as_cpp<cpp11::decay_t<double>>(cy)));
+    return cpp11::as_sexp(rt_affine_rotate(cpp11::as_cpp<cpp11::decay_t<double>>(angle), cpp11::as_cpp<cpp11::decay_t<double>>(cx), cpp11::as_cpp<cpp11::decay_t<double>>(cy), cpp11::as_cpp<cpp11::decay_t<double>>(scale)));
   END_CPP11
 }
 // transforms.cpp
@@ -489,7 +489,7 @@ extern "C" SEXP _Retina_rt_perspective_from_points(SEXP src, SEXP dst) {
 extern "C" {
 static const R_CallMethodDef CallEntries[] = {
     {"_Retina_rt_affine_from_points",       (DL_FUNC) &_Retina_rt_affine_from_points,       2},
-    {"_Retina_rt_affine_rotate",            (DL_FUNC) &_Retina_rt_affine_rotate,            3},
+    {"_Retina_rt_affine_rotate",            (DL_FUNC) &_Retina_rt_affine_rotate,            4},
     {"_Retina_rt_build_ok",                 (DL_FUNC) &_Retina_rt_build_ok,                 0},
     {"_Retina_rt_has_cuda",                 (DL_FUNC) &_Retina_rt_has_cuda,                 0},
     {"_Retina_rt_has_module",               (DL_FUNC) &_Retina_rt_has_module,               1},
