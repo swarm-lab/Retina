@@ -1655,3 +1655,68 @@ Image <- R6::R6Class("Image",
 
   Image$new(rt_image_extract_region(.ptr, i[1L], j[1L], i[length(i)], j[length(j)]))
 }
+
+#' @export
+`[<-.Image` <- function(x, i, j, k, value) {
+  # drop is accepted for S3 generic compatibility but not used.
+  .nrow  <- x$nrow
+  .ncol  <- x$ncol
+  .nchan <- x$nchan
+  .depth <- x$depth
+  .ptr   <- .rt_ptr(x)
+
+  .k_missing <- missing(k)
+
+  if (missing(i) || missing(j))
+    stop("both row and column indices must be provided for assignment", call. = FALSE)
+
+  if (anyNA(i)) stop("row index must not contain NA", call. = FALSE)
+  if (anyNA(j)) stop("column index must not contain NA", call. = FALSE)
+
+  i <- as.integer(i)
+  j <- as.integer(j)
+
+  if (length(i) < 1L) stop("row index must not be empty", call. = FALSE)
+  if (length(j) < 1L) stop("column index must not be empty", call. = FALSE)
+
+  if (any(i < 1L) || any(i > .nrow))
+    stop("row index out of bounds", call. = FALSE)
+  if (length(i) > 1L && !all(diff(i) == 1L))
+    stop("index must be a contiguous integer sequence", call. = FALSE)
+
+  if (any(j < 1L) || any(j > .ncol))
+    stop("column index out of bounds", call. = FALSE)
+  if (length(j) > 1L && !all(diff(j) == 1L))
+    stop("index must be a contiguous integer sequence", call. = FALSE)
+
+  if (length(i) == 1L && length(j) == 1L) {
+    if (!.k_missing) {
+      if (is.na(k)) stop("channel index must not be NA", call. = FALSE)
+      k <- as.integer(k)
+      if (length(k) != 1L || k < 1L || k > .nchan)
+        stop("channel index out of bounds", call. = FALSE)
+      if (!is.numeric(value) || length(value) != 1L)
+        stop("value must be a single numeric", call. = FALSE)
+      vals <- as.numeric(rt_image_get_pixel(.ptr, i, j))
+      vals[k] <- as.double(value)
+      rt_image_set_pixel(.ptr, i, j, vals)
+    } else {
+      if (!is.numeric(value) || length(value) != .nchan)
+        stop(sprintf("value must be a numeric vector of length %d (matching nchan)", .nchan),
+             call. = FALSE)
+      rt_image_set_pixel(.ptr, i, j, as.double(value))
+    }
+  } else {
+    if (!inherits(value, "Image"))
+      stop("value must be an Image for range assignment", call. = FALSE)
+    if (value$nrow != length(i) || value$ncol != length(j))
+      stop("value dimensions do not match the index range", call. = FALSE)
+    if (value$nchan != .nchan)
+      stop("value has a different number of channels", call. = FALSE)
+    if (value$depth != .depth)
+      stop("value has a different depth", call. = FALSE)
+    rt_image_copy_roi(.ptr, .rt_ptr(value), i[1L], j[1L])
+  }
+
+  x
+}

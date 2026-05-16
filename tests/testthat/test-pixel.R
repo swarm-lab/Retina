@@ -176,3 +176,75 @@ test_that("[.Image errors when k is supplied with a range", {
 test_that("[.Image errors on column index below 1", {
   expect_error(img_3x4()[1L, 0L], "column index out of bounds")
 })
+
+# ── [<-.Image write operator ──────────────────────────────────────────────────
+
+test_that("[<-.Image single-pixel write roundtrip", {
+  img <- img_3x4()
+  img[2L, 3L] <- c(99L, 88L, 77L)
+  px <- img[2L, 3L]
+  expect_equal(as.integer(px[["B"]]), 99L)
+  expect_equal(as.integer(px[["G"]]), 88L)
+  expect_equal(as.integer(px[["R"]]), 77L)
+})
+
+test_that("[<-.Image single-channel write roundtrip", {
+  img <- img_3x4()
+  img[2L, 3L, 1L] <- 55L  # B channel
+  expect_equal(as.integer(img[2L, 3L, 1L]), 55L)
+  # Other channels unchanged
+  expect_equal(as.integer(img[2L, 3L, 2L]), 30L)
+})
+
+test_that("[<-.Image single-pixel write does not affect other pixels", {
+  img <- img_3x4()
+  img[2L, 3L] <- c(99L, 88L, 77L)
+  # Adjacent pixel (1,3) should be unchanged: B=10, G=30, R=0
+  px <- img[1L, 3L]
+  expect_equal(as.integer(px[["B"]]), 10L)
+  expect_equal(as.integer(px[["G"]]), 30L)
+})
+
+test_that("[<-.Image range write (ROI copy) pastes src into dst", {
+  dst <- img_3x4()
+  src_arr <- array(42L, dim = c(2L, 2L, 3L))
+  src <- Image$new(src_arr, colorspace = "BGR", depth = "CV_8U")
+  dst[1:2, 1:2] <- src
+  # Pixels in the pasted region should be 42
+  expect_equal(as.integer(dst[1L, 1L, 1L]), 42L)
+  expect_equal(as.integer(dst[2L, 2L, 1L]), 42L)
+  # Pixel outside the region should be unchanged: (3,3) B=30
+  expect_equal(as.integer(dst[3L, 3L, 1L]), 30L)
+})
+
+test_that("[<-.Image returns the modified image", {
+  img <- img_3x4()
+  result <- `[<-`(img, 1L, 1L, value = c(1L, 2L, 3L))
+  expect_true(inherits(result, "Image"))
+})
+
+test_that("[<-.Image errors when value length mismatches nchan", {
+  img <- img_3x4()
+  expect_error(
+    { img[1L, 1L] <- c(1L, 2L) },
+    "length"
+  )
+})
+
+test_that("[<-.Image errors when range write value is not an Image", {
+  img <- img_3x4()
+  expect_error(
+    { img[1:2, 1:2] <- matrix(42L, 2L, 2L) },
+    "Image"
+  )
+})
+
+test_that("[<-.Image errors when range write dimensions mismatch", {
+  dst <- img_3x4()
+  src_arr <- array(42L, dim = c(3L, 2L, 3L))  # 3 rows, not 2
+  src <- Image$new(src_arr, colorspace = "BGR", depth = "CV_8U")
+  expect_error(
+    { dst[1:2, 1:2] <- src },
+    "dimensions"
+  )
+})
