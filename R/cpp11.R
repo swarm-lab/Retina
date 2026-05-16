@@ -124,12 +124,12 @@ rt_image_canny <- function(img, low_threshold, high_threshold, aperture_size, L2
   .Call(`_Retina_rt_image_canny`, img, low_threshold, high_threshold, aperture_size, L2_gradient)
 }
 
-rt_image_resize <- function(img, width, height, fx, fy, interp_int) {
-  .Call(`_Retina_rt_image_resize`, img, width, height, fx, fy, interp_int)
+rt_image_resize <- function(img, width, height, fx, fy, interpolation) {
+  .Call(`_Retina_rt_image_resize`, img, width, height, fx, fy, interpolation)
 }
 
-rt_image_rotate <- function(img, angle, cx, cy, scale, interp_int, border_int) {
-  .Call(`_Retina_rt_image_rotate`, img, angle, cx, cy, scale, interp_int, border_int)
+rt_image_rotate <- function(img, angle, cx, cy, scale, interpolation, border_type) {
+  .Call(`_Retina_rt_image_rotate`, img, angle, cx, cy, scale, interpolation, border_type)
 }
 
 rt_image_flip <- function(img, flip_code) {
@@ -250,4 +250,24 @@ rt_image_median <- function(img) {
 
 rt_image_quantile <- function(img, probs) {
   .Call(`_Retina_rt_image_quantile`, img, probs)
+}
+
+rt_image_warp_affine <- function(img, m, width, height, interpolation, border_type) {
+  .Call(`_Retina_rt_image_warp_affine`, img, m, width, height, interpolation, border_type)
+}
+
+rt_image_warp_perspective <- function(img, m, width, height, interpolation, border_type) {
+  .Call(`_Retina_rt_image_warp_perspective`, img, m, width, height, interpolation, border_type)
+}
+
+rt_affine_rotate <- function(angle, cx, cy) {
+  .Call(`_Retina_rt_affine_rotate`, angle, cx, cy)
+}
+
+rt_affine_from_points <- function(src, dst) {
+  .Call(`_Retina_rt_affine_from_points`, src, dst)
+}
+
+rt_perspective_from_points <- function(src, dst) {
+  .Call(`_Retina_rt_perspective_from_points`, src, dst)
 }

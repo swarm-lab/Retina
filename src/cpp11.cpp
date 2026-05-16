@@ -223,17 +223,17 @@ extern "C" SEXP _Retina_rt_image_canny(SEXP img, SEXP low_threshold, SEXP high_t
   END_CPP11
 }
 // geometry.cpp
-external_pointer<RtImage> rt_image_resize(external_pointer<RtImage> img, int width, int height, double fx, double fy, int interp_int);
-extern "C" SEXP _Retina_rt_image_resize(SEXP img, SEXP width, SEXP height, SEXP fx, SEXP fy, SEXP interp_int) {
+external_pointer<RtImage> rt_image_resize(external_pointer<RtImage> img, int width, int height, double fx, double fy, std::string interpolation);
+extern "C" SEXP _Retina_rt_image_resize(SEXP img, SEXP width, SEXP height, SEXP fx, SEXP fy, SEXP interpolation) {
   BEGIN_CPP11
-    return cpp11::as_sexp(rt_image_resize(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<int>>(width), cpp11::as_cpp<cpp11::decay_t<int>>(height), cpp11::as_cpp<cpp11::decay_t<double>>(fx), cpp11::as_cpp<cpp11::decay_t<double>>(fy), cpp11::as_cpp<cpp11::decay_t<int>>(interp_int)));
+    return cpp11::as_sexp(rt_image_resize(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<int>>(width), cpp11::as_cpp<cpp11::decay_t<int>>(height), cpp11::as_cpp<cpp11::decay_t<double>>(fx), cpp11::as_cpp<cpp11::decay_t<double>>(fy), cpp11::as_cpp<cpp11::decay_t<std::string>>(interpolation)));
   END_CPP11
 }
 // geometry.cpp
-external_pointer<RtImage> rt_image_rotate(external_pointer<RtImage> img, double angle, double cx, double cy, double scale, int interp_int, int border_int);
-extern "C" SEXP _Retina_rt_image_rotate(SEXP img, SEXP angle, SEXP cx, SEXP cy, SEXP scale, SEXP interp_int, SEXP border_int) {
+external_pointer<RtImage> rt_image_rotate(external_pointer<RtImage> img, double angle, double cx, double cy, double scale, std::string interpolation, std::string border_type);
+extern "C" SEXP _Retina_rt_image_rotate(SEXP img, SEXP angle, SEXP cx, SEXP cy, SEXP scale, SEXP interpolation, SEXP border_type) {
   BEGIN_CPP11
-    return cpp11::as_sexp(rt_image_rotate(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<double>>(angle), cpp11::as_cpp<cpp11::decay_t<double>>(cx), cpp11::as_cpp<cpp11::decay_t<double>>(cy), cpp11::as_cpp<cpp11::decay_t<double>>(scale), cpp11::as_cpp<cpp11::decay_t<int>>(interp_int), cpp11::as_cpp<cpp11::decay_t<int>>(border_int)));
+    return cpp11::as_sexp(rt_image_rotate(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<double>>(angle), cpp11::as_cpp<cpp11::decay_t<double>>(cx), cpp11::as_cpp<cpp11::decay_t<double>>(cy), cpp11::as_cpp<cpp11::decay_t<double>>(scale), cpp11::as_cpp<cpp11::decay_t<std::string>>(interpolation), cpp11::as_cpp<cpp11::decay_t<std::string>>(border_type)));
   END_CPP11
 }
 // geometry.cpp
@@ -450,9 +450,46 @@ extern "C" SEXP _Retina_rt_image_quantile(SEXP img, SEXP probs) {
     return cpp11::as_sexp(rt_image_quantile(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<doubles>>(probs)));
   END_CPP11
 }
+// transforms.cpp
+external_pointer<RtImage> rt_image_warp_affine(external_pointer<RtImage> img, doubles m, int width, int height, std::string interpolation, std::string border_type);
+extern "C" SEXP _Retina_rt_image_warp_affine(SEXP img, SEXP m, SEXP width, SEXP height, SEXP interpolation, SEXP border_type) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_image_warp_affine(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<doubles>>(m), cpp11::as_cpp<cpp11::decay_t<int>>(width), cpp11::as_cpp<cpp11::decay_t<int>>(height), cpp11::as_cpp<cpp11::decay_t<std::string>>(interpolation), cpp11::as_cpp<cpp11::decay_t<std::string>>(border_type)));
+  END_CPP11
+}
+// transforms.cpp
+external_pointer<RtImage> rt_image_warp_perspective(external_pointer<RtImage> img, doubles m, int width, int height, std::string interpolation, std::string border_type);
+extern "C" SEXP _Retina_rt_image_warp_perspective(SEXP img, SEXP m, SEXP width, SEXP height, SEXP interpolation, SEXP border_type) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_image_warp_perspective(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<doubles>>(m), cpp11::as_cpp<cpp11::decay_t<int>>(width), cpp11::as_cpp<cpp11::decay_t<int>>(height), cpp11::as_cpp<cpp11::decay_t<std::string>>(interpolation), cpp11::as_cpp<cpp11::decay_t<std::string>>(border_type)));
+  END_CPP11
+}
+// transforms.cpp
+doubles rt_affine_rotate(double angle, double cx, double cy);
+extern "C" SEXP _Retina_rt_affine_rotate(SEXP angle, SEXP cx, SEXP cy) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_affine_rotate(cpp11::as_cpp<cpp11::decay_t<double>>(angle), cpp11::as_cpp<cpp11::decay_t<double>>(cx), cpp11::as_cpp<cpp11::decay_t<double>>(cy)));
+  END_CPP11
+}
+// transforms.cpp
+doubles rt_affine_from_points(doubles src, doubles dst);
+extern "C" SEXP _Retina_rt_affine_from_points(SEXP src, SEXP dst) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_affine_from_points(cpp11::as_cpp<cpp11::decay_t<doubles>>(src), cpp11::as_cpp<cpp11::decay_t<doubles>>(dst)));
+  END_CPP11
+}
+// transforms.cpp
+doubles rt_perspective_from_points(doubles src, doubles dst);
+extern "C" SEXP _Retina_rt_perspective_from_points(SEXP src, SEXP dst) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_perspective_from_points(cpp11::as_cpp<cpp11::decay_t<doubles>>(src), cpp11::as_cpp<cpp11::decay_t<doubles>>(dst)));
+  END_CPP11
+}
 
 extern "C" {
 static const R_CallMethodDef CallEntries[] = {
+    {"_Retina_rt_affine_from_points",       (DL_FUNC) &_Retina_rt_affine_from_points,       2},
+    {"_Retina_rt_affine_rotate",            (DL_FUNC) &_Retina_rt_affine_rotate,            3},
     {"_Retina_rt_build_ok",                 (DL_FUNC) &_Retina_rt_build_ok,                 0},
     {"_Retina_rt_has_cuda",                 (DL_FUNC) &_Retina_rt_has_cuda,                 0},
     {"_Retina_rt_has_module",               (DL_FUNC) &_Retina_rt_has_module,               1},
@@ -515,7 +552,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_Retina_rt_image_to_integer_array",   (DL_FUNC) &_Retina_rt_image_to_integer_array,   1},
     {"_Retina_rt_image_to_native_raster",   (DL_FUNC) &_Retina_rt_image_to_native_raster,   1},
     {"_Retina_rt_image_var",                (DL_FUNC) &_Retina_rt_image_var,                1},
+    {"_Retina_rt_image_warp_affine",        (DL_FUNC) &_Retina_rt_image_warp_affine,        6},
+    {"_Retina_rt_image_warp_perspective",   (DL_FUNC) &_Retina_rt_image_warp_perspective,   6},
     {"_Retina_rt_image_write",              (DL_FUNC) &_Retina_rt_image_write,              2},
+    {"_Retina_rt_perspective_from_points",  (DL_FUNC) &_Retina_rt_perspective_from_points,  2},
     {NULL, NULL, 0}
 };
 }
