@@ -1658,7 +1658,6 @@ Image <- R6::R6Class("Image",
 
 #' @export
 `[<-.Image` <- function(x, i, j, k, value) {
-  # drop is accepted for S3 generic compatibility but not used.
   .nrow  <- x$nrow
   .ncol  <- x$ncol
   .nchan <- x$nchan
