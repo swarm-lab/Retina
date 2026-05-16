@@ -4,3 +4,5 @@
 ^\.Rbuildignore$
 ^\.gitignore$
 ^.*\.Rproj$
+^_pkgdown\.yml$
+^pkgdown$

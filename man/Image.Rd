@@ -334,6 +334,8 @@ img$plot()
 \item \href{#method-Image-warp_affine_}{\code{Image$warp_affine_()}}
 \item \href{#method-Image-warp_perspective}{\code{Image$warp_perspective()}}
 \item \href{#method-Image-warp_perspective_}{\code{Image$warp_perspective_()}}
+\item \href{#method-Image-border}{\code{Image$border()}}
+\item \href{#method-Image-border_}{\code{Image$border_()}}
 \item \href{#method-Image-print}{\code{Image$print()}}
 }
 }
@@ -2407,6 +2409,86 @@ img$plot()
 
 }
 
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-border"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-border}{}}}
+\subsection{Method \code{border()}}{
+Add a border around the image.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$border(
+  top,
+  bottom = top,
+  left = top,
+  right = left,
+  type = "constant",
+  value = 0
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{top}}{Integer. Border width in pixels on the top edge.}
+
+\item{\code{bottom}}{Integer. Border width on the bottom edge. Defaults to `top`.}
+
+\item{\code{left}}{Integer. Border width on the left edge. Defaults to `top`.}
+
+\item{\code{right}}{Integer. Border width on the right edge. Defaults to `left`.}
+
+\item{\code{type}}{Character. Border fill mode. One of `"constant"`,
+`"default"`, `"reflect"`, `"reflect_101"`, `"replicate"`, `"wrap"`.
+Default `"constant"`.}
+
+\item{\code{value}}{Numeric vector of length 1 or `nchan`. Fill colour used when
+`type = "constant"`. Recycled to `nchan` values. Default 0 (black).}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A new `Image`.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-border_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-border_}{}}}
+\subsection{Method \code{border_()}}{
+Add a border around the image, in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$border_(
+  top,
+  bottom = top,
+  left = top,
+  right = left,
+  type = "constant",
+  value = 0
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{top}}{Integer. Border width on the top edge.}
+
+\item{\code{bottom}}{Integer. Defaults to `top`.}
+
+\item{\code{left}}{Integer. Defaults to `top`.}
+
+\item{\code{right}}{Integer. Defaults to `left`.}
+
+\item{\code{type}}{Character. Border fill mode. One of `"constant"`,
+`"default"`, `"reflect"`, `"reflect_101"`, `"replicate"`, `"wrap"`.
+Default `"constant"`.}
+
+\item{\code{value}}{Numeric vector of length 1 or `nchan`. Fill colour used when
+`type = "constant"`. Recycled to `nchan` values. Default 0 (black).}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+`self` invisibly.
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Image-print"></a>}}

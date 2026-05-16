@@ -25,5 +25,5 @@ Suggests:
     rmarkdown
 Config/testthat/edition: 3
 VignetteBuilder: knitr
-URL: https://github.com/swarm-lab/Retina
+URL: https://github.com/swarm-lab/Retina, https://swarm-lab.github.io/Retina/
 BugReports: https://github.com/swarm-lab/Retina/issues

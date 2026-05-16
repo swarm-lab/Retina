@@ -12,6 +12,7 @@ An OpenCV-based computer vision library providing an idiomatic R interface to im
 Useful links:
 \itemize{
   \item \url{https://github.com/swarm-lab/Retina}
+  \item \url{https://swarm-lab.github.io/Retina/}
   \item Report bugs at \url{https://github.com/swarm-lab/Retina/issues}
 }
 
