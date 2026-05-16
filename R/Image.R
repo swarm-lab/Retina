@@ -1707,6 +1707,10 @@ Image <- R6::R6Class("Image",
       rt_image_set_pixel(.ptr, i, j, as.double(value))
     }
   } else {
+    if (!.k_missing)
+      stop("channel index k is not supported for range assignment", call. = FALSE)
+    # Assignment always requires explicit row and column indices.
+    # Unlike [.Image, no defaulting to full row/column is provided.
     if (!inherits(value, "Image"))
       stop("value must be an Image for range assignment", call. = FALSE)
     if (value$nrow != length(i) || value$ncol != length(j))

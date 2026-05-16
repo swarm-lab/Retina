@@ -248,3 +248,13 @@ test_that("[<-.Image errors when range write dimensions mismatch", {
     "dimensions"
   )
 })
+
+test_that("[<-.Image errors when k is supplied with a range", {
+  dst <- img_3x4()
+  src_arr <- array(42L, dim = c(2L, 2L, 3L))
+  src <- Image$new(src_arr, colorspace = "BGR", depth = "CV_8U")
+  expect_error(
+    { dst[1:2, 1:2, 1L] <- src },
+    "range"
+  )
+})
