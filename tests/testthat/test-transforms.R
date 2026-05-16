@@ -137,3 +137,49 @@ test_that("perspective_from_points errors on wrong src shape", {
   dst <- matrix(c(1, 1,  10, 1,  10, 10,  1, 10), nrow = 4, ncol = 2, byrow = TRUE)
   expect_error(perspective_from_points(src, dst), "src must be a 4x2 numeric matrix")
 })
+
+# ── warp_affine ───────────────────────────────────────────────────────────────
+
+img_10x10 <- function() {
+  arr <- array(seq_len(300L), dim = c(10L, 10L, 3L))
+  storage.mode(arr) <- "integer"
+  Image$new(arr, colorspace = "BGR", depth = "CV_8U")
+}
+
+test_that("warp_affine with identity matrix preserves dimensions", {
+  m <- cbind(diag(2), c(0, 0))
+  result <- img_10x10()$warp_affine(m)
+  expect_equal(result$ncol, 10L)
+  expect_equal(result$nrow, 10L)
+})
+
+test_that("warp_affine with explicit width/height produces correct output size", {
+  m <- cbind(diag(2), c(0, 0))
+  result <- img_10x10()$warp_affine(m, width = 20L, height = 5L)
+  expect_equal(result$ncol, 20L)
+  expect_equal(result$nrow, 5L)
+})
+
+test_that("warp_affine errors on wrong matrix shape (3x3)", {
+  expect_error(img_10x10()$warp_affine(diag(3)),
+               "m must be a 2x3 numeric matrix")
+})
+
+test_that("warp_affine errors on non-matrix input", {
+  expect_error(img_10x10()$warp_affine(1:6),
+               "m must be a 2x3 numeric matrix")
+})
+
+test_that("warp_affine preserves colorspace", {
+  m <- cbind(diag(2), c(0, 0))
+  expect_equal(img_10x10()$warp_affine(m)$colorspace, "BGR")
+})
+
+test_that("warp_affine_ modifies image in place and returns self", {
+  img <- img_10x10()
+  m <- cbind(diag(2), c(0, 0))
+  result <- img$warp_affine_(m)
+  expect_identical(result, img)
+  expect_equal(img$ncol, 10L)
+  expect_equal(img$nrow, 10L)
+})
