@@ -1782,3 +1782,71 @@ Image <- R6::R6Class("Image",
 
   x
 }
+
+# ── Image class-level constructors ────────────────────────────────────────────
+# These are attached to the Image class generator so they are called as
+# Image$zeros(), Image$ones(), etc. — analogous to Image$new().
+
+.rt_valid_depths <- c("CV_8U", "CV_16U", "CV_16S", "CV_32F", "CV_64F")
+
+.rt_check_construct_args <- function(nrow, ncol, nchan, depth, colorspace) {
+  if (length(nrow) != 1L || !isTRUE(nrow >= 1L) || !isTRUE(nrow == as.integer(nrow)))
+    stop("nrow must be a single positive integer", call. = FALSE)
+  if (length(ncol) != 1L || !isTRUE(ncol >= 1L) || !isTRUE(ncol == as.integer(ncol)))
+    stop("ncol must be a single positive integer", call. = FALSE)
+  if (length(nchan) != 1L || !isTRUE(nchan >= 1L) || !isTRUE(nchan <= 4L) ||
+      !isTRUE(nchan == as.integer(nchan)))
+    stop("nchan must be a single positive integer <= 4", call. = FALSE)
+  if (length(depth) != 1L || !depth %in% .rt_valid_depths)
+    stop("depth must be one of: ", paste(.rt_valid_depths, collapse = ", "), call. = FALSE)
+  if (length(colorspace) != 1L || !is.character(colorspace) || is.na(colorspace))
+    stop("colorspace must be a single character string", call. = FALSE)
+}
+
+# Create a zero-filled image.
+# nrow, ncol: image dimensions. nchan: channels (1-4). depth: one of CV_8U,
+# CV_16U, CV_16S, CV_32F, CV_64F. colorspace: color space label.
+Image$zeros <- function(nrow, ncol, nchan = 1L, depth = "CV_8U",
+                        colorspace = "GRAY") {
+  .rt_check_construct_args(nrow, ncol, nchan, depth, colorspace)
+  Image$new(rt_zeros(as.integer(nrow), as.integer(ncol),
+                     as.integer(nchan), depth, colorspace))
+}
+
+# Create an image filled with ones (value = 1, not depth maximum).
+# For CV_8U this is nearly black. Use Image$zeros()$set_to(v) for arbitrary fill.
+Image$ones <- function(nrow, ncol, nchan = 1L, depth = "CV_8U",
+                       colorspace = "GRAY") {
+  .rt_check_construct_args(nrow, ncol, nchan, depth, colorspace)
+  Image$new(rt_ones(as.integer(nrow), as.integer(ncol),
+                    as.integer(nchan), depth, colorspace))
+}
+
+# Create an image filled with uniform random values in [low, high].
+# Defaults (low=0, high=255) are calibrated for CV_8U; adjust for other depths.
+Image$randu <- function(nrow, ncol, nchan = 1L, depth = "CV_8U",
+                        colorspace = "GRAY", low = 0, high = 255) {
+  .rt_check_construct_args(nrow, ncol, nchan, depth, colorspace)
+  if (length(low) != 1L || !is.numeric(low) || !is.finite(low))
+    stop("low must be a single finite numeric", call. = FALSE)
+  if (length(high) != 1L || !is.numeric(high) || !is.finite(high))
+    stop("high must be a single finite numeric", call. = FALSE)
+  if (low >= high) stop("low must be strictly less than high", call. = FALSE)
+  Image$new(rt_randu(as.integer(nrow), as.integer(ncol),
+                     as.integer(nchan), depth, colorspace,
+                     as.double(low), as.double(high)))
+}
+
+# Create an image filled with Gaussian random values ~ Normal(mean, sd).
+# Defaults (mean=128, sd=30) are calibrated for CV_8U.
+Image$randn <- function(nrow, ncol, nchan = 1L, depth = "CV_8U",
+                        colorspace = "GRAY", mean = 128, sd = 30) {
+  .rt_check_construct_args(nrow, ncol, nchan, depth, colorspace)
+  if (length(mean) != 1L || !is.numeric(mean) || !is.finite(mean))
+    stop("mean must be a single finite numeric", call. = FALSE)
+  if (length(sd) != 1L || !is.numeric(sd) || !is.finite(sd) || sd <= 0)
+    stop("sd must be a single positive finite numeric", call. = FALSE)
+  Image$new(rt_randn(as.integer(nrow), as.integer(ncol),
+                     as.integer(nchan), depth, colorspace,
+                     as.double(mean), as.double(sd)))
+}
