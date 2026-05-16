@@ -1595,3 +1595,52 @@ Image <- R6::R6Class("Image",
     }
   )
 )
+
+# ── S3 indexing operators ──────────────────────────────────────────────────────
+
+#' @export
+`[.Image` <- function(x, i, j, k, drop = TRUE) {
+  .nrow  <- x$nrow
+  .ncol  <- x$ncol
+  .nchan <- x$nchan
+  .ptr   <- x$.__enclos_env__$private$.ptr
+
+  .i_missing <- missing(i)
+  .j_missing <- missing(j)
+  .k_missing <- missing(k)
+
+  if (.i_missing && .j_missing)
+    stop("at least one index must be provided", call. = FALSE)
+
+  if (.i_missing) i <- seq_len(.nrow)
+  if (.j_missing) j <- seq_len(.ncol)
+
+  i <- as.integer(i)
+  j <- as.integer(j)
+
+  if (any(i < 1L) || any(i > .nrow))
+    stop("row index out of bounds", call. = FALSE)
+  if (length(i) > 1L && !all(diff(i) == 1L))
+    stop("index must be a contiguous integer sequence", call. = FALSE)
+
+  if (any(j < 1L) || any(j > .ncol))
+    stop("column index out of bounds", call. = FALSE)
+  if (length(j) > 1L && !all(diff(j) == 1L))
+    stop("index must be a contiguous integer sequence", call. = FALSE)
+
+  if (length(i) == 1L && length(j) == 1L) {
+    vals <- setNames(
+      as.numeric(rt_image_get_pixel(.ptr, i, j)),
+      rt_channel_names(x$colorspace, .nchan)
+    )
+    if (!.k_missing) {
+      k <- as.integer(k)
+      if (length(k) != 1L || k < 1L || k > .nchan)
+        stop("channel index out of bounds", call. = FALSE)
+      return(vals[[k]])
+    }
+    return(vals)
+  }
+
+  Image$new(rt_image_extract_region(.ptr, i[1L], j[1L], i[length(i)], j[length(j)]))
+}

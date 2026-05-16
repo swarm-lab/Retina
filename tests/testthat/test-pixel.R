@@ -75,3 +75,88 @@ test_that("rt_image_set_pixel errors when values length < nchan", {
   ptr <- img_3x4()$.__enclos_env__$private$.ptr
   expect_error(Retina:::rt_image_set_pixel(ptr, 1L, 1L, c(1, 2)), "channel")
 })
+
+# ── [.Image read operator ─────────────────────────────────────────────────────
+
+test_that("[.Image returns named numeric vector for single pixel", {
+  px <- img_3x4()[1L, 1L]
+  expect_type(px, "double")
+  expect_length(px, 3L)
+  expect_named(px, c("B", "G", "R"))
+})
+
+test_that("[.Image returns correct channel values for single pixel", {
+  # pixel (2,3): B = 2*10 = 20, G = 3*10 = 30, R = 0
+  px <- img_3x4()[2L, 3L]
+  expect_equal(px[["B"]], 20)
+  expect_equal(px[["G"]], 30)
+  expect_equal(px[["R"]], 0)
+})
+
+test_that("[.Image with k returns single scalar", {
+  # channel 2 (G) at (1,1): j=1, so G = 1*10 = 10
+  val <- img_3x4()[1L, 1L, 2L]
+  expect_length(val, 1L)
+  expect_equal(val, 10)
+})
+
+test_that("[.Image range returns Image with correct dimensions", {
+  result <- img_3x4()[1:2, 1:3]
+  expect_true(inherits(result, "Image"))
+  expect_equal(result$nrow, 2L)
+  expect_equal(result$ncol, 3L)
+})
+
+test_that("[.Image range preserves colorspace", {
+  expect_equal(img_3x4()[1:2, 1:3]$colorspace, "BGR")
+})
+
+test_that("[.Image missing i returns full-column strip", {
+  result <- img_3x4()[, 2L]
+  expect_equal(result$nrow, 3L)
+  expect_equal(result$ncol, 1L)
+})
+
+test_that("[.Image missing j returns full-row strip", {
+  result <- img_3x4()[1L, ]
+  expect_equal(result$nrow, 1L)
+  expect_equal(result$ncol, 4L)
+})
+
+test_that("[.Image errors when both i and j are missing", {
+  expect_error(img_3x4()[], "at least one index")
+})
+
+test_that("[.Image errors on row index out of bounds (low)", {
+  expect_error(img_3x4()[0L, 1L], "row index out of bounds")
+})
+
+test_that("[.Image errors on row index out of bounds (high)", {
+  expect_error(img_3x4()[4L, 1L], "row index out of bounds")
+})
+
+test_that("[.Image errors on column index out of bounds (high)", {
+  expect_error(img_3x4()[1L, 5L], "column index out of bounds")
+})
+
+test_that("[.Image errors on non-contiguous row index", {
+  expect_error(img_3x4()[c(1L, 3L), 1L], "contiguous")
+})
+
+test_that("[.Image errors on channel index out of bounds", {
+  expect_error(img_3x4()[1L, 1L, 4L], "channel index out of bounds")
+})
+
+test_that("[.Image channel names for GRAY image use 'Y'", {
+  gray_arr <- array(128L, dim = c(3L, 3L, 1L))
+  gray_img <- Image$new(gray_arr, colorspace = "GRAY", depth = "CV_8U")
+  px <- gray_img[1L, 1L]
+  expect_named(px, "Y")
+})
+
+test_that("[.Image channel names for HSV image use H, S, V", {
+  hsv_arr <- array(100L, dim = c(3L, 3L, 3L))
+  hsv_img <- Image$new(hsv_arr, colorspace = "HSV", depth = "CV_8U")
+  px <- hsv_img[1L, 1L]
+  expect_named(px, c("H", "S", "V"))
+})
