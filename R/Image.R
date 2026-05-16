@@ -1474,6 +1474,113 @@ Image <- R6::R6Class("Image",
       invisible(self)
     },
 
+    #' @description Apply a perspective transformation to the image. Returns a
+    #'   new Image. Output defaults to the same dimensions as the input; content
+    #'   outside the canvas is clipped.
+    #' @param m A 3x3 numeric matrix representing the perspective transformation.
+    #'   Build one with \code{\link{perspective_from_points}}.
+    #' @param width Positive integer. Output width in pixels. Default:
+    #'   \code{self$ncol}.
+    #' @param height Positive integer. Output height in pixels. Default:
+    #'   \code{self$nrow}.
+    #' @param interpolation Character. One of \code{"nearest"}, \code{"linear"},
+    #'   \code{"cubic"}, \code{"area"}, \code{"lanczos4"}. Default
+    #'   \code{"linear"}.
+    #' @param border_type Character. Pixel extrapolation method. One of
+    #'   \code{"default"}, \code{"reflect"}, \code{"reflect_101"},
+    #'   \code{"replicate"}, \code{"constant"}, \code{"wrap"}.
+    #'   Default \code{"default"}.
+    #' @return A new \code{Image}.
+    #' @examples
+    #' \donttest{
+    #' img_path <- system.file("img", "flower.jpg", package = "Retina")
+    #' img <- Image$new(img_path)
+    #' w <- img$ncol; h <- img$nrow
+    #' src <- matrix(c(1, 1,  w, 1,  w, h,  1, h), nrow = 4, byrow = TRUE)
+    #' dst <- matrix(c(round(w*0.1), 1,  w, 1,  w, h,  1, h), nrow = 4, byrow = TRUE)
+    #' m <- perspective_from_points(src, dst)
+    #' img$warp_perspective(m)$plot()
+    #' }
+    warp_perspective = function(m, width = NULL, height = NULL,
+                                interpolation = "linear", border_type = "default") {
+      .valid_interp  <- c("nearest", "linear", "cubic", "area", "lanczos4")
+      .valid_border  <- c("default", "reflect", "reflect_101",
+                          "replicate", "constant", "wrap")
+      if (!is.matrix(m) || !is.numeric(m) || !identical(dim(m), c(3L, 3L)))
+        stop("m must be a 3x3 numeric matrix", call. = FALSE)
+      if (!is.null(width) && (!is.numeric(width) || length(width) != 1L ||
+                              width < 1L || width != as.integer(width)))
+        stop("width must be a single positive integer", call. = FALSE)
+      if (!is.null(height) && (!is.numeric(height) || length(height) != 1L ||
+                               height < 1L || height != as.integer(height)))
+        stop("height must be a single positive integer", call. = FALSE)
+      if (!is.character(interpolation) || length(interpolation) != 1L ||
+          !interpolation %in% .valid_interp)
+        stop("interpolation must be one of: nearest, linear, cubic, area, lanczos4",
+             call. = FALSE)
+      if (!is.character(border_type) || length(border_type) != 1L ||
+          !border_type %in% .valid_border)
+        stop("border_type must be one of: default, reflect, reflect_101, replicate, constant, wrap",
+             call. = FALSE)
+      .w <- if (is.null(width))  self$ncol else as.integer(width)
+      .h <- if (is.null(height)) self$nrow else as.integer(height)
+      Image$new(rt_image_warp_perspective(private$.ptr, as.double(m),
+                                          .w, .h, interpolation, border_type))
+    },
+
+    #' @description Apply a perspective transformation to the image in place.
+    #' @param m A 3x3 numeric matrix representing the perspective transformation.
+    #'   Build one with \code{\link{perspective_from_points}}.
+    #' @param width Positive integer. Output width in pixels. Default:
+    #'   \code{self$ncol}.
+    #' @param height Positive integer. Output height in pixels. Default:
+    #'   \code{self$nrow}.
+    #' @param interpolation Character. One of \code{"nearest"}, \code{"linear"},
+    #'   \code{"cubic"}, \code{"area"}, \code{"lanczos4"}. Default
+    #'   \code{"linear"}.
+    #' @param border_type Character. Pixel extrapolation method. One of
+    #'   \code{"default"}, \code{"reflect"}, \code{"reflect_101"},
+    #'   \code{"replicate"}, \code{"constant"}, \code{"wrap"}.
+    #'   Default \code{"default"}.
+    #' @return \code{self} invisibly.
+    #' @examples
+    #' \donttest{
+    #' img_path <- system.file("img", "flower.jpg", package = "Retina")
+    #' img <- Image$new(img_path)
+    #' w <- img$ncol; h <- img$nrow
+    #' src <- matrix(c(1, 1,  w, 1,  w, h,  1, h), nrow = 4, byrow = TRUE)
+    #' dst <- matrix(c(round(w*0.1), 1,  w, 1,  w, h,  1, h), nrow = 4, byrow = TRUE)
+    #' img$warp_perspective_(perspective_from_points(src, dst))
+    #' img$plot()
+    #' }
+    warp_perspective_ = function(m, width = NULL, height = NULL,
+                                 interpolation = "linear", border_type = "default") {
+      .valid_interp  <- c("nearest", "linear", "cubic", "area", "lanczos4")
+      .valid_border  <- c("default", "reflect", "reflect_101",
+                          "replicate", "constant", "wrap")
+      if (!is.matrix(m) || !is.numeric(m) || !identical(dim(m), c(3L, 3L)))
+        stop("m must be a 3x3 numeric matrix", call. = FALSE)
+      if (!is.null(width) && (!is.numeric(width) || length(width) != 1L ||
+                              width < 1L || width != as.integer(width)))
+        stop("width must be a single positive integer", call. = FALSE)
+      if (!is.null(height) && (!is.numeric(height) || length(height) != 1L ||
+                               height < 1L || height != as.integer(height)))
+        stop("height must be a single positive integer", call. = FALSE)
+      if (!is.character(interpolation) || length(interpolation) != 1L ||
+          !interpolation %in% .valid_interp)
+        stop("interpolation must be one of: nearest, linear, cubic, area, lanczos4",
+             call. = FALSE)
+      if (!is.character(border_type) || length(border_type) != 1L ||
+          !border_type %in% .valid_border)
+        stop("border_type must be one of: default, reflect, reflect_101, replicate, constant, wrap",
+             call. = FALSE)
+      .w <- if (is.null(width))  self$ncol else as.integer(width)
+      .h <- if (is.null(height)) self$nrow else as.integer(height)
+      private$.ptr <- rt_image_warp_perspective(private$.ptr, as.double(m),
+                                                .w, .h, interpolation, border_type)
+      invisible(self)
+    },
+
     #' @description Print a summary of the image.
     #' @param ... Ignored.
     #' @return \code{self} invisibly.

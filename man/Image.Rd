@@ -101,6 +101,141 @@ img <- Image$new(img_path)$convert_color("GRAY")
 img$morph_("erode")
 img$plot()
 }
+
+## ------------------------------------------------
+## Method `Image$resize`
+## ------------------------------------------------
+
+\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)
+img$resize(width = 320L, height = 240L)$plot()
+img$resize(fx = 0.5, fy = 0.5)$plot()
+}
+
+## ------------------------------------------------
+## Method `Image$resize_`
+## ------------------------------------------------
+
+\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)
+img$resize_(fx = 0.5, fy = 0.5)
+img$plot()
+}
+
+## ------------------------------------------------
+## Method `Image$rotate`
+## ------------------------------------------------
+
+\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)
+img$rotate(45)$plot()
+}
+
+## ------------------------------------------------
+## Method `Image$rotate_`
+## ------------------------------------------------
+
+\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)
+img$rotate_(45)
+img$plot()
+}
+
+## ------------------------------------------------
+## Method `Image$flip`
+## ------------------------------------------------
+
+\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)
+img$flip(flip_h = TRUE)$plot()
+}
+
+## ------------------------------------------------
+## Method `Image$flip_`
+## ------------------------------------------------
+
+\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)
+img$flip_(flip_v = TRUE)
+img$plot()
+}
+
+## ------------------------------------------------
+## Method `Image$crop`
+## ------------------------------------------------
+
+\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)
+img$crop(1L, 1L, 100L, 100L)$plot()
+}
+
+## ------------------------------------------------
+## Method `Image$crop_`
+## ------------------------------------------------
+
+\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)
+img$crop_(1L, 1L, 100L, 100L)
+img$plot()
+}
+
+## ------------------------------------------------
+## Method `Image$warp_affine`
+## ------------------------------------------------
+
+\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)
+m <- affine_translate(50, 30)
+img$warp_affine(m)$plot()
+}
+
+## ------------------------------------------------
+## Method `Image$warp_affine_`
+## ------------------------------------------------
+
+\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)
+img$warp_affine_(affine_translate(50, 30))
+img$plot()
+}
+
+## ------------------------------------------------
+## Method `Image$warp_perspective`
+## ------------------------------------------------
+
+\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)
+w <- img$ncol; h <- img$nrow
+src <- matrix(c(1, 1,  w, 1,  w, h,  1, h), nrow = 4, byrow = TRUE)
+dst <- matrix(c(round(w*0.1), 1,  w, 1,  w, h,  1, h), nrow = 4, byrow = TRUE)
+m <- perspective_from_points(src, dst)
+img$warp_perspective(m)$plot()
+}
+
+## ------------------------------------------------
+## Method `Image$warp_perspective_`
+## ------------------------------------------------
+
+\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)
+w <- img$ncol; h <- img$nrow
+src <- matrix(c(1, 1,  w, 1,  w, h,  1, h), nrow = 4, byrow = TRUE)
+dst <- matrix(c(round(w*0.1), 1,  w, 1,  w, h,  1, h), nrow = 4, byrow = TRUE)
+img$warp_perspective_(perspective_from_points(src, dst))
+img$plot()
+}
 }
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
@@ -187,6 +322,18 @@ img$plot()
 \item \href{#method-Image-canny_}{\code{Image$canny_()}}
 \item \href{#method-Image-morph}{\code{Image$morph()}}
 \item \href{#method-Image-morph_}{\code{Image$morph_()}}
+\item \href{#method-Image-resize}{\code{Image$resize()}}
+\item \href{#method-Image-resize_}{\code{Image$resize_()}}
+\item \href{#method-Image-rotate}{\code{Image$rotate()}}
+\item \href{#method-Image-rotate_}{\code{Image$rotate_()}}
+\item \href{#method-Image-flip}{\code{Image$flip()}}
+\item \href{#method-Image-flip_}{\code{Image$flip_()}}
+\item \href{#method-Image-crop}{\code{Image$crop()}}
+\item \href{#method-Image-crop_}{\code{Image$crop_()}}
+\item \href{#method-Image-warp_affine}{\code{Image$warp_affine()}}
+\item \href{#method-Image-warp_affine_}{\code{Image$warp_affine_()}}
+\item \href{#method-Image-warp_perspective}{\code{Image$warp_perspective()}}
+\item \href{#method-Image-warp_perspective_}{\code{Image$warp_perspective_()}}
 \item \href{#method-Image-print}{\code{Image$print()}}
 }
 }
@@ -1643,6 +1790,616 @@ Default \code{"default"}.}
 img_path <- system.file("img", "flower.jpg", package = "Retina")
 img <- Image$new(img_path)$convert_color("GRAY")
 img$morph_("erode")
+img$plot()
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-resize"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-resize}{}}}
+\subsection{Method \code{resize()}}{
+Resize the image. Returns a new Image.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$resize(
+  width = NULL,
+  height = NULL,
+  fx = NULL,
+  fy = NULL,
+  interpolation = "linear"
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{width}}{Positive integer. Output width in pixels. Supply with
+\code{height}; mutually exclusive with \code{fx}/\code{fy}.}
+
+\item{\code{height}}{Positive integer. Output height in pixels.}
+
+\item{\code{fx}}{Positive numeric. Horizontal scale factor. Supply with
+\code{fy}; mutually exclusive with \code{width}/\code{height}.}
+
+\item{\code{fy}}{Positive numeric. Vertical scale factor.}
+
+\item{\code{interpolation}}{Character. One of \code{"nearest"}, \code{"linear"},
+\code{"cubic"}, \code{"area"}, \code{"lanczos4"}. Default
+\code{"linear"}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A new \code{Image}.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)
+img$resize(width = 320L, height = 240L)$plot()
+img$resize(fx = 0.5, fy = 0.5)$plot()
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-resize_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-resize_}{}}}
+\subsection{Method \code{resize_()}}{
+Resize the image in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$resize_(
+  width = NULL,
+  height = NULL,
+  fx = NULL,
+  fy = NULL,
+  interpolation = "linear"
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{width}}{Positive integer. Output width in pixels.}
+
+\item{\code{height}}{Positive integer. Output height in pixels.}
+
+\item{\code{fx}}{Positive numeric. Horizontal scale factor.}
+
+\item{\code{fy}}{Positive numeric. Vertical scale factor.}
+
+\item{\code{interpolation}}{Character. One of \code{"nearest"}, \code{"linear"},
+\code{"cubic"}, \code{"area"}, \code{"lanczos4"}. Default
+\code{"linear"}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{self} invisibly.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)
+img$resize_(fx = 0.5, fy = 0.5)
+img$plot()
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-rotate"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-rotate}{}}}
+\subsection{Method \code{rotate()}}{
+Rotate the image. Returns a new Image. Output retains
+  original dimensions; content outside the canvas is clipped.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$rotate(
+  angle,
+  cx = NULL,
+  cy = NULL,
+  scale = 1,
+  interpolation = "linear",
+  border_type = "default"
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{angle}}{Single numeric. Rotation angle in degrees,
+counter-clockwise.}
+
+\item{\code{cx}}{Single positive numeric. X coordinate of the rotation centre
+(1-based). Defaults to image centre.}
+
+\item{\code{cy}}{Single positive numeric. Y coordinate of the rotation centre
+(1-based). Defaults to image centre.}
+
+\item{\code{scale}}{Single positive numeric. Isotropic scale factor applied
+during rotation. Default \code{1}.}
+
+\item{\code{interpolation}}{Character. One of \code{"nearest"}, \code{"linear"},
+\code{"cubic"}, \code{"area"}, \code{"lanczos4"}. Default
+\code{"linear"}.}
+
+\item{\code{border_type}}{Character. Pixel extrapolation method. One of
+\code{"default"}, \code{"reflect"}, \code{"reflect_101"},
+\code{"replicate"}, \code{"constant"}, \code{"wrap"}.
+Default \code{"default"}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A new \code{Image}.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)
+img$rotate(45)$plot()
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-rotate_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-rotate_}{}}}
+\subsection{Method \code{rotate_()}}{
+Rotate the image in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$rotate_(
+  angle,
+  cx = NULL,
+  cy = NULL,
+  scale = 1,
+  interpolation = "linear",
+  border_type = "default"
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{angle}}{Single numeric. Rotation angle in degrees,
+counter-clockwise.}
+
+\item{\code{cx}}{Single positive numeric. X coordinate of the rotation centre
+(1-based). Defaults to image centre.}
+
+\item{\code{cy}}{Single positive numeric. Y coordinate of the rotation centre
+(1-based). Defaults to image centre.}
+
+\item{\code{scale}}{Single positive numeric. Isotropic scale factor. Default
+\code{1}.}
+
+\item{\code{interpolation}}{Character. One of \code{"nearest"}, \code{"linear"},
+\code{"cubic"}, \code{"area"}, \code{"lanczos4"}. Default
+\code{"linear"}.}
+
+\item{\code{border_type}}{Character. Pixel extrapolation method. One of
+\code{"default"}, \code{"reflect"}, \code{"reflect_101"},
+\code{"replicate"}, \code{"constant"}, \code{"wrap"}.
+Default \code{"default"}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{self} invisibly.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)
+img$rotate_(45)
+img$plot()
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-flip"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-flip}{}}}
+\subsection{Method \code{flip()}}{
+Flip the image horizontally, vertically, or both. Returns
+  a new Image.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$flip(flip_h = FALSE, flip_v = FALSE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{flip_h}}{Logical scalar. If \code{TRUE}, flip left-right.
+Default \code{FALSE}.}
+
+\item{\code{flip_v}}{Logical scalar. If \code{TRUE}, flip top-bottom.
+Default \code{FALSE}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A new \code{Image}.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)
+img$flip(flip_h = TRUE)$plot()
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-flip_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-flip_}{}}}
+\subsection{Method \code{flip_()}}{
+Flip the image in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$flip_(flip_h = FALSE, flip_v = FALSE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{flip_h}}{Logical scalar. If \code{TRUE}, flip left-right.
+Default \code{FALSE}.}
+
+\item{\code{flip_v}}{Logical scalar. If \code{TRUE}, flip top-bottom.
+Default \code{FALSE}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{self} invisibly.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)
+img$flip_(flip_v = TRUE)
+img$plot()
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-crop"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-crop}{}}}
+\subsection{Method \code{crop()}}{
+Crop the image to a rectangular region. Returns a new
+  Image. Coordinates are 1-based.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$crop(x1, y1, x2, y2)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{x1}}{Single positive integer. Left column (inclusive, 1-based).}
+
+\item{\code{y1}}{Single positive integer. Top row (inclusive, 1-based).}
+
+\item{\code{x2}}{Single positive integer. Right column (inclusive, 1-based).
+Must be greater than \code{x1} and \code{<= ncol}.}
+
+\item{\code{y2}}{Single positive integer. Bottom row (inclusive, 1-based).
+Must be greater than \code{y1} and \code{<= nrow}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A new \code{Image}.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)
+img$crop(1L, 1L, 100L, 100L)$plot()
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-crop_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-crop_}{}}}
+\subsection{Method \code{crop_()}}{
+Crop the image in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$crop_(x1, y1, x2, y2)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{x1}}{Single positive integer. Left column (inclusive, 1-based).}
+
+\item{\code{y1}}{Single positive integer. Top row (inclusive, 1-based).}
+
+\item{\code{x2}}{Single positive integer. Right column (inclusive, 1-based).}
+
+\item{\code{y2}}{Single positive integer. Bottom row (inclusive, 1-based).}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{self} invisibly.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)
+img$crop_(1L, 1L, 100L, 100L)
+img$plot()
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-warp_affine"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-warp_affine}{}}}
+\subsection{Method \code{warp_affine()}}{
+Apply an affine transformation to the image. Returns a new
+  Image. Output defaults to the same dimensions as the input; content
+  outside the canvas is clipped.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$warp_affine(
+  m,
+  width = NULL,
+  height = NULL,
+  interpolation = "linear",
+  border_type = "default"
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{m}}{A 2x3 numeric matrix representing the affine transformation.
+Build one with \code{\link{affine_translate}},
+\code{\link{affine_scale}}, \code{\link{affine_shear}},
+\code{\link{affine_rotate}}, or \code{\link{affine_from_points}}.
+Compose multiple transforms by embedding into 3x3 with
+\code{rbind(m, c(0, 0, 1))} then multiplying with \code{\%*\%}.}
+
+\item{\code{width}}{Positive integer. Output width in pixels. Default:
+\code{self$ncol}.}
+
+\item{\code{height}}{Positive integer. Output height in pixels. Default:
+\code{self$nrow}.}
+
+\item{\code{interpolation}}{Character. One of \code{"nearest"}, \code{"linear"},
+\code{"cubic"}, \code{"area"}, \code{"lanczos4"}. Default
+\code{"linear"}.}
+
+\item{\code{border_type}}{Character. Pixel extrapolation method. One of
+\code{"default"}, \code{"reflect"}, \code{"reflect_101"},
+\code{"replicate"}, \code{"constant"}, \code{"wrap"}.
+Default \code{"default"}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A new \code{Image}.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)
+m <- affine_translate(50, 30)
+img$warp_affine(m)$plot()
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-warp_affine_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-warp_affine_}{}}}
+\subsection{Method \code{warp_affine_()}}{
+Apply an affine transformation to the image in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$warp_affine_(
+  m,
+  width = NULL,
+  height = NULL,
+  interpolation = "linear",
+  border_type = "default"
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{m}}{A 2x3 numeric matrix representing the affine transformation.
+Build one with \code{\link{affine_translate}},
+\code{\link{affine_scale}}, \code{\link{affine_shear}},
+\code{\link{affine_rotate}}, or \code{\link{affine_from_points}}.
+Compose multiple transforms by embedding into 3x3 with
+\code{rbind(m, c(0, 0, 1))} then multiplying with \code{\%*\%}.}
+
+\item{\code{width}}{Positive integer. Output width in pixels. Default:
+\code{self$ncol}.}
+
+\item{\code{height}}{Positive integer. Output height in pixels. Default:
+\code{self$nrow}.}
+
+\item{\code{interpolation}}{Character. One of \code{"nearest"}, \code{"linear"},
+\code{"cubic"}, \code{"area"}, \code{"lanczos4"}. Default
+\code{"linear"}.}
+
+\item{\code{border_type}}{Character. Pixel extrapolation method. One of
+\code{"default"}, \code{"reflect"}, \code{"reflect_101"},
+\code{"replicate"}, \code{"constant"}, \code{"wrap"}.
+Default \code{"default"}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{self} invisibly.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)
+img$warp_affine_(affine_translate(50, 30))
+img$plot()
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-warp_perspective"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-warp_perspective}{}}}
+\subsection{Method \code{warp_perspective()}}{
+Apply a perspective transformation to the image. Returns a
+  new Image. Output defaults to the same dimensions as the input; content
+  outside the canvas is clipped.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$warp_perspective(
+  m,
+  width = NULL,
+  height = NULL,
+  interpolation = "linear",
+  border_type = "default"
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{m}}{A 3x3 numeric matrix representing the perspective transformation.
+Build one with \code{\link{perspective_from_points}}.}
+
+\item{\code{width}}{Positive integer. Output width in pixels. Default:
+\code{self$ncol}.}
+
+\item{\code{height}}{Positive integer. Output height in pixels. Default:
+\code{self$nrow}.}
+
+\item{\code{interpolation}}{Character. One of \code{"nearest"}, \code{"linear"},
+\code{"cubic"}, \code{"area"}, \code{"lanczos4"}. Default
+\code{"linear"}.}
+
+\item{\code{border_type}}{Character. Pixel extrapolation method. One of
+\code{"default"}, \code{"reflect"}, \code{"reflect_101"},
+\code{"replicate"}, \code{"constant"}, \code{"wrap"}.
+Default \code{"default"}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A new \code{Image}.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)
+w <- img$ncol; h <- img$nrow
+src <- matrix(c(1, 1,  w, 1,  w, h,  1, h), nrow = 4, byrow = TRUE)
+dst <- matrix(c(round(w*0.1), 1,  w, 1,  w, h,  1, h), nrow = 4, byrow = TRUE)
+m <- perspective_from_points(src, dst)
+img$warp_perspective(m)$plot()
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-warp_perspective_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-warp_perspective_}{}}}
+\subsection{Method \code{warp_perspective_()}}{
+Apply a perspective transformation to the image in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$warp_perspective_(
+  m,
+  width = NULL,
+  height = NULL,
+  interpolation = "linear",
+  border_type = "default"
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{m}}{A 3x3 numeric matrix representing the perspective transformation.
+Build one with \code{\link{perspective_from_points}}.}
+
+\item{\code{width}}{Positive integer. Output width in pixels. Default:
+\code{self$ncol}.}
+
+\item{\code{height}}{Positive integer. Output height in pixels. Default:
+\code{self$nrow}.}
+
+\item{\code{interpolation}}{Character. One of \code{"nearest"}, \code{"linear"},
+\code{"cubic"}, \code{"area"}, \code{"lanczos4"}. Default
+\code{"linear"}.}
+
+\item{\code{border_type}}{Character. Pixel extrapolation method. One of
+\code{"default"}, \code{"reflect"}, \code{"reflect_101"},
+\code{"replicate"}, \code{"constant"}, \code{"wrap"}.
+Default \code{"default"}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{self} invisibly.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)
+w <- img$ncol; h <- img$nrow
+src <- matrix(c(1, 1,  w, 1,  w, h,  1, h), nrow = 4, byrow = TRUE)
+dst <- matrix(c(round(w*0.1), 1,  w, 1,  w, h,  1, h), nrow = 4, byrow = TRUE)
+img$warp_perspective_(perspective_from_points(src, dst))
 img$plot()
 }
 }

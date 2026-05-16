@@ -198,3 +198,54 @@ test_that("warp_affine with translation shifts pixels correctly", {
   # Column 3 of result should be 200
   expect_true(all(out[, 3, 1] == 200L))
 })
+
+# ── warp_perspective ──────────────────────────────────────────────────────────
+
+test_that("warp_perspective with identity matrix preserves dimensions", {
+  result <- img_10x10()$warp_perspective(diag(3))
+  expect_equal(result$ncol, 10L)
+  expect_equal(result$nrow, 10L)
+})
+
+test_that("warp_perspective with explicit width/height produces correct output size", {
+  result <- img_10x10()$warp_perspective(diag(3), width = 20L, height = 5L)
+  expect_equal(result$ncol, 20L)
+  expect_equal(result$nrow, 5L)
+})
+
+test_that("warp_perspective errors on wrong matrix shape (2x3)", {
+  m <- cbind(diag(2), c(0, 0))
+  expect_error(img_10x10()$warp_perspective(m),
+               "m must be a 3x3 numeric matrix")
+})
+
+test_that("warp_perspective errors on non-matrix input", {
+  expect_error(img_10x10()$warp_perspective(1:9),
+               "m must be a 3x3 numeric matrix")
+})
+
+test_that("warp_perspective preserves colorspace", {
+  expect_equal(img_10x10()$warp_perspective(diag(3))$colorspace, "BGR")
+})
+
+test_that("warp_perspective_ modifies image in place and returns self", {
+  img <- img_10x10()
+  result <- img$warp_perspective_(diag(3))
+  expect_identical(result, img)
+  expect_equal(img$ncol, 10L)
+  expect_equal(img$nrow, 10L)
+})
+
+test_that("warp_perspective with perspective_from_points shifts pixels correctly", {
+  # 4x4 GRAY image, all zeros except top-left 2x2 = 200
+  arr <- array(0L, dim = c(4L, 4L, 1L))
+  arr[1:2, 1:2, 1] <- 200L
+  img <- Image$new(arr, colorspace = "GRAY", depth = "CV_8U")
+  # Identity transform via perspective_from_points should preserve content
+  src <- matrix(c(1,1, 4,1, 4,4, 1,4), nrow = 4, ncol = 2, byrow = TRUE)
+  m <- perspective_from_points(src, src)
+  result <- img$warp_perspective(m)
+  expect_equal(result$ncol, 4L)
+  expect_equal(result$nrow, 4L)
+  expect_equal(result$colorspace, "GRAY")
+})
