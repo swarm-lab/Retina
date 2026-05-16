@@ -167,20 +167,6 @@ extern "C" SEXP _Retina_rt_image_convert_color(SEXP img, SEXP from_cs, SEXP to_c
   END_CPP11
 }
 // construct.cpp
-external_pointer<RtImage> rt_zeros(int rows, int cols, int nchan, std::string depth, std::string colorspace);
-extern "C" SEXP _Retina_rt_zeros(SEXP rows, SEXP cols, SEXP nchan, SEXP depth, SEXP colorspace) {
-  BEGIN_CPP11
-    return cpp11::as_sexp(rt_zeros(cpp11::as_cpp<cpp11::decay_t<int>>(rows), cpp11::as_cpp<cpp11::decay_t<int>>(cols), cpp11::as_cpp<cpp11::decay_t<int>>(nchan), cpp11::as_cpp<cpp11::decay_t<std::string>>(depth), cpp11::as_cpp<cpp11::decay_t<std::string>>(colorspace)));
-  END_CPP11
-}
-// construct.cpp
-external_pointer<RtImage> rt_ones(int rows, int cols, int nchan, std::string depth, std::string colorspace);
-extern "C" SEXP _Retina_rt_ones(SEXP rows, SEXP cols, SEXP nchan, SEXP depth, SEXP colorspace) {
-  BEGIN_CPP11
-    return cpp11::as_sexp(rt_ones(cpp11::as_cpp<cpp11::decay_t<int>>(rows), cpp11::as_cpp<cpp11::decay_t<int>>(cols), cpp11::as_cpp<cpp11::decay_t<int>>(nchan), cpp11::as_cpp<cpp11::decay_t<std::string>>(depth), cpp11::as_cpp<cpp11::decay_t<std::string>>(colorspace)));
-  END_CPP11
-}
-// construct.cpp
 external_pointer<RtImage> rt_randu(int rows, int cols, int nchan, std::string depth, std::string colorspace, double low, double high);
 extern "C" SEXP _Retina_rt_randu(SEXP rows, SEXP cols, SEXP nchan, SEXP depth, SEXP colorspace, SEXP low, SEXP high) {
   BEGIN_CPP11
@@ -633,11 +619,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_Retina_rt_image_warp_affine",        (DL_FUNC) &_Retina_rt_image_warp_affine,        6},
     {"_Retina_rt_image_warp_perspective",   (DL_FUNC) &_Retina_rt_image_warp_perspective,   6},
     {"_Retina_rt_image_write",              (DL_FUNC) &_Retina_rt_image_write,              2},
-    {"_Retina_rt_ones",                     (DL_FUNC) &_Retina_rt_ones,                     5},
     {"_Retina_rt_perspective_from_points",  (DL_FUNC) &_Retina_rt_perspective_from_points,  2},
     {"_Retina_rt_randn",                    (DL_FUNC) &_Retina_rt_randn,                    7},
     {"_Retina_rt_randu",                    (DL_FUNC) &_Retina_rt_randu,                    7},
-    {"_Retina_rt_zeros",                    (DL_FUNC) &_Retina_rt_zeros,                    5},
     {NULL, NULL, 0}
 };
 }

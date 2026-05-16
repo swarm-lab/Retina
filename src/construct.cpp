@@ -23,24 +23,6 @@ static int cv_depth_code(const std::string& depth) {
   return -1;
 }
 
-// ── zeros ─────────────────────────────────────────────────────────────────────
-[[cpp11::register]]
-external_pointer<RtImage> rt_zeros(int rows, int cols, int nchan,
-                                    std::string depth, std::string colorspace) {
-  int type = CV_MAKETYPE(cv_depth_code(depth), nchan);
-  cv::Mat mat = cv::Mat::zeros(rows, cols, type);
-  return {new RtImage(std::move(mat), colorspace)};
-}
-
-// ── ones ──────────────────────────────────────────────────────────────────────
-[[cpp11::register]]
-external_pointer<RtImage> rt_ones(int rows, int cols, int nchan,
-                                   std::string depth, std::string colorspace) {
-  int type = CV_MAKETYPE(cv_depth_code(depth), nchan);
-  cv::Mat mat = cv::Mat::ones(rows, cols, type);
-  return {new RtImage(std::move(mat), colorspace)};
-}
-
 // ── randu ─────────────────────────────────────────────────────────────────────
 [[cpp11::register]]
 external_pointer<RtImage> rt_randu(int rows, int cols, int nchan,
