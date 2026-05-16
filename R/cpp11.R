@@ -220,6 +220,22 @@ rt_image_morph_custom <- function(img, op, custom_kernel, iterations, border_typ
   .Call(`_Retina_rt_image_morph_custom`, img, op, custom_kernel, iterations, border_type)
 }
 
+rt_image_get_pixel <- function(img, row, col) {
+  .Call(`_Retina_rt_image_get_pixel`, img, row, col)
+}
+
+rt_image_set_pixel <- function(img, row, col, values) {
+  invisible(.Call(`_Retina_rt_image_set_pixel`, img, row, col, values))
+}
+
+rt_image_extract_region <- function(img, row_start, col_start, row_end, col_end) {
+  .Call(`_Retina_rt_image_extract_region`, img, row_start, col_start, row_end, col_end)
+}
+
+rt_image_copy_roi <- function(dst, src, row_start, col_start) {
+  invisible(.Call(`_Retina_rt_image_copy_roi`, dst, src, row_start, col_start))
+}
+
 rt_image_mean <- function(img) {
   .Call(`_Retina_rt_image_mean`, img)
 }

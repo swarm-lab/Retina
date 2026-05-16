@@ -394,6 +394,36 @@ extern "C" SEXP _Retina_rt_image_morph_custom(SEXP img, SEXP op, SEXP custom_ker
     return cpp11::as_sexp(rt_image_morph_custom(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<std::string>>(op), cpp11::as_cpp<cpp11::decay_t<cpp11::integers>>(custom_kernel), cpp11::as_cpp<cpp11::decay_t<int>>(iterations), cpp11::as_cpp<cpp11::decay_t<std::string>>(border_type)));
   END_CPP11
 }
+// pixel.cpp
+doubles rt_image_get_pixel(external_pointer<RtImage> img, int row, int col);
+extern "C" SEXP _Retina_rt_image_get_pixel(SEXP img, SEXP row, SEXP col) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_image_get_pixel(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<int>>(row), cpp11::as_cpp<cpp11::decay_t<int>>(col)));
+  END_CPP11
+}
+// pixel.cpp
+void rt_image_set_pixel(external_pointer<RtImage> img, int row, int col, doubles values);
+extern "C" SEXP _Retina_rt_image_set_pixel(SEXP img, SEXP row, SEXP col, SEXP values) {
+  BEGIN_CPP11
+    rt_image_set_pixel(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<int>>(row), cpp11::as_cpp<cpp11::decay_t<int>>(col), cpp11::as_cpp<cpp11::decay_t<doubles>>(values));
+    return R_NilValue;
+  END_CPP11
+}
+// pixel.cpp
+external_pointer<RtImage> rt_image_extract_region(external_pointer<RtImage> img, int row_start, int col_start, int row_end, int col_end);
+extern "C" SEXP _Retina_rt_image_extract_region(SEXP img, SEXP row_start, SEXP col_start, SEXP row_end, SEXP col_end) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_image_extract_region(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<int>>(row_start), cpp11::as_cpp<cpp11::decay_t<int>>(col_start), cpp11::as_cpp<cpp11::decay_t<int>>(row_end), cpp11::as_cpp<cpp11::decay_t<int>>(col_end)));
+  END_CPP11
+}
+// pixel.cpp
+void rt_image_copy_roi(external_pointer<RtImage> dst, external_pointer<RtImage> src, int row_start, int col_start);
+extern "C" SEXP _Retina_rt_image_copy_roi(SEXP dst, SEXP src, SEXP row_start, SEXP col_start) {
+  BEGIN_CPP11
+    rt_image_copy_roi(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(dst), cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(src), cpp11::as_cpp<cpp11::decay_t<int>>(row_start), cpp11::as_cpp<cpp11::decay_t<int>>(col_start));
+    return R_NilValue;
+  END_CPP11
+}
 // stats.cpp
 doubles rt_image_mean(external_pointer<RtImage> img);
 extern "C" SEXP _Retina_rt_image_mean(SEXP img) {
@@ -512,14 +542,17 @@ static const R_CallMethodDef CallEntries[] = {
     {"_Retina_rt_image_colorspace",         (DL_FUNC) &_Retina_rt_image_colorspace,         1},
     {"_Retina_rt_image_convert_color",      (DL_FUNC) &_Retina_rt_image_convert_color,      3},
     {"_Retina_rt_image_convert_depth",      (DL_FUNC) &_Retina_rt_image_convert_depth,      2},
+    {"_Retina_rt_image_copy_roi",           (DL_FUNC) &_Retina_rt_image_copy_roi,           4},
     {"_Retina_rt_image_crop",               (DL_FUNC) &_Retina_rt_image_crop,               5},
     {"_Retina_rt_image_depth",              (DL_FUNC) &_Retina_rt_image_depth,              1},
     {"_Retina_rt_image_divide_image",       (DL_FUNC) &_Retina_rt_image_divide_image,       2},
     {"_Retina_rt_image_divide_scalar",      (DL_FUNC) &_Retina_rt_image_divide_scalar,      2},
+    {"_Retina_rt_image_extract_region",     (DL_FUNC) &_Retina_rt_image_extract_region,     5},
     {"_Retina_rt_image_flip",               (DL_FUNC) &_Retina_rt_image_flip,               2},
     {"_Retina_rt_image_from_double_array",  (DL_FUNC) &_Retina_rt_image_from_double_array,  3},
     {"_Retina_rt_image_from_integer_array", (DL_FUNC) &_Retina_rt_image_from_integer_array, 3},
     {"_Retina_rt_image_gaussian_blur",      (DL_FUNC) &_Retina_rt_image_gaussian_blur,      5},
+    {"_Retina_rt_image_get_pixel",          (DL_FUNC) &_Retina_rt_image_get_pixel,          3},
     {"_Retina_rt_image_is_gpu",             (DL_FUNC) &_Retina_rt_image_is_gpu,             1},
     {"_Retina_rt_image_laplacian",          (DL_FUNC) &_Retina_rt_image_laplacian,          6},
     {"_Retina_rt_image_max",                (DL_FUNC) &_Retina_rt_image_max,                1},
@@ -541,6 +574,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_Retina_rt_image_rotate",             (DL_FUNC) &_Retina_rt_image_rotate,             7},
     {"_Retina_rt_image_sd",                 (DL_FUNC) &_Retina_rt_image_sd,                 1},
     {"_Retina_rt_image_set_colorspace",     (DL_FUNC) &_Retina_rt_image_set_colorspace,     2},
+    {"_Retina_rt_image_set_pixel",          (DL_FUNC) &_Retina_rt_image_set_pixel,          4},
     {"_Retina_rt_image_sobel",              (DL_FUNC) &_Retina_rt_image_sobel,              8},
     {"_Retina_rt_image_split_channels",     (DL_FUNC) &_Retina_rt_image_split_channels,     1},
     {"_Retina_rt_image_subtract_image",     (DL_FUNC) &_Retina_rt_image_subtract_image,     2},
