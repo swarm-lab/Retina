@@ -1027,6 +1027,350 @@ Image <- R6::R6Class("Image",
       invisible(self)
     },
 
+    #' @description Resize the image. Returns a new Image.
+    #' @param width Positive integer. Output width in pixels. Supply with
+    #'   \code{height}; mutually exclusive with \code{fx}/\code{fy}.
+    #' @param height Positive integer. Output height in pixels.
+    #' @param fx Positive numeric. Horizontal scale factor. Supply with
+    #'   \code{fy}; mutually exclusive with \code{width}/\code{height}.
+    #' @param fy Positive numeric. Vertical scale factor.
+    #' @param interpolation Character. One of \code{"nearest"}, \code{"linear"},
+    #'   \code{"cubic"}, \code{"area"}, \code{"lanczos4"}. Default
+    #'   \code{"linear"}.
+    #' @return A new \code{Image}.
+    #' @examples
+    #' \donttest{
+    #' img_path <- system.file("img", "flower.jpg", package = "Retina")
+    #' img <- Image$new(img_path)
+    #' img$resize(width = 320L, height = 240L)$plot()
+    #' img$resize(fx = 0.5, fy = 0.5)$plot()
+    #' }
+    resize = function(width = NULL, height = NULL, fx = NULL, fy = NULL,
+                      interpolation = "linear") {
+      .valid_interp <- c("nearest", "linear", "cubic", "area", "lanczos4")
+      .interp_codes <- c(nearest = 0L, linear = 1L, cubic = 2L,
+                         area = 3L, lanczos4 = 4L)
+      .use_dims  <- !is.null(width)  || !is.null(height)
+      .use_scale <- !is.null(fx)     || !is.null(fy)
+      if (.use_dims && .use_scale)
+        stop("supply either width/height or fx/fy, not both", call. = FALSE)
+      if (!.use_dims && !.use_scale)
+        stop("supply either width/height or fx/fy", call. = FALSE)
+      if (!is.character(interpolation) || length(interpolation) != 1L ||
+          !interpolation %in% .valid_interp)
+        stop("interpolation must be one of: nearest, linear, cubic, area, lanczos4",
+             call. = FALSE)
+      if (.use_dims) {
+        if (is.null(width) || is.null(height) ||
+            !is.numeric(width) || !is.numeric(height) ||
+            length(width) != 1L || length(height) != 1L ||
+            width < 1L || height < 1L)
+          stop("width and height must be single positive integers", call. = FALSE)
+        Image$new(rt_image_resize(private$.ptr,
+                                  as.integer(width), as.integer(height),
+                                  0, 0, .interp_codes[[interpolation]]))
+      } else {
+        if (is.null(fx) || is.null(fy) ||
+            !is.numeric(fx) || !is.numeric(fy) ||
+            length(fx) != 1L || length(fy) != 1L ||
+            fx <= 0 || fy <= 0)
+          stop("fx and fy must be single positive numeric values", call. = FALSE)
+        Image$new(rt_image_resize(private$.ptr,
+                                  0L, 0L,
+                                  as.double(fx), as.double(fy),
+                                  .interp_codes[[interpolation]]))
+      }
+    },
+
+    #' @description Resize the image in place.
+    #' @param width Positive integer. Output width in pixels.
+    #' @param height Positive integer. Output height in pixels.
+    #' @param fx Positive numeric. Horizontal scale factor.
+    #' @param fy Positive numeric. Vertical scale factor.
+    #' @param interpolation Character. One of \code{"nearest"}, \code{"linear"},
+    #'   \code{"cubic"}, \code{"area"}, \code{"lanczos4"}. Default
+    #'   \code{"linear"}.
+    #' @return \code{self} invisibly.
+    #' @examples
+    #' \donttest{
+    #' img_path <- system.file("img", "flower.jpg", package = "Retina")
+    #' img <- Image$new(img_path)
+    #' img$resize_(fx = 0.5, fy = 0.5)
+    #' img$plot()
+    #' }
+    resize_ = function(width = NULL, height = NULL, fx = NULL, fy = NULL,
+                       interpolation = "linear") {
+      .valid_interp <- c("nearest", "linear", "cubic", "area", "lanczos4")
+      .interp_codes <- c(nearest = 0L, linear = 1L, cubic = 2L,
+                         area = 3L, lanczos4 = 4L)
+      .use_dims  <- !is.null(width)  || !is.null(height)
+      .use_scale <- !is.null(fx)     || !is.null(fy)
+      if (.use_dims && .use_scale)
+        stop("supply either width/height or fx/fy, not both", call. = FALSE)
+      if (!.use_dims && !.use_scale)
+        stop("supply either width/height or fx/fy", call. = FALSE)
+      if (!is.character(interpolation) || length(interpolation) != 1L ||
+          !interpolation %in% .valid_interp)
+        stop("interpolation must be one of: nearest, linear, cubic, area, lanczos4",
+             call. = FALSE)
+      if (.use_dims) {
+        if (is.null(width) || is.null(height) ||
+            !is.numeric(width) || !is.numeric(height) ||
+            length(width) != 1L || length(height) != 1L ||
+            width < 1L || height < 1L)
+          stop("width and height must be single positive integers", call. = FALSE)
+        private$.ptr <- rt_image_resize(private$.ptr,
+                                        as.integer(width), as.integer(height),
+                                        0, 0, .interp_codes[[interpolation]])
+      } else {
+        if (is.null(fx) || is.null(fy) ||
+            !is.numeric(fx) || !is.numeric(fy) ||
+            length(fx) != 1L || length(fy) != 1L ||
+            fx <= 0 || fy <= 0)
+          stop("fx and fy must be single positive numeric values", call. = FALSE)
+        private$.ptr <- rt_image_resize(private$.ptr,
+                                        0L, 0L,
+                                        as.double(fx), as.double(fy),
+                                        .interp_codes[[interpolation]])
+      }
+      invisible(self)
+    },
+
+    #' @description Rotate the image. Returns a new Image. Output retains
+    #'   original dimensions; content outside the canvas is clipped.
+    #' @param angle Single numeric. Rotation angle in degrees,
+    #'   counter-clockwise.
+    #' @param cx Single positive numeric. X coordinate of the rotation centre
+    #'   (1-based). Defaults to image centre.
+    #' @param cy Single positive numeric. Y coordinate of the rotation centre
+    #'   (1-based). Defaults to image centre.
+    #' @param scale Single positive numeric. Isotropic scale factor applied
+    #'   during rotation. Default \code{1}.
+    #' @param interpolation Character. One of \code{"nearest"}, \code{"linear"},
+    #'   \code{"cubic"}, \code{"area"}, \code{"lanczos4"}. Default
+    #'   \code{"linear"}.
+    #' @param border_type Character. Pixel extrapolation method. One of
+    #'   \code{"default"}, \code{"reflect"}, \code{"reflect_101"},
+    #'   \code{"replicate"}, \code{"constant"}, \code{"wrap"}.
+    #'   Default \code{"default"}.
+    #' @return A new \code{Image}.
+    #' @examples
+    #' \donttest{
+    #' img_path <- system.file("img", "flower.jpg", package = "Retina")
+    #' img <- Image$new(img_path)
+    #' img$rotate(45)$plot()
+    #' }
+    rotate = function(angle, cx = NULL, cy = NULL, scale = 1,
+                      interpolation = "linear", border_type = "default") {
+      .valid_interp <- c("nearest", "linear", "cubic", "area", "lanczos4")
+      .valid_border <- c("default", "reflect", "reflect_101",
+                         "replicate", "constant", "wrap")
+      .interp_codes <- c(nearest = 0L, linear = 1L, cubic = 2L,
+                         area = 3L, lanczos4 = 4L)
+      .border_codes <- c(default = 4L, reflect = 2L, reflect_101 = 4L,
+                         replicate = 1L, constant = 0L, wrap = 3L)
+      if (!is.numeric(angle) || length(angle) != 1L)
+        stop("angle must be a single numeric value", call. = FALSE)
+      if (!is.null(cx) && (!is.numeric(cx) || length(cx) != 1L ||
+                           cx < 1 || cx > self$ncol))
+        stop("cx and cy must be single positive numeric values within image dimensions",
+             call. = FALSE)
+      if (!is.null(cy) && (!is.numeric(cy) || length(cy) != 1L ||
+                           cy < 1 || cy > self$nrow))
+        stop("cx and cy must be single positive numeric values within image dimensions",
+             call. = FALSE)
+      if (!is.numeric(scale) || length(scale) != 1L || scale <= 0)
+        stop("scale must be a single positive numeric value", call. = FALSE)
+      if (!is.character(interpolation) || length(interpolation) != 1L ||
+          !interpolation %in% .valid_interp)
+        stop("interpolation must be one of: nearest, linear, cubic, area, lanczos4",
+             call. = FALSE)
+      if (!is.character(border_type) || length(border_type) != 1L ||
+          !border_type %in% .valid_border)
+        stop("border_type must be one of: default, reflect, reflect_101, replicate, constant, wrap",
+             call. = FALSE)
+      .cx <- if (is.null(cx)) self$ncol / 2 else as.double(cx)
+      .cy <- if (is.null(cy)) self$nrow / 2 else as.double(cy)
+      Image$new(rt_image_rotate(private$.ptr, as.double(angle), .cx, .cy,
+                                as.double(scale),
+                                .interp_codes[[interpolation]],
+                                .border_codes[[border_type]]))
+    },
+
+    #' @description Rotate the image in place.
+    #' @param angle Single numeric. Rotation angle in degrees,
+    #'   counter-clockwise.
+    #' @param cx Single positive numeric. X coordinate of the rotation centre
+    #'   (1-based). Defaults to image centre.
+    #' @param cy Single positive numeric. Y coordinate of the rotation centre
+    #'   (1-based). Defaults to image centre.
+    #' @param scale Single positive numeric. Isotropic scale factor. Default
+    #'   \code{1}.
+    #' @param interpolation Character. One of \code{"nearest"}, \code{"linear"},
+    #'   \code{"cubic"}, \code{"area"}, \code{"lanczos4"}. Default
+    #'   \code{"linear"}.
+    #' @param border_type Character. Pixel extrapolation method. One of
+    #'   \code{"default"}, \code{"reflect"}, \code{"reflect_101"},
+    #'   \code{"replicate"}, \code{"constant"}, \code{"wrap"}.
+    #'   Default \code{"default"}.
+    #' @return \code{self} invisibly.
+    #' @examples
+    #' \donttest{
+    #' img_path <- system.file("img", "flower.jpg", package = "Retina")
+    #' img <- Image$new(img_path)
+    #' img$rotate_(45)
+    #' img$plot()
+    #' }
+    rotate_ = function(angle, cx = NULL, cy = NULL, scale = 1,
+                       interpolation = "linear", border_type = "default") {
+      .valid_interp <- c("nearest", "linear", "cubic", "area", "lanczos4")
+      .valid_border <- c("default", "reflect", "reflect_101",
+                         "replicate", "constant", "wrap")
+      .interp_codes <- c(nearest = 0L, linear = 1L, cubic = 2L,
+                         area = 3L, lanczos4 = 4L)
+      .border_codes <- c(default = 4L, reflect = 2L, reflect_101 = 4L,
+                         replicate = 1L, constant = 0L, wrap = 3L)
+      if (!is.numeric(angle) || length(angle) != 1L)
+        stop("angle must be a single numeric value", call. = FALSE)
+      if (!is.null(cx) && (!is.numeric(cx) || length(cx) != 1L ||
+                           cx < 1 || cx > self$ncol))
+        stop("cx and cy must be single positive numeric values within image dimensions",
+             call. = FALSE)
+      if (!is.null(cy) && (!is.numeric(cy) || length(cy) != 1L ||
+                           cy < 1 || cy > self$nrow))
+        stop("cx and cy must be single positive numeric values within image dimensions",
+             call. = FALSE)
+      if (!is.numeric(scale) || length(scale) != 1L || scale <= 0)
+        stop("scale must be a single positive numeric value", call. = FALSE)
+      if (!is.character(interpolation) || length(interpolation) != 1L ||
+          !interpolation %in% .valid_interp)
+        stop("interpolation must be one of: nearest, linear, cubic, area, lanczos4",
+             call. = FALSE)
+      if (!is.character(border_type) || length(border_type) != 1L ||
+          !border_type %in% .valid_border)
+        stop("border_type must be one of: default, reflect, reflect_101, replicate, constant, wrap",
+             call. = FALSE)
+      .cx <- if (is.null(cx)) self$ncol / 2 else as.double(cx)
+      .cy <- if (is.null(cy)) self$nrow / 2 else as.double(cy)
+      private$.ptr <- rt_image_rotate(private$.ptr, as.double(angle), .cx, .cy,
+                                      as.double(scale),
+                                      .interp_codes[[interpolation]],
+                                      .border_codes[[border_type]])
+      invisible(self)
+    },
+
+    #' @description Flip the image horizontally, vertically, or both. Returns
+    #'   a new Image.
+    #' @param flip_h Logical scalar. If \code{TRUE}, flip left-right.
+    #'   Default \code{FALSE}.
+    #' @param flip_v Logical scalar. If \code{TRUE}, flip top-bottom.
+    #'   Default \code{FALSE}.
+    #' @return A new \code{Image}.
+    #' @examples
+    #' \donttest{
+    #' img_path <- system.file("img", "flower.jpg", package = "Retina")
+    #' img <- Image$new(img_path)
+    #' img$flip(flip_h = TRUE)$plot()
+    #' }
+    flip = function(flip_h = FALSE, flip_v = FALSE) {
+      if (!is.logical(flip_h) || length(flip_h) != 1L ||
+          !is.logical(flip_v) || length(flip_v) != 1L)
+        stop("flip_h and flip_v must be single logical values", call. = FALSE)
+      if (!flip_h && !flip_v)
+        stop("at least one of flip_h or flip_v must be TRUE", call. = FALSE)
+      .flip_code <- if (flip_h && flip_v) -1L else if (flip_h) 1L else 0L
+      Image$new(rt_image_flip(private$.ptr, .flip_code))
+    },
+
+    #' @description Flip the image in place.
+    #' @param flip_h Logical scalar. If \code{TRUE}, flip left-right.
+    #'   Default \code{FALSE}.
+    #' @param flip_v Logical scalar. If \code{TRUE}, flip top-bottom.
+    #'   Default \code{FALSE}.
+    #' @return \code{self} invisibly.
+    #' @examples
+    #' \donttest{
+    #' img_path <- system.file("img", "flower.jpg", package = "Retina")
+    #' img <- Image$new(img_path)
+    #' img$flip_(flip_v = TRUE)
+    #' img$plot()
+    #' }
+    flip_ = function(flip_h = FALSE, flip_v = FALSE) {
+      if (!is.logical(flip_h) || length(flip_h) != 1L ||
+          !is.logical(flip_v) || length(flip_v) != 1L)
+        stop("flip_h and flip_v must be single logical values", call. = FALSE)
+      if (!flip_h && !flip_v)
+        stop("at least one of flip_h or flip_v must be TRUE", call. = FALSE)
+      .flip_code <- if (flip_h && flip_v) -1L else if (flip_h) 1L else 0L
+      private$.ptr <- rt_image_flip(private$.ptr, .flip_code)
+      invisible(self)
+    },
+
+    #' @description Crop the image to a rectangular region. Returns a new
+    #'   Image. Coordinates are 1-based.
+    #' @param x1 Single positive integer. Left column (inclusive, 1-based).
+    #' @param y1 Single positive integer. Top row (inclusive, 1-based).
+    #' @param x2 Single positive integer. Right column (inclusive, 1-based).
+    #'   Must be greater than \code{x1} and \code{<= ncol}.
+    #' @param y2 Single positive integer. Bottom row (inclusive, 1-based).
+    #'   Must be greater than \code{y1} and \code{<= nrow}.
+    #' @return A new \code{Image}.
+    #' @examples
+    #' \donttest{
+    #' img_path <- system.file("img", "flower.jpg", package = "Retina")
+    #' img <- Image$new(img_path)
+    #' img$crop(1L, 1L, 100L, 100L)$plot()
+    #' }
+    crop = function(x1, y1, x2, y2) {
+      if (!is.numeric(x1) || !is.numeric(y1) ||
+          !is.numeric(x2) || !is.numeric(y2) ||
+          length(x1) != 1L || length(y1) != 1L ||
+          length(x2) != 1L || length(y2) != 1L ||
+          x1 < 1L || y1 < 1L || x2 < 1L || y2 < 1L)
+        stop("x1, y1, x2, y2 must be single positive integers", call. = FALSE)
+      if (x1 >= x2)
+        stop("x1 must be less than x2", call. = FALSE)
+      if (y1 >= y2)
+        stop("y1 must be less than y2", call. = FALSE)
+      if (x2 > self$ncol || y2 > self$nrow)
+        stop("crop coordinates exceed image dimensions", call. = FALSE)
+      Image$new(rt_image_crop(private$.ptr,
+                              as.integer(x1), as.integer(y1),
+                              as.integer(x2), as.integer(y2)))
+    },
+
+    #' @description Crop the image in place.
+    #' @param x1 Single positive integer. Left column (inclusive, 1-based).
+    #' @param y1 Single positive integer. Top row (inclusive, 1-based).
+    #' @param x2 Single positive integer. Right column (inclusive, 1-based).
+    #' @param y2 Single positive integer. Bottom row (inclusive, 1-based).
+    #' @return \code{self} invisibly.
+    #' @examples
+    #' \donttest{
+    #' img_path <- system.file("img", "flower.jpg", package = "Retina")
+    #' img <- Image$new(img_path)
+    #' img$crop_(1L, 1L, 100L, 100L)
+    #' img$plot()
+    #' }
+    crop_ = function(x1, y1, x2, y2) {
+      if (!is.numeric(x1) || !is.numeric(y1) ||
+          !is.numeric(x2) || !is.numeric(y2) ||
+          length(x1) != 1L || length(y1) != 1L ||
+          length(x2) != 1L || length(y2) != 1L ||
+          x1 < 1L || y1 < 1L || x2 < 1L || y2 < 1L)
+        stop("x1, y1, x2, y2 must be single positive integers", call. = FALSE)
+      if (x1 >= x2)
+        stop("x1 must be less than x2", call. = FALSE)
+      if (y1 >= y2)
+        stop("y1 must be less than y2", call. = FALSE)
+      if (x2 > self$ncol || y2 > self$nrow)
+        stop("crop coordinates exceed image dimensions", call. = FALSE)
+      private$.ptr <- rt_image_crop(private$.ptr,
+                                    as.integer(x1), as.integer(y1),
+                                    as.integer(x2), as.integer(y2))
+      invisible(self)
+    },
+
     #' @description Print a summary of the image.
     #' @param ... Ignored.
     #' @return \code{self} invisibly.

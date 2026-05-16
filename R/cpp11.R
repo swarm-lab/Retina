@@ -124,6 +124,22 @@ rt_image_canny <- function(img, low_threshold, high_threshold, aperture_size, L2
   .Call(`_Retina_rt_image_canny`, img, low_threshold, high_threshold, aperture_size, L2_gradient)
 }
 
+rt_image_resize <- function(img, width, height, fx, fy, interp_int) {
+  .Call(`_Retina_rt_image_resize`, img, width, height, fx, fy, interp_int)
+}
+
+rt_image_rotate <- function(img, angle, cx, cy, scale, interp_int, border_int) {
+  .Call(`_Retina_rt_image_rotate`, img, angle, cx, cy, scale, interp_int, border_int)
+}
+
+rt_image_flip <- function(img, flip_code) {
+  .Call(`_Retina_rt_image_flip`, img, flip_code)
+}
+
+rt_image_crop <- function(img, x1, y1, x2, y2) {
+  .Call(`_Retina_rt_image_crop`, img, x1, y1, x2, y2)
+}
+
 rt_build_ok <- function() {
   .Call(`_Retina_rt_build_ok`)
 }

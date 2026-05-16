@@ -222,6 +222,34 @@ extern "C" SEXP _Retina_rt_image_canny(SEXP img, SEXP low_threshold, SEXP high_t
     return cpp11::as_sexp(rt_image_canny(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<double>>(low_threshold), cpp11::as_cpp<cpp11::decay_t<double>>(high_threshold), cpp11::as_cpp<cpp11::decay_t<int>>(aperture_size), cpp11::as_cpp<cpp11::decay_t<bool>>(L2_gradient)));
   END_CPP11
 }
+// geometry.cpp
+external_pointer<RtImage> rt_image_resize(external_pointer<RtImage> img, int width, int height, double fx, double fy, int interp_int);
+extern "C" SEXP _Retina_rt_image_resize(SEXP img, SEXP width, SEXP height, SEXP fx, SEXP fy, SEXP interp_int) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_image_resize(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<int>>(width), cpp11::as_cpp<cpp11::decay_t<int>>(height), cpp11::as_cpp<cpp11::decay_t<double>>(fx), cpp11::as_cpp<cpp11::decay_t<double>>(fy), cpp11::as_cpp<cpp11::decay_t<int>>(interp_int)));
+  END_CPP11
+}
+// geometry.cpp
+external_pointer<RtImage> rt_image_rotate(external_pointer<RtImage> img, double angle, double cx, double cy, double scale, int interp_int, int border_int);
+extern "C" SEXP _Retina_rt_image_rotate(SEXP img, SEXP angle, SEXP cx, SEXP cy, SEXP scale, SEXP interp_int, SEXP border_int) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_image_rotate(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<double>>(angle), cpp11::as_cpp<cpp11::decay_t<double>>(cx), cpp11::as_cpp<cpp11::decay_t<double>>(cy), cpp11::as_cpp<cpp11::decay_t<double>>(scale), cpp11::as_cpp<cpp11::decay_t<int>>(interp_int), cpp11::as_cpp<cpp11::decay_t<int>>(border_int)));
+  END_CPP11
+}
+// geometry.cpp
+external_pointer<RtImage> rt_image_flip(external_pointer<RtImage> img, int flip_code);
+extern "C" SEXP _Retina_rt_image_flip(SEXP img, SEXP flip_code) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_image_flip(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<int>>(flip_code)));
+  END_CPP11
+}
+// geometry.cpp
+external_pointer<RtImage> rt_image_crop(external_pointer<RtImage> img, int x1, int y1, int x2, int y2);
+extern "C" SEXP _Retina_rt_image_crop(SEXP img, SEXP x1, SEXP y1, SEXP x2, SEXP y2) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_image_crop(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<int>>(x1), cpp11::as_cpp<cpp11::decay_t<int>>(y1), cpp11::as_cpp<cpp11::decay_t<int>>(x2), cpp11::as_cpp<cpp11::decay_t<int>>(y2)));
+  END_CPP11
+}
 // image.cpp
 bool rt_build_ok();
 extern "C" SEXP _Retina_rt_build_ok() {
@@ -447,9 +475,11 @@ static const R_CallMethodDef CallEntries[] = {
     {"_Retina_rt_image_colorspace",         (DL_FUNC) &_Retina_rt_image_colorspace,         1},
     {"_Retina_rt_image_convert_color",      (DL_FUNC) &_Retina_rt_image_convert_color,      3},
     {"_Retina_rt_image_convert_depth",      (DL_FUNC) &_Retina_rt_image_convert_depth,      2},
+    {"_Retina_rt_image_crop",               (DL_FUNC) &_Retina_rt_image_crop,               5},
     {"_Retina_rt_image_depth",              (DL_FUNC) &_Retina_rt_image_depth,              1},
     {"_Retina_rt_image_divide_image",       (DL_FUNC) &_Retina_rt_image_divide_image,       2},
     {"_Retina_rt_image_divide_scalar",      (DL_FUNC) &_Retina_rt_image_divide_scalar,      2},
+    {"_Retina_rt_image_flip",               (DL_FUNC) &_Retina_rt_image_flip,               2},
     {"_Retina_rt_image_from_double_array",  (DL_FUNC) &_Retina_rt_image_from_double_array,  3},
     {"_Retina_rt_image_from_integer_array", (DL_FUNC) &_Retina_rt_image_from_integer_array, 3},
     {"_Retina_rt_image_gaussian_blur",      (DL_FUNC) &_Retina_rt_image_gaussian_blur,      5},
@@ -470,6 +500,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_Retina_rt_image_nrow",               (DL_FUNC) &_Retina_rt_image_nrow,               1},
     {"_Retina_rt_image_quantile",           (DL_FUNC) &_Retina_rt_image_quantile,           2},
     {"_Retina_rt_image_read",               (DL_FUNC) &_Retina_rt_image_read,               1},
+    {"_Retina_rt_image_resize",             (DL_FUNC) &_Retina_rt_image_resize,             6},
+    {"_Retina_rt_image_rotate",             (DL_FUNC) &_Retina_rt_image_rotate,             7},
     {"_Retina_rt_image_sd",                 (DL_FUNC) &_Retina_rt_image_sd,                 1},
     {"_Retina_rt_image_set_colorspace",     (DL_FUNC) &_Retina_rt_image_set_colorspace,     2},
     {"_Retina_rt_image_sobel",              (DL_FUNC) &_Retina_rt_image_sobel,              8},
