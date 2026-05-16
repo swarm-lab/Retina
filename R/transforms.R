@@ -8,6 +8,7 @@
 #' @param dy Numeric. Vertical shift in pixels (positive = downward).
 #' @return A 2x3 numeric matrix.
 #' @seealso \code{\link{affine_scale}}, \code{\link{affine_shear}},
+#'   \code{\link{affine_rotate}}, \code{\link{affine_from_points}},
 #'   \code{\link[Retina]{Image}}
 #' @export
 affine_translate <- function(dx, dy) {
@@ -29,6 +30,7 @@ affine_translate <- function(dx, dy) {
 #'   \code{1}.
 #' @return A 2x3 numeric matrix.
 #' @seealso \code{\link{affine_translate}}, \code{\link{affine_shear}},
+#'   \code{\link{affine_rotate}}, \code{\link{affine_from_points}},
 #'   \code{\link[Retina]{Image}}
 #' @export
 affine_scale <- function(fx, fy, cx = 1, cy = 1) {
@@ -53,6 +55,7 @@ affine_scale <- function(fx, fy, cx = 1, cy = 1) {
 #' @param sy Numeric. Vertical shear factor.
 #' @return A 2x3 numeric matrix.
 #' @seealso \code{\link{affine_translate}}, \code{\link{affine_scale}},
+#'   \code{\link{affine_rotate}}, \code{\link{affine_from_points}},
 #'   \code{\link[Retina]{Image}}
 #' @export
 affine_shear <- function(sx, sy) {
@@ -125,7 +128,8 @@ affine_from_points <- function(src, dst) {
 #' @param dst A 4x2 numeric matrix of destination points. Same convention as
 #'   \code{src}.
 #' @return A 3x3 numeric matrix.
-#' @seealso \code{\link[Retina]{Image}}
+#' @seealso \code{\link{affine_rotate}}, \code{\link{affine_from_points}},
+#'   \code{\link[Retina]{Image}}
 #' @export
 perspective_from_points <- function(src, dst) {
   if (!is.matrix(src) || !is.numeric(src) || !identical(dim(src), c(4L, 2L)))

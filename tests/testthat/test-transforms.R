@@ -62,6 +62,23 @@ test_that("affine_rotate 0 degrees returns identity-like matrix", {
   expect_equal(m[2, 2],  1, tolerance = 1e-6)
 })
 
+test_that("affine_rotate 90 degrees around non-origin centre has correct translation", {
+  # OpenCV getRotationMatrix2D rotates CW for positive angle.
+  # Rotating 90 CW around (cx=5, cy=5), OpenCV centre (4,4) (0-based):
+  # [[cos(-90), -sin(-90), tx], [sin(-90), cos(-90), ty]]
+  # = [[0, 1, tx], [-1, 0, ty]]
+  # tx = (1-cos(-90))*4 + sin(-90)*(-4) ... simplifies to 0 via OpenCV formula
+  # ty = -sin(-90)*4 + (1-cos(-90))*4 = 4+4 = 8
+  # In R 2x3 matrix (column-major): m[1,2]=1, m[2,1]=-1, m[1,3]=0, m[2,3]=8
+  m <- affine_rotate(90, cx = 5, cy = 5)
+  expect_equal(m[1, 1],  0, tolerance = 1e-5)
+  expect_equal(m[1, 2],  1, tolerance = 1e-5)
+  expect_equal(m[2, 1], -1, tolerance = 1e-5)
+  expect_equal(m[2, 2],  0, tolerance = 1e-5)
+  expect_equal(m[1, 3],  0, tolerance = 1e-5)
+  expect_equal(m[2, 3],  8, tolerance = 1e-5)
+})
+
 # ── affine_from_points ────────────────────────────────────────────────────────
 
 test_that("affine_from_points returns a 2x3 numeric matrix", {
@@ -103,10 +120,16 @@ test_that("perspective_from_points identity mapping returns identity-like matrix
   src <- matrix(c(1, 1,  10, 1,  10, 10,  1, 10), nrow = 4, ncol = 2, byrow = TRUE)
   m <- perspective_from_points(src, src)
   m_norm <- m / m[3, 3]
+  # Full normalized 3x3 identity check
   expect_equal(m_norm[1, 1], 1, tolerance = 1e-5)
   expect_equal(m_norm[2, 2], 1, tolerance = 1e-5)
+  expect_equal(m_norm[3, 3], 1, tolerance = 1e-5)
   expect_equal(m_norm[1, 2], 0, tolerance = 1e-5)
   expect_equal(m_norm[2, 1], 0, tolerance = 1e-5)
+  expect_equal(m_norm[1, 3], 0, tolerance = 1e-5)
+  expect_equal(m_norm[2, 3], 0, tolerance = 1e-5)
+  expect_equal(m_norm[3, 1], 0, tolerance = 1e-5)
+  expect_equal(m_norm[3, 2], 0, tolerance = 1e-5)
 })
 
 test_that("perspective_from_points errors on wrong src shape", {
