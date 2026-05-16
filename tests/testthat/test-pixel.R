@@ -58,3 +58,20 @@ test_that("rt_image_copy_roi pastes src into dst", {
   px <- Retina:::rt_image_get_pixel(dst$.__enclos_env__$private$.ptr, 1L, 1L)
   expect_equal(as.integer(px[[1L]]), 99L)
 })
+
+test_that("rt_image_get_pixel errors on out-of-bounds row", {
+  ptr <- img_3x4()$.__enclos_env__$private$.ptr
+  expect_error(Retina:::rt_image_get_pixel(ptr, 0L, 1L), "out of bounds")
+  expect_error(Retina:::rt_image_get_pixel(ptr, 4L, 1L), "out of bounds")
+})
+
+test_that("rt_image_get_pixel errors on out-of-bounds col", {
+  ptr <- img_3x4()$.__enclos_env__$private$.ptr
+  expect_error(Retina:::rt_image_get_pixel(ptr, 1L, 0L), "out of bounds")
+  expect_error(Retina:::rt_image_get_pixel(ptr, 1L, 5L), "out of bounds")
+})
+
+test_that("rt_image_set_pixel errors when values length < nchan", {
+  ptr <- img_3x4()$.__enclos_env__$private$.ptr
+  expect_error(Retina:::rt_image_set_pixel(ptr, 1L, 1L, c(1, 2)), "channel")
+})

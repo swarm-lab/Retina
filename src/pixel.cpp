@@ -17,6 +17,8 @@ static cv::Mat get_cpu_mat(const external_pointer<RtImage>& img) {
 doubles rt_image_get_pixel(external_pointer<RtImage> img, int row, int col) {
   cv::Mat mat = get_cpu_mat(img);
   int r = row - 1, c = col - 1;
+  if (r < 0 || r >= mat.rows || c < 0 || c >= mat.cols)
+    stop("pixel coordinates out of bounds");
   int nchan = mat.channels();
   int depth = mat.depth();
   writable::doubles result(nchan);
@@ -43,7 +45,12 @@ void rt_image_set_pixel(external_pointer<RtImage> img,
   }
   cv::Mat& mat = std::get<cv::Mat>(img->buffer);
   int r = row - 1, c = col - 1;
+  if (r < 0 || r >= mat.rows || c < 0 || c >= mat.cols)
+    stop("pixel coordinates out of bounds");
   int nchan = mat.channels();
+  if ((int)values.size() < nchan)
+    stop("values must have one element per channel (%d expected, got %d)",
+         nchan, (int)values.size());
   int depth = mat.depth();
   for (int k = 0; k < nchan; k++) {
     double v = values[k];
@@ -65,6 +72,8 @@ external_pointer<RtImage> rt_image_extract_region(
   // All coords are 1-based inclusive; cv::Rect is 0-based with width/height.
   cv::Rect roi(col_start - 1, row_start - 1,
                col_end - col_start + 1, row_end - row_start + 1);
+  if (roi.x < 0 || roi.y < 0 || roi.x + roi.width > src.cols || roi.y + roi.height > src.rows)
+    stop("region coordinates out of bounds");
   cv::Mat result = src(roi).clone();
   return {new RtImage(std::move(result), img->colorspace)};
 }
@@ -83,5 +92,8 @@ void rt_image_copy_roi(external_pointer<RtImage> dst,
   cv::Mat& dst_mat = std::get<cv::Mat>(dst->buffer);
   cv::Mat src_mat  = get_cpu_mat(src);
   cv::Rect roi(col_start - 1, row_start - 1, src_mat.cols, src_mat.rows);
+  if (roi.x < 0 || roi.y < 0 ||
+      roi.x + roi.width > dst_mat.cols || roi.y + roi.height > dst_mat.rows)
+    stop("ROI exceeds destination image bounds");
   src_mat.copyTo(dst_mat(roi));
 }
