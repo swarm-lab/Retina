@@ -140,10 +140,29 @@ test_that("border_() modifies in place and returns self invisibly", {
 test_that("border() errors on invalid type", {
   img <- zeros(3L, 3L)
   expect_error(img$border(1L, type = "invalid"),
-               "type must be one of: constant, reflect, reflect_101, replicate, wrap")
+               "type must be one of")
 })
 
 test_that("border() errors on negative width", {
   img <- zeros(3L, 3L)
   expect_error(img$border(-1L), "top must be a single non-negative integer")
+})
+
+test_that("border() errors on empty value vector", {
+  img <- zeros(3L, 3L)
+  expect_error(img$border(1L, value = numeric(0)),
+               "value must be a non-empty numeric vector with no NAs")
+})
+
+test_that("border_() errors on invalid type", {
+  img <- zeros(3L, 3L)
+  expect_error(img$border_(1L, type = "bad"),
+               "type must be one of")
+})
+
+test_that("border() accepts 'default' as a valid type", {
+  img <- zeros(3L, 3L, 1L, "CV_8U", "GRAY")
+  b <- img$border(1L, type = "default")
+  expect_equal(b$nrow, 5L)
+  expect_s3_class(b, "Image")
 })
