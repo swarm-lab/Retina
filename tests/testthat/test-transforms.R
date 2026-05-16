@@ -44,3 +44,73 @@ test_that("affine_shear with zero shear returns identity-like matrix", {
   m <- affine_shear(0, 0)
   expect_equal(m, matrix(c(1, 0, 0,  0, 1, 0), nrow = 2, byrow = TRUE))
 })
+
+# ── affine_rotate ─────────────────────────────────────────────────────────────
+
+test_that("affine_rotate returns a 2x3 numeric matrix", {
+  m <- affine_rotate(45, cx = 5, cy = 5)
+  expect_true(is.matrix(m))
+  expect_true(is.numeric(m))
+  expect_equal(dim(m), c(2L, 3L))
+})
+
+test_that("affine_rotate 0 degrees returns identity-like matrix", {
+  m <- affine_rotate(0, cx = 1, cy = 1)
+  expect_equal(m[1, 1],  1, tolerance = 1e-6)
+  expect_equal(m[1, 2],  0, tolerance = 1e-6)
+  expect_equal(m[2, 1],  0, tolerance = 1e-6)
+  expect_equal(m[2, 2],  1, tolerance = 1e-6)
+})
+
+# ── affine_from_points ────────────────────────────────────────────────────────
+
+test_that("affine_from_points returns a 2x3 numeric matrix", {
+  src <- matrix(c(1, 1,  10, 1,  1, 10), nrow = 3, ncol = 2, byrow = TRUE)
+  dst <- matrix(c(2, 2,  11, 2,  2, 11), nrow = 3, ncol = 2, byrow = TRUE)
+  m <- affine_from_points(src, dst)
+  expect_true(is.matrix(m))
+  expect_equal(dim(m), c(2L, 3L))
+})
+
+test_that("affine_from_points identity mapping returns identity-like matrix", {
+  src <- matrix(c(1, 1,  10, 1,  1, 10), nrow = 3, ncol = 2, byrow = TRUE)
+  m <- affine_from_points(src, src)
+  expect_equal(m[1, 1],  1, tolerance = 1e-5)
+  expect_equal(m[1, 2],  0, tolerance = 1e-5)
+  expect_equal(m[2, 1],  0, tolerance = 1e-5)
+  expect_equal(m[2, 2],  1, tolerance = 1e-5)
+  expect_equal(m[1, 3],  0, tolerance = 1e-5)
+  expect_equal(m[2, 3],  0, tolerance = 1e-5)
+})
+
+test_that("affine_from_points errors on wrong src shape", {
+  src <- matrix(1:8, nrow = 4, ncol = 2)
+  dst <- matrix(c(1, 1,  10, 1,  1, 10), nrow = 3, ncol = 2, byrow = TRUE)
+  expect_error(affine_from_points(src, dst), "src must be a 3x2 numeric matrix")
+})
+
+# ── perspective_from_points ───────────────────────────────────────────────────
+
+test_that("perspective_from_points returns a 3x3 numeric matrix", {
+  src <- matrix(c(1, 1,  10, 1,  10, 10,  1, 10), nrow = 4, ncol = 2, byrow = TRUE)
+  dst <- matrix(c(2, 2,  11, 2,  11, 11,  2, 11), nrow = 4, ncol = 2, byrow = TRUE)
+  m <- perspective_from_points(src, dst)
+  expect_true(is.matrix(m))
+  expect_equal(dim(m), c(3L, 3L))
+})
+
+test_that("perspective_from_points identity mapping returns identity-like matrix", {
+  src <- matrix(c(1, 1,  10, 1,  10, 10,  1, 10), nrow = 4, ncol = 2, byrow = TRUE)
+  m <- perspective_from_points(src, src)
+  m_norm <- m / m[3, 3]
+  expect_equal(m_norm[1, 1], 1, tolerance = 1e-5)
+  expect_equal(m_norm[2, 2], 1, tolerance = 1e-5)
+  expect_equal(m_norm[1, 2], 0, tolerance = 1e-5)
+  expect_equal(m_norm[2, 1], 0, tolerance = 1e-5)
+})
+
+test_that("perspective_from_points errors on wrong src shape", {
+  src <- matrix(1:6, nrow = 3, ncol = 2)
+  dst <- matrix(c(1, 1,  10, 1,  10, 10,  1, 10), nrow = 4, ncol = 2, byrow = TRUE)
+  expect_error(perspective_from_points(src, dst), "src must be a 4x2 numeric matrix")
+})
