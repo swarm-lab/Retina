@@ -236,7 +236,7 @@ test_that("warp_perspective_ modifies image in place and returns self", {
   expect_equal(img$nrow, 10L)
 })
 
-test_that("warp_perspective with perspective_from_points shifts pixels correctly", {
+test_that("warp_perspective with perspective_from_points returns correct dimensions and colorspace", {
   # 4x4 GRAY image, all zeros except top-left 2x2 = 200
   arr <- array(0L, dim = c(4L, 4L, 1L))
   arr[1:2, 1:2, 1] <- 200L

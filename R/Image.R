@@ -1401,10 +1401,10 @@ Image <- R6::R6Class("Image",
       if (!is.matrix(m) || !is.numeric(m) || !identical(dim(m), c(2L, 3L)))
         stop("m must be a 2x3 numeric matrix", call. = FALSE)
       if (!is.null(width) && (!is.numeric(width) || length(width) != 1L ||
-                              width < 1L || width != as.integer(width)))
+                              !isTRUE(width >= 1L) || !isTRUE(width == as.integer(width))))
         stop("width must be a single positive integer", call. = FALSE)
       if (!is.null(height) && (!is.numeric(height) || length(height) != 1L ||
-                               height < 1L || height != as.integer(height)))
+                               !isTRUE(height >= 1L) || !isTRUE(height == as.integer(height))))
         stop("height must be a single positive integer", call. = FALSE)
       if (!is.character(interpolation) || length(interpolation) != 1L ||
           !interpolation %in% .valid_interp)
@@ -1454,10 +1454,10 @@ Image <- R6::R6Class("Image",
       if (!is.matrix(m) || !is.numeric(m) || !identical(dim(m), c(2L, 3L)))
         stop("m must be a 2x3 numeric matrix", call. = FALSE)
       if (!is.null(width) && (!is.numeric(width) || length(width) != 1L ||
-                              width < 1L || width != as.integer(width)))
+                              !isTRUE(width >= 1L) || !isTRUE(width == as.integer(width))))
         stop("width must be a single positive integer", call. = FALSE)
       if (!is.null(height) && (!is.numeric(height) || length(height) != 1L ||
-                               height < 1L || height != as.integer(height)))
+                               !isTRUE(height >= 1L) || !isTRUE(height == as.integer(height))))
         stop("height must be a single positive integer", call. = FALSE)
       if (!is.character(interpolation) || length(interpolation) != 1L ||
           !interpolation %in% .valid_interp)
@@ -1509,10 +1509,10 @@ Image <- R6::R6Class("Image",
       if (!is.matrix(m) || !is.numeric(m) || !identical(dim(m), c(3L, 3L)))
         stop("m must be a 3x3 numeric matrix", call. = FALSE)
       if (!is.null(width) && (!is.numeric(width) || length(width) != 1L ||
-                              width < 1L || width != as.integer(width)))
+                              !isTRUE(width >= 1L) || !isTRUE(width == as.integer(width))))
         stop("width must be a single positive integer", call. = FALSE)
       if (!is.null(height) && (!is.numeric(height) || length(height) != 1L ||
-                               height < 1L || height != as.integer(height)))
+                               !isTRUE(height >= 1L) || !isTRUE(height == as.integer(height))))
         stop("height must be a single positive integer", call. = FALSE)
       if (!is.character(interpolation) || length(interpolation) != 1L ||
           !interpolation %in% .valid_interp)
@@ -1561,10 +1561,10 @@ Image <- R6::R6Class("Image",
       if (!is.matrix(m) || !is.numeric(m) || !identical(dim(m), c(3L, 3L)))
         stop("m must be a 3x3 numeric matrix", call. = FALSE)
       if (!is.null(width) && (!is.numeric(width) || length(width) != 1L ||
-                              width < 1L || width != as.integer(width)))
+                              !isTRUE(width >= 1L) || !isTRUE(width == as.integer(width))))
         stop("width must be a single positive integer", call. = FALSE)
       if (!is.null(height) && (!is.numeric(height) || length(height) != 1L ||
-                               height < 1L || height != as.integer(height)))
+                               !isTRUE(height >= 1L) || !isTRUE(height == as.integer(height))))
         stop("height must be a single positive integer", call. = FALSE)
       if (!is.character(interpolation) || length(interpolation) != 1L ||
           !interpolation %in% .valid_interp)
