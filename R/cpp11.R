@@ -108,6 +108,10 @@ rt_randn <- function(rows, cols, nchan, depth, colorspace, mean, stddev) {
   .Call(`_Retina_rt_randn`, rows, cols, nchan, depth, colorspace, mean, stddev)
 }
 
+rt_image_border <- function(img, top, bottom, left, right, border_type, value) {
+  .Call(`_Retina_rt_image_border`, img, top, bottom, left, right, border_type, value)
+}
+
 rt_image_to_native_raster <- function(img) {
   .Call(`_Retina_rt_image_to_native_raster`, img)
 }

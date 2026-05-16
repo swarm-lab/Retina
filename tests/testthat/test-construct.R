@@ -98,3 +98,52 @@ test_that("randn() returns an Image object and handles 3 channels", {
   expect_s3_class(img, "Image")
   expect_equal(img$nchan, 3L)
 })
+
+test_that("border() adds correct pixel counts on all sides", {
+  img <- zeros(3L, 4L, 1L, "CV_8U", "GRAY")
+  b <- img$border(top = 1L, bottom = 2L, left = 3L, right = 4L,
+                  type = "constant", value = 255)
+  expect_equal(b$nrow, 6L)   # 3 + 1 + 2
+  expect_equal(b$ncol, 11L)  # 4 + 3 + 4
+  expect_equal(b[1, 1], c(Y = 255))   # border pixel
+  expect_equal(b[2, 4], c(Y = 0))     # interior pixel
+})
+
+test_that("border() symmetric shorthand: border(2) adds 2 on all sides", {
+  img <- zeros(3L, 3L, 1L, "CV_8U", "GRAY")
+  b <- img$border(2L)
+  expect_equal(b$nrow, 7L)
+  expect_equal(b$ncol, 7L)
+})
+
+test_that("border() preserves colorspace", {
+  img <- zeros(3L, 3L, 3L, "CV_8U", "BGR")
+  b <- img$border(1L)
+  expect_equal(b$colorspace, "BGR")
+  expect_s3_class(b, "Image")
+})
+
+test_that("border() constant value applies per channel", {
+  img <- zeros(2L, 2L, 3L, "CV_8U", "BGR")
+  b <- img$border(1L, type = "constant", value = c(10, 20, 30))
+  expect_equal(b[1, 1], c(B = 10, G = 20, R = 30))
+})
+
+test_that("border_() modifies in place and returns self invisibly", {
+  img <- zeros(3L, 4L, 1L, "CV_8U", "GRAY")
+  result <- img$border_(1L, type = "replicate")
+  expect_identical(result, img)
+  expect_equal(img$nrow, 5L)
+  expect_equal(img$ncol, 6L)
+})
+
+test_that("border() errors on invalid type", {
+  img <- zeros(3L, 3L)
+  expect_error(img$border(1L, type = "invalid"),
+               "type must be one of: constant, reflect, reflect_101, replicate, wrap")
+})
+
+test_that("border() errors on negative width", {
+  img <- zeros(3L, 3L)
+  expect_error(img$border(-1L), "top must be a single non-negative integer")
+})

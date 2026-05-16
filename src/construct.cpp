@@ -2,6 +2,15 @@
 #include <opencv2/opencv.hpp>
 using namespace cpp11;
 
+static cv::Mat get_cpu_mat(const external_pointer<RtImage>& img) {
+  if (img->is_gpu()) {
+    cv::Mat m;
+    std::get<cv::UMat>(img->buffer).copyTo(m);
+    return m;
+  }
+  return std::get<cv::Mat>(img->buffer);
+}
+
 static int cv_depth_code(const std::string& depth) {
   if      (depth == "CV_8U")  return CV_8U;
   else if (depth == "CV_8S")  return CV_8S;
@@ -52,4 +61,30 @@ external_pointer<RtImage> rt_randn(int rows, int cols, int nchan,
   cv::Mat mat(rows, cols, type);
   cv::randn(mat, cv::Scalar::all(mean), cv::Scalar::all(stddev));
   return {new RtImage(std::move(mat), colorspace)};
+}
+
+static int cv_border_type_c(const std::string& b) {
+  if      (b == "constant")                      return cv::BORDER_CONSTANT;
+  else if (b == "reflect")                       return cv::BORDER_REFLECT;
+  else if (b == "reflect_101" || b == "default") return cv::BORDER_DEFAULT;
+  else if (b == "replicate")                     return cv::BORDER_REPLICATE;
+  else if (b == "wrap")                          return cv::BORDER_WRAP;
+  else stop("type must be one of: constant, reflect, reflect_101, replicate, wrap");
+  return -1;
+}
+
+// ── border ────────────────────────────────────────────────────────────────────
+[[cpp11::register]]
+external_pointer<RtImage> rt_image_border(
+    external_pointer<RtImage> img,
+    int top, int bottom, int left, int right,
+    std::string border_type, doubles value) {
+  cv::Scalar scalar(value.size() > 0 ? value[0] : 0.0,
+                    value.size() > 1 ? value[1] : 0.0,
+                    value.size() > 2 ? value[2] : 0.0,
+                    value.size() > 3 ? value[3] : 0.0);
+  cv::Mat dst;
+  cv::copyMakeBorder(get_cpu_mat(img), dst, top, bottom, left, right,
+                     cv_border_type_c(border_type), scalar);
+  return {new RtImage(std::move(dst), img->colorspace)};
 }

@@ -194,6 +194,13 @@ extern "C" SEXP _Retina_rt_randn(SEXP rows, SEXP cols, SEXP nchan, SEXP depth, S
     return cpp11::as_sexp(rt_randn(cpp11::as_cpp<cpp11::decay_t<int>>(rows), cpp11::as_cpp<cpp11::decay_t<int>>(cols), cpp11::as_cpp<cpp11::decay_t<int>>(nchan), cpp11::as_cpp<cpp11::decay_t<std::string>>(depth), cpp11::as_cpp<cpp11::decay_t<std::string>>(colorspace), cpp11::as_cpp<cpp11::decay_t<double>>(mean), cpp11::as_cpp<cpp11::decay_t<double>>(stddev)));
   END_CPP11
 }
+// construct.cpp
+external_pointer<RtImage> rt_image_border(external_pointer<RtImage> img, int top, int bottom, int left, int right, std::string border_type, doubles value);
+extern "C" SEXP _Retina_rt_image_border(SEXP img, SEXP top, SEXP bottom, SEXP left, SEXP right, SEXP border_type, SEXP value) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_image_border(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<int>>(top), cpp11::as_cpp<cpp11::decay_t<int>>(bottom), cpp11::as_cpp<cpp11::decay_t<int>>(left), cpp11::as_cpp<cpp11::decay_t<int>>(right), cpp11::as_cpp<cpp11::decay_t<std::string>>(border_type), cpp11::as_cpp<cpp11::decay_t<doubles>>(value)));
+  END_CPP11
+}
 // display.cpp
 integers rt_image_to_native_raster(external_pointer<RtImage> img);
 extern "C" SEXP _Retina_rt_image_to_native_raster(SEXP img) {
@@ -565,6 +572,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_Retina_rt_image_bitwise_xor_image",  (DL_FUNC) &_Retina_rt_image_bitwise_xor_image,  2},
     {"_Retina_rt_image_bitwise_xor_scalar", (DL_FUNC) &_Retina_rt_image_bitwise_xor_scalar, 2},
     {"_Retina_rt_image_blur",               (DL_FUNC) &_Retina_rt_image_blur,               3},
+    {"_Retina_rt_image_border",             (DL_FUNC) &_Retina_rt_image_border,             7},
     {"_Retina_rt_image_canny",              (DL_FUNC) &_Retina_rt_image_canny,              5},
     {"_Retina_rt_image_clone",              (DL_FUNC) &_Retina_rt_image_clone,              1},
     {"_Retina_rt_image_colorspace",         (DL_FUNC) &_Retina_rt_image_colorspace,         1},

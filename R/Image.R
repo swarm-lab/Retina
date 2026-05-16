@@ -1581,6 +1581,62 @@ Image <- R6::R6Class("Image",
       invisible(self)
     },
 
+    #' @description Add a border around the image.
+    #' @param top Integer. Border width in pixels on the top edge.
+    #' @param bottom Integer. Border width on the bottom edge. Defaults to `top`.
+    #' @param left Integer. Border width on the left edge. Defaults to `top`.
+    #' @param right Integer. Border width on the right edge. Defaults to `left`.
+    #' @param type Character. Border fill mode. One of `"constant"`,
+    #'   `"reflect"`, `"reflect_101"`, `"replicate"`, `"wrap"`.
+    #'   Default `"constant"`.
+    #' @param value Numeric vector of length 1 or `nchan`. Fill colour used when
+    #'   `type = "constant"`. Recycled to `nchan` values. Default 0 (black).
+    #' @return A new `Image`.
+    border = function(top, bottom = top, left = top, right = left,
+                      type = "constant", value = 0) {
+      for (nm in c("top", "bottom", "left", "right")) {
+        v <- get(nm)
+        if (length(v) != 1L || !isTRUE(v >= 0L) || !isTRUE(v == as.integer(v)))
+          stop(nm, " must be a single non-negative integer", call. = FALSE)
+      }
+      valid_types <- c("constant", "reflect", "reflect_101", "replicate", "wrap")
+      if (length(type) != 1L || !type %in% valid_types)
+        stop("type must be one of: ", paste(valid_types, collapse = ", "), call. = FALSE)
+      if (!is.numeric(value) || anyNA(value))
+        stop("value must be a numeric vector with no NAs", call. = FALSE)
+      Image$new(rt_image_border(private$.ptr,
+                                as.integer(top), as.integer(bottom),
+                                as.integer(left), as.integer(right),
+                                type, as.double(rep_len(value, self$nchan))))
+    },
+
+    #' @description Add a border around the image, in place.
+    #' @param top Integer. Border width on the top edge.
+    #' @param bottom Integer. Defaults to `top`.
+    #' @param left Integer. Defaults to `top`.
+    #' @param right Integer. Defaults to `left`.
+    #' @param type Character. Border fill mode. Default `"constant"`.
+    #' @param value Numeric. Fill colour for `"constant"` mode. Default 0.
+    #' @return `self` invisibly.
+    border_ = function(top, bottom = top, left = top, right = left,
+                       type = "constant", value = 0) {
+      for (nm in c("top", "bottom", "left", "right")) {
+        v <- get(nm)
+        if (length(v) != 1L || !isTRUE(v >= 0L) || !isTRUE(v == as.integer(v)))
+          stop(nm, " must be a single non-negative integer", call. = FALSE)
+      }
+      valid_types <- c("constant", "reflect", "reflect_101", "replicate", "wrap")
+      if (length(type) != 1L || !type %in% valid_types)
+        stop("type must be one of: ", paste(valid_types, collapse = ", "), call. = FALSE)
+      if (!is.numeric(value) || anyNA(value))
+        stop("value must be a numeric vector with no NAs", call. = FALSE)
+      private$.ptr <- rt_image_border(private$.ptr,
+                                       as.integer(top), as.integer(bottom),
+                                       as.integer(left), as.integer(right),
+                                       type, as.double(rep_len(value, self$nchan)))
+      invisible(self)
+    },
+
     #' @description Print a summary of the image.
     #' @param ... Ignored.
     #' @return \code{self} invisibly.
