@@ -183,3 +183,18 @@ test_that("warp_affine_ modifies image in place and returns self", {
   expect_equal(img$ncol, 10L)
   expect_equal(img$nrow, 10L)
 })
+
+test_that("warp_affine with translation shifts pixels correctly", {
+  # 4x4 single-channel image: column 1 = 200, rest = 0
+  arr <- array(0L, dim = c(4L, 4L, 1L))
+  arr[, 1, 1] <- 200L
+  img <- Image$new(arr, colorspace = "GRAY", depth = "CV_8U")
+  # Translate right by 2 pixels: column 1 content should appear at column 3
+  m <- affine_translate(2, 0)
+  result <- img$warp_affine(m)
+  out <- rt_image_to_integer_array(result$.__enclos_env__$private$.ptr)
+  # Column 1 of result should be 0 (content moved right)
+  expect_true(all(out[, 1, 1] == 0L))
+  # Column 3 of result should be 200
+  expect_true(all(out[, 3, 1] == 200L))
+})

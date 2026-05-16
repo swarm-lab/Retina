@@ -1422,6 +1422,11 @@ Image <- R6::R6Class("Image",
 
     #' @description Apply an affine transformation to the image in place.
     #' @param m A 2x3 numeric matrix representing the affine transformation.
+    #'   Build one with \code{\link{affine_translate}},
+    #'   \code{\link{affine_scale}}, \code{\link{affine_shear}},
+    #'   \code{\link{affine_rotate}}, or \code{\link{affine_from_points}}.
+    #'   Compose multiple transforms by embedding into 3x3 with
+    #'   \code{rbind(m, c(0, 0, 1))} then multiplying with \code{\%*\%}.
     #' @param width Positive integer. Output width in pixels. Default:
     #'   \code{self$ncol}.
     #' @param height Positive integer. Output height in pixels. Default:
