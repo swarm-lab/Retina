@@ -19,7 +19,6 @@ static int cv_depth_code(const std::string& depth) {
   else if (depth == "CV_32S") return CV_32S;
   else if (depth == "CV_32F") return CV_32F;
   else if (depth == "CV_64F") return CV_64F;
-  else stop("depth must be one of: CV_8U, CV_8S, CV_16U, CV_16S, CV_32S, CV_32F, CV_64F");
   return -1;
 }
 

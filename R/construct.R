@@ -10,7 +10,7 @@
     stop("nchan must be a single positive integer <= 4", call. = FALSE)
   if (length(depth) != 1L || !depth %in% .valid_depths)
     stop("depth must be one of: ", paste(.valid_depths, collapse = ", "), call. = FALSE)
-  if (length(colorspace) != 1L || !is.character(colorspace))
+  if (length(colorspace) != 1L || !is.character(colorspace) || is.na(colorspace))
     stop("colorspace must be a single character string", call. = FALSE)
 }
 

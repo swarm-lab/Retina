@@ -34,6 +34,7 @@ test_that("randu() values are within [low, high]", {
   expect_lte(max(arr), 1)
   expect_equal(img$nrow, 100L)
   expect_equal(img$ncol, 100L)
+  expect_equal(img$nchan, 1L)
 })
 
 test_that("randu() default range 0-255 for CV_8U", {
