@@ -1048,8 +1048,6 @@ Image <- R6::R6Class("Image",
     resize = function(width = NULL, height = NULL, fx = NULL, fy = NULL,
                       interpolation = "linear") {
       .valid_interp <- c("nearest", "linear", "cubic", "area", "lanczos4")
-      .interp_codes <- c(nearest = 0L, linear = 1L, cubic = 2L,
-                         area = 3L, lanczos4 = 4L)
       .use_dims  <- !is.null(width)  || !is.null(height)
       .use_scale <- !is.null(fx)     || !is.null(fy)
       if (.use_dims && .use_scale)
@@ -1066,9 +1064,11 @@ Image <- R6::R6Class("Image",
             length(width) != 1L || length(height) != 1L ||
             width < 1L || height < 1L)
           stop("width and height must be single positive integers", call. = FALSE)
+        if (width != as.integer(width) || height != as.integer(height))
+          stop("width and height must be single positive integers", call. = FALSE)
         Image$new(rt_image_resize(private$.ptr,
                                   as.integer(width), as.integer(height),
-                                  0, 0, .interp_codes[[interpolation]]))
+                                  0, 0, interpolation))
       } else {
         if (is.null(fx) || is.null(fy) ||
             !is.numeric(fx) || !is.numeric(fy) ||
@@ -1078,7 +1078,7 @@ Image <- R6::R6Class("Image",
         Image$new(rt_image_resize(private$.ptr,
                                   0L, 0L,
                                   as.double(fx), as.double(fy),
-                                  .interp_codes[[interpolation]]))
+                                  interpolation))
       }
     },
 
@@ -1101,8 +1101,6 @@ Image <- R6::R6Class("Image",
     resize_ = function(width = NULL, height = NULL, fx = NULL, fy = NULL,
                        interpolation = "linear") {
       .valid_interp <- c("nearest", "linear", "cubic", "area", "lanczos4")
-      .interp_codes <- c(nearest = 0L, linear = 1L, cubic = 2L,
-                         area = 3L, lanczos4 = 4L)
       .use_dims  <- !is.null(width)  || !is.null(height)
       .use_scale <- !is.null(fx)     || !is.null(fy)
       if (.use_dims && .use_scale)
@@ -1119,9 +1117,11 @@ Image <- R6::R6Class("Image",
             length(width) != 1L || length(height) != 1L ||
             width < 1L || height < 1L)
           stop("width and height must be single positive integers", call. = FALSE)
+        if (width != as.integer(width) || height != as.integer(height))
+          stop("width and height must be single positive integers", call. = FALSE)
         private$.ptr <- rt_image_resize(private$.ptr,
                                         as.integer(width), as.integer(height),
-                                        0, 0, .interp_codes[[interpolation]])
+                                        0, 0, interpolation)
       } else {
         if (is.null(fx) || is.null(fy) ||
             !is.numeric(fx) || !is.numeric(fy) ||
@@ -1131,7 +1131,7 @@ Image <- R6::R6Class("Image",
         private$.ptr <- rt_image_resize(private$.ptr,
                                         0L, 0L,
                                         as.double(fx), as.double(fy),
-                                        .interp_codes[[interpolation]])
+                                        interpolation)
       }
       invisible(self)
     },
@@ -1165,10 +1165,6 @@ Image <- R6::R6Class("Image",
       .valid_interp <- c("nearest", "linear", "cubic", "area", "lanczos4")
       .valid_border <- c("default", "reflect", "reflect_101",
                          "replicate", "constant", "wrap")
-      .interp_codes <- c(nearest = 0L, linear = 1L, cubic = 2L,
-                         area = 3L, lanczos4 = 4L)
-      .border_codes <- c(default = 4L, reflect = 2L, reflect_101 = 4L,
-                         replicate = 1L, constant = 0L, wrap = 3L)
       if (!is.numeric(angle) || length(angle) != 1L)
         stop("angle must be a single numeric value", call. = FALSE)
       if (!is.null(cx) && (!is.numeric(cx) || length(cx) != 1L ||
@@ -1192,9 +1188,7 @@ Image <- R6::R6Class("Image",
       .cx <- if (is.null(cx)) self$ncol / 2 else as.double(cx)
       .cy <- if (is.null(cy)) self$nrow / 2 else as.double(cy)
       Image$new(rt_image_rotate(private$.ptr, as.double(angle), .cx, .cy,
-                                as.double(scale),
-                                .interp_codes[[interpolation]],
-                                .border_codes[[border_type]]))
+                                as.double(scale), interpolation, border_type))
     },
 
     #' @description Rotate the image in place.
@@ -1226,10 +1220,6 @@ Image <- R6::R6Class("Image",
       .valid_interp <- c("nearest", "linear", "cubic", "area", "lanczos4")
       .valid_border <- c("default", "reflect", "reflect_101",
                          "replicate", "constant", "wrap")
-      .interp_codes <- c(nearest = 0L, linear = 1L, cubic = 2L,
-                         area = 3L, lanczos4 = 4L)
-      .border_codes <- c(default = 4L, reflect = 2L, reflect_101 = 4L,
-                         replicate = 1L, constant = 0L, wrap = 3L)
       if (!is.numeric(angle) || length(angle) != 1L)
         stop("angle must be a single numeric value", call. = FALSE)
       if (!is.null(cx) && (!is.numeric(cx) || length(cx) != 1L ||
@@ -1253,9 +1243,7 @@ Image <- R6::R6Class("Image",
       .cx <- if (is.null(cx)) self$ncol / 2 else as.double(cx)
       .cy <- if (is.null(cy)) self$nrow / 2 else as.double(cy)
       private$.ptr <- rt_image_rotate(private$.ptr, as.double(angle), .cx, .cy,
-                                      as.double(scale),
-                                      .interp_codes[[interpolation]],
-                                      .border_codes[[border_type]])
+                                      as.double(scale), interpolation, border_type)
       invisible(self)
     },
 
@@ -1328,6 +1316,9 @@ Image <- R6::R6Class("Image",
           length(x2) != 1L || length(y2) != 1L ||
           x1 < 1L || y1 < 1L || x2 < 1L || y2 < 1L)
         stop("x1, y1, x2, y2 must be single positive integers", call. = FALSE)
+      if (x1 != as.integer(x1) || y1 != as.integer(y1) ||
+          x2 != as.integer(x2) || y2 != as.integer(y2))
+        stop("x1, y1, x2, y2 must be single positive integers", call. = FALSE)
       if (x1 >= x2)
         stop("x1 must be less than x2", call. = FALSE)
       if (y1 >= y2)
@@ -1358,6 +1349,9 @@ Image <- R6::R6Class("Image",
           length(x1) != 1L || length(y1) != 1L ||
           length(x2) != 1L || length(y2) != 1L ||
           x1 < 1L || y1 < 1L || x2 < 1L || y2 < 1L)
+        stop("x1, y1, x2, y2 must be single positive integers", call. = FALSE)
+      if (x1 != as.integer(x1) || y1 != as.integer(y1) ||
+          x2 != as.integer(x2) || y2 != as.integer(y2))
         stop("x1, y1, x2, y2 must be single positive integers", call. = FALSE)
       if (x1 >= x2)
         stop("x1 must be less than x2", call. = FALSE)
