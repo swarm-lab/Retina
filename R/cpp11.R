@@ -92,6 +92,22 @@ rt_image_convert_color <- function(img, from_cs, to_cs) {
   .Call(`_Retina_rt_image_convert_color`, img, from_cs, to_cs)
 }
 
+rt_zeros <- function(rows, cols, nchan, depth, colorspace) {
+  .Call(`_Retina_rt_zeros`, rows, cols, nchan, depth, colorspace)
+}
+
+rt_ones <- function(rows, cols, nchan, depth, colorspace) {
+  .Call(`_Retina_rt_ones`, rows, cols, nchan, depth, colorspace)
+}
+
+rt_randu <- function(rows, cols, nchan, depth, colorspace, low, high) {
+  .Call(`_Retina_rt_randu`, rows, cols, nchan, depth, colorspace, low, high)
+}
+
+rt_randn <- function(rows, cols, nchan, depth, colorspace, mean, stddev) {
+  .Call(`_Retina_rt_randn`, rows, cols, nchan, depth, colorspace, mean, stddev)
+}
+
 rt_image_to_native_raster <- function(img) {
   .Call(`_Retina_rt_image_to_native_raster`, img)
 }
