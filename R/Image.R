@@ -1600,10 +1600,11 @@ Image <- R6::R6Class("Image",
 
 #' @export
 `[.Image` <- function(x, i, j, k, drop = TRUE) {
+  # drop is accepted for S3 generic compatibility but not used.
   .nrow  <- x$nrow
   .ncol  <- x$ncol
   .nchan <- x$nchan
-  .ptr   <- x$.__enclos_env__$private$.ptr
+  .ptr   <- .rt_ptr(x)
 
   .i_missing <- missing(i)
   .j_missing <- missing(j)
@@ -1615,8 +1616,14 @@ Image <- R6::R6Class("Image",
   if (.i_missing) i <- seq_len(.nrow)
   if (.j_missing) j <- seq_len(.ncol)
 
+  if (anyNA(i)) stop("row index must not contain NA", call. = FALSE)
+  if (anyNA(j)) stop("column index must not contain NA", call. = FALSE)
+
   i <- as.integer(i)
   j <- as.integer(j)
+
+  if (length(i) < 1L) stop("row index must not be empty", call. = FALSE)
+  if (length(j) < 1L) stop("column index must not be empty", call. = FALSE)
 
   if (any(i < 1L) || any(i > .nrow))
     stop("row index out of bounds", call. = FALSE)
@@ -1634,6 +1641,7 @@ Image <- R6::R6Class("Image",
       rt_channel_names(x$colorspace, .nchan)
     )
     if (!.k_missing) {
+      if (is.na(k)) stop("channel index must not be NA", call. = FALSE)
       k <- as.integer(k)
       if (length(k) != 1L || k < 1L || k > .nchan)
         stop("channel index out of bounds", call. = FALSE)
@@ -1641,6 +1649,9 @@ Image <- R6::R6Class("Image",
     }
     return(vals)
   }
+
+  if (!.k_missing)
+    stop("channel index k is not supported for range extraction", call. = FALSE)
 
   Image$new(rt_image_extract_region(.ptr, i[1L], j[1L], i[length(i)], j[length(j)]))
 }

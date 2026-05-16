@@ -160,3 +160,19 @@ test_that("[.Image channel names for HSV image use H, S, V", {
   px <- hsv_img[1L, 1L]
   expect_named(px, c("H", "S", "V"))
 })
+
+test_that("[.Image errors on NA row index", {
+  expect_error(img_3x4()[NA_integer_, 1L], "NA")
+})
+
+test_that("[.Image errors on zero-length row index", {
+  expect_error(img_3x4()[integer(0), 1L], "empty")
+})
+
+test_that("[.Image errors when k is supplied with a range", {
+  expect_error(img_3x4()[1:2, 1:3, 1L], "range")
+})
+
+test_that("[.Image errors on column index below 1", {
+  expect_error(img_3x4()[1L, 0L], "column index out of bounds")
+})
