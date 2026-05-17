@@ -201,6 +201,13 @@ extern "C" SEXP _Retina_rt_image_tile(SEXP img, SEXP nrow_rep, SEXP ncol_rep) {
     return cpp11::as_sexp(rt_image_tile(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<int>>(nrow_rep), cpp11::as_cpp<cpp11::decay_t<int>>(ncol_rep)));
   END_CPP11
 }
+// construct.cpp
+external_pointer<RtImage> rt_image_set_to(external_pointer<RtImage> img, doubles value, SEXP mask_ptr);
+extern "C" SEXP _Retina_rt_image_set_to(SEXP img, SEXP value, SEXP mask_ptr) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_image_set_to(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<doubles>>(value), cpp11::as_cpp<cpp11::decay_t<SEXP>>(mask_ptr)));
+  END_CPP11
+}
 // display.cpp
 integers rt_image_to_native_raster(external_pointer<RtImage> img);
 extern "C" SEXP _Retina_rt_image_to_native_raster(SEXP img) {
@@ -612,6 +619,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_Retina_rt_image_sd",                 (DL_FUNC) &_Retina_rt_image_sd,                 1},
     {"_Retina_rt_image_set_colorspace",     (DL_FUNC) &_Retina_rt_image_set_colorspace,     2},
     {"_Retina_rt_image_set_pixel",          (DL_FUNC) &_Retina_rt_image_set_pixel,          4},
+    {"_Retina_rt_image_set_to",             (DL_FUNC) &_Retina_rt_image_set_to,             3},
     {"_Retina_rt_image_sobel",              (DL_FUNC) &_Retina_rt_image_sobel,              8},
     {"_Retina_rt_image_split_channels",     (DL_FUNC) &_Retina_rt_image_split_channels,     1},
     {"_Retina_rt_image_subtract_image",     (DL_FUNC) &_Retina_rt_image_subtract_image,     2},

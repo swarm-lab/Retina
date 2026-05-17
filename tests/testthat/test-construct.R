@@ -424,3 +424,76 @@ test_that("$tile() errors on Inf ncol", {
   img <- Image$zeros(2L, 2L)
   expect_error(img$tile(2L, Inf), "ncol must be a single positive integer")
 })
+
+# ── $set_to() / $set_to_() ────────────────────────────────────────────────────
+
+test_that("$set_to() with no mask sets all pixels to value", {
+  img <- Image$zeros(3L, 3L, 1L, "CV_8U", "GRAY")
+  out <- img$set_to(255)
+  expect_equal(out[1, 1], c(Y = 255))
+  expect_equal(out[3, 3], c(Y = 255))
+  expect_equal(img[1, 1], c(Y = 0))   # original unchanged
+})
+
+test_that("$set_to() with vector value fills each channel", {
+  img <- Image$zeros(2L, 2L, 3L, "CV_8U", "BGR")
+  out <- img$set_to(c(10, 20, 30))
+  expect_equal(out[1, 1], c(B = 10, G = 20, R = 30))
+})
+
+test_that("$set_to() with mask only sets masked pixels", {
+  img  <- Image$zeros(3L, 3L, 1L, "CV_8U", "GRAY")
+  mask <- Image$zeros(3L, 3L, 1L, "CV_8U", "GRAY")
+  mask[1, 1] <- c(Y = 255)          # mark pixel (1,1)
+  out <- img$set_to(128, mask = mask)
+  expect_equal(out[1, 1], c(Y = 128))   # masked pixel changed
+  expect_equal(out[1, 2], c(Y = 0))     # unmasked unchanged
+  expect_equal(out[3, 3], c(Y = 0))     # unmasked unchanged
+})
+
+test_that("$set_to() returns a new Image (copying)", {
+  img <- Image$zeros(2L, 2L)
+  out <- img$set_to(100)
+  expect_false(identical(img, out))
+  expect_equal(img[1, 1], c(Y = 0))
+})
+
+test_that("$set_to_() modifies in place and returns self invisibly", {
+  img <- Image$zeros(3L, 3L, 1L, "CV_8U", "GRAY")
+  result <- img$set_to_(200)
+  expect_identical(result, img)
+  expect_equal(img[1, 1], c(Y = 200))
+  expect_equal(img[3, 3], c(Y = 200))
+})
+
+test_that("$set_to_() with mask only modifies masked pixels in place", {
+  img  <- Image$zeros(3L, 3L, 1L, "CV_8U", "GRAY")
+  mask <- Image$zeros(3L, 3L, 1L, "CV_8U", "GRAY")
+  mask[2, 2] <- c(Y = 255)
+  img$set_to_(99, mask = mask)
+  expect_equal(img[2, 2], c(Y = 99))
+  expect_equal(img[1, 1], c(Y = 0))
+})
+
+test_that("$set_to() errors on NA value", {
+  img <- Image$zeros(2L, 2L)
+  expect_error(img$set_to(NA_real_), "value must be")
+})
+
+test_that("$set_to() errors when mask has wrong depth", {
+  img      <- Image$zeros(3L, 3L, 1L, "CV_8U",  "GRAY")
+  bad_mask <- Image$zeros(3L, 3L, 1L, "CV_32F", "GRAY")
+  expect_error(img$set_to(255, mask = bad_mask), "mask must be CV_8U depth")
+})
+
+test_that("$set_to() errors when mask has wrong dimensions", {
+  img      <- Image$zeros(3L, 3L, 1L, "CV_8U", "GRAY")
+  bad_mask <- Image$zeros(2L, 3L, 1L, "CV_8U", "GRAY")
+  expect_error(img$set_to(255, mask = bad_mask), "mask dimensions must match")
+})
+
+test_that("$set_to() errors when mask has more than 1 channel", {
+  img      <- Image$zeros(3L, 3L, 3L, "CV_8U", "BGR")
+  bad_mask <- Image$zeros(3L, 3L, 3L, "CV_8U", "BGR")
+  expect_error(img$set_to(255, mask = bad_mask), "mask must be a single-channel")
+})
