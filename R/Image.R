@@ -1586,6 +1586,14 @@ Image <- R6::R6Class("Image",
     },
 
     #' @description Add a border around the image.
+    #'
+    #' The argument order `(top, left, bottom, right)` is deliberately different
+    #' from the CSS shorthand (`top, right, bottom, left`) and from OpenCV's
+    #' `copyMakeBorder` (`top, bottom, left, right`). With this order, the
+    #' two-argument form `$border(v, h)` adds `v` pixels vertically (top and
+    #' bottom) and `h` pixels horizontally (left and right) — the most natural
+    #' two-argument case for symmetric borders.
+    #'
     #' @param top Integer. Border width in pixels on the top edge.
     #' @param left Integer. Border width on the left edge. Defaults to `top`.
     #' @param bottom Integer. Border width on the bottom edge. Defaults to `top`.
@@ -1615,6 +1623,10 @@ Image <- R6::R6Class("Image",
     },
 
     #' @description Add a border around the image, in place.
+    #'
+    #' See `$border()` for the rationale behind the argument order
+    #' `(top, left, bottom, right)`.
+    #'
     #' @param top Integer. Border width on the top edge.
     #' @param left Integer. Defaults to `top`.
     #' @param bottom Integer. Defaults to `top`.
