@@ -8,3 +8,4 @@ src/Makevars
 docs/*
 !docs/superpowers/
 !docs/superpowers/**
+.DS_store

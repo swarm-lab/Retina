@@ -6,3 +6,4 @@
 ^.*\.Rproj$
 ^_pkgdown\.yml$
 ^pkgdown$
+.DS_store
