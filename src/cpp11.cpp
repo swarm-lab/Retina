@@ -529,6 +529,13 @@ extern "C" SEXP _Retina_rt_image_quantile(SEXP img, SEXP probs) {
     return cpp11::as_sexp(rt_image_quantile(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<doubles>>(probs)));
   END_CPP11
 }
+// threshold.cpp
+double rt_autothreshold_value(external_pointer<RtImage> img, std::string method, int bins);
+extern "C" SEXP _Retina_rt_autothreshold_value(SEXP img, SEXP method, SEXP bins) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_autothreshold_value(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<std::string>>(method), cpp11::as_cpp<cpp11::decay_t<int>>(bins)));
+  END_CPP11
+}
 // transforms.cpp
 external_pointer<RtImage> rt_image_warp_affine(external_pointer<RtImage> img, doubles m, int width, int height, std::string interpolation, std::string border_type);
 extern "C" SEXP _Retina_rt_image_warp_affine(SEXP img, SEXP m, SEXP width, SEXP height, SEXP interpolation, SEXP border_type) {
@@ -569,6 +576,7 @@ extern "C" {
 static const R_CallMethodDef CallEntries[] = {
     {"_Retina_rt_affine_from_points",       (DL_FUNC) &_Retina_rt_affine_from_points,       2},
     {"_Retina_rt_affine_rotate",            (DL_FUNC) &_Retina_rt_affine_rotate,            4},
+    {"_Retina_rt_autothreshold_value",      (DL_FUNC) &_Retina_rt_autothreshold_value,      3},
     {"_Retina_rt_build_ok",                 (DL_FUNC) &_Retina_rt_build_ok,                 0},
     {"_Retina_rt_concatenate",              (DL_FUNC) &_Retina_rt_concatenate,              2},
     {"_Retina_rt_fill",                     (DL_FUNC) &_Retina_rt_fill,                     6},

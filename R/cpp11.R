@@ -296,6 +296,10 @@ rt_image_quantile <- function(img, probs) {
   .Call(`_Retina_rt_image_quantile`, img, probs)
 }
 
+rt_autothreshold_value <- function(img, method, bins) {
+  .Call(`_Retina_rt_autothreshold_value`, img, method, bins)
+}
+
 rt_image_warp_affine <- function(img, m, width, height, interpolation, border_type) {
   .Call(`_Retina_rt_image_warp_affine`, img, m, width, height, interpolation, border_type)
 }
