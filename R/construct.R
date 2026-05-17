@@ -12,7 +12,7 @@
 #' @param imgs A list of at least 2 \code{Image} objects.
 #' @param axis \code{"h"} or \code{"horizontal"} for side-by-side;
 #'   \code{"v"} or \code{"vertical"} for top-to-bottom. Default \code{"h"}.
-#' @return A new \code{Image}.
+#' @return A new \code{Image} with the colorspace of the first input image.
 #' @examples
 #' \donttest{
 #' a <- Image$zeros(3L, 4L, 1L, "CV_8U", "GRAY")
@@ -29,11 +29,11 @@ concatenate <- function(imgs, axis = "h") {
   if (length(axis) != 1L || !is.character(axis) || !axis %in% valid_axes)
     stop("axis must be one of: h, horizontal, v, vertical", call. = FALSE)
 
-  depths      <- vapply(imgs, function(x) x$depth,      integer(1L))
+  depth_names <- vapply(imgs, function(x) x$depth_name, character(1L))
   nchans      <- vapply(imgs, function(x) x$nchan,      integer(1L))
   colorspaces <- vapply(imgs, function(x) x$colorspace, character(1L))
 
-  if (length(unique(depths)) > 1L)
+  if (length(unique(depth_names)) > 1L)
     stop("all images must have the same depth", call. = FALSE)
   if (length(unique(nchans)) > 1L)
     stop("all images must have the same nchan", call. = FALSE)

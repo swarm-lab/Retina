@@ -121,6 +121,7 @@ external_pointer<RtImage> rt_image_set_to(
 [[cpp11::register]]
 external_pointer<RtImage> rt_concatenate(cpp11::list img_ptrs,
                                           std::string axis) {
+  // Colorspace uniformity is validated on the R side; take colorspace from img_ptrs[0].
   std::vector<cv::Mat> mats;
   mats.reserve(img_ptrs.size());
   std::string colorspace;

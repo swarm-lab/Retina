@@ -528,7 +528,7 @@ test_that("concatenate() vertical: nrow is sum of inputs", {
   expect_equal(out$nrow, 8L)    # 3 + 5
   expect_equal(out$ncol, 4L)
   expect_equal(out[1, 1], c(Y = 10))   # top portion
-  expect_equal(out[4, 1], c(Y = 20))   # bottom portion
+  expect_equal(out[4, 1], c(Y = 20))   # row 4 = first row of b (a has 3 rows)
 })
 
 test_that("concatenate() axis aliases 'horizontal' and 'vertical' work", {
