@@ -1677,8 +1677,9 @@ Image <- R6::R6Class("Image",
     #'   `value` is written.
     #' @return A new `Image`.
     set_to = function(value, mask = NULL) {
-      if (!is.numeric(value) || length(value) < 1L || anyNA(value))
-        stop("value must be a non-empty numeric vector with no NAs", call. = FALSE)
+      if (!is.numeric(value) || length(value) < 1L || anyNA(value) ||
+          !all(is.finite(value)))
+        stop("value must be a non-empty finite numeric vector with no NAs", call. = FALSE)
       if (!is.null(mask)) {
         if (!inherits(mask, "Image"))
           stop("mask must be an Image", call. = FALSE)
@@ -1701,8 +1702,9 @@ Image <- R6::R6Class("Image",
     #' @param mask `NULL` or a single-channel `CV_8U` `Image` same size as self.
     #' @return `self` invisibly.
     set_to_ = function(value, mask = NULL) {
-      if (!is.numeric(value) || length(value) < 1L || anyNA(value))
-        stop("value must be a non-empty numeric vector with no NAs", call. = FALSE)
+      if (!is.numeric(value) || length(value) < 1L || anyNA(value) ||
+          !all(is.finite(value)))
+        stop("value must be a non-empty finite numeric vector with no NAs", call. = FALSE)
       if (!is.null(mask)) {
         if (!inherits(mask, "Image"))
           stop("mask must be an Image", call. = FALSE)

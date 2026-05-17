@@ -509,6 +509,16 @@ test_that("$set_to_() errors when mask has wrong depth", {
   expect_error(img$set_to_(255, mask = bad_mask), "mask must be CV_8U depth")
 })
 
+test_that("$set_to() errors on Inf value", {
+  img <- Image$zeros(2L, 2L)
+  expect_error(img$set_to(Inf), "value must be")
+})
+
+test_that("$set_to_() errors on Inf value", {
+  img <- Image$zeros(2L, 2L)
+  expect_error(img$set_to_(-Inf), "value must be")
+})
+
 # ── concatenate() ─────────────────────────────────────────────────────────────
 
 test_that("concatenate() horizontal: ncol is sum of inputs", {
