@@ -1852,7 +1852,7 @@ Image$randu <- function(nrow, ncol, nchan = 1L, depth = "CV_8U",
     if (missing(low))  low  <- d[1]
     if (missing(high)) high <- d[2]
     message("Using default range [", low, ", ", high, "] for ", depth,
-            ". Pass 'low' and 'high' explicitly to suppress this message.")
+            ". Provide both 'low' and 'high' explicitly to suppress this message.")
   }
   if (length(low)  != 1L || !is.numeric(low)  || !is.finite(low))
     stop("low must be a single finite numeric",  call. = FALSE)
@@ -1882,7 +1882,7 @@ Image$randn <- function(nrow, ncol, nchan = 1L, depth = "CV_8U",
     if (missing(mean)) mean <- d[1]
     if (missing(sd))   sd   <- d[2]
     message("Using default mean/sd [", mean, ", ", sd, "] for ", depth,
-            ". Pass 'mean' and 'sd' explicitly to suppress this message.")
+            ". Provide both 'mean' and 'sd' explicitly to suppress this message.")
   }
   if (length(mean) != 1L || !is.numeric(mean) || !is.finite(mean))
     stop("mean must be a single finite numeric", call. = FALSE)

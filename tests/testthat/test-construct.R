@@ -285,3 +285,17 @@ test_that("Image$randn() emits message with correct values for CV_16S", {
 test_that("Image$randn() emits no message when mean and sd are provided", {
   expect_no_message(Image$randn(10L, 10L, mean = 128, sd = 30))
 })
+
+test_that("Image$randu() applies only missing default when low is supplied", {
+  expect_message(
+    Image$randu(10L, 10L, low = 5),
+    "Using default range \\[5, 255\\] for CV_8U"
+  )
+})
+
+test_that("Image$randn() applies only missing default when mean is supplied", {
+  expect_message(
+    Image$randn(10L, 10L, mean = 100),
+    "Using default mean/sd \\[100, 30\\] for CV_8U"
+  )
+})
