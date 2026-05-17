@@ -394,3 +394,33 @@ test_that("$tile() errors on ncol < 1", {
   img <- Image$zeros(2L, 2L)
   expect_error(img$tile(2L, 0L), "ncol must be a single positive integer")
 })
+
+test_that("$tile() errors on non-integer nrow (e.g., 1.5)", {
+  img <- Image$zeros(2L, 2L)
+  expect_error(img$tile(1.5), "nrow must be a single positive integer")
+})
+
+test_that("$tile() errors on NA nrow", {
+  img <- Image$zeros(2L, 2L)
+  expect_error(img$tile(NA_integer_), "nrow must be a single positive integer")
+})
+
+test_that("$tile() errors on Inf nrow", {
+  img <- Image$zeros(2L, 2L)
+  expect_error(img$tile(Inf), "nrow must be a single positive integer")
+})
+
+test_that("$tile() errors on non-integer ncol (e.g., 2.7)", {
+  img <- Image$zeros(2L, 2L)
+  expect_error(img$tile(2L, 2.7), "ncol must be a single positive integer")
+})
+
+test_that("$tile() errors on NA ncol", {
+  img <- Image$zeros(2L, 2L)
+  expect_error(img$tile(2L, NA_integer_), "ncol must be a single positive integer")
+})
+
+test_that("$tile() errors on Inf ncol", {
+  img <- Image$zeros(2L, 2L)
+  expect_error(img$tile(2L, Inf), "ncol must be a single positive integer")
+})
