@@ -37,8 +37,11 @@ test_that("Image$randu() values are within [low, high]", {
   expect_equal(img$nchan, 1L)
 })
 
-test_that("Image$randu() default range 0-255 for CV_8U", {
-  img <- Image$randu(50L, 50L)
+test_that("Image$randu() emits message and uses [0,255] default for CV_8U", {
+  expect_message(
+    { img <- Image$randu(50L, 50L) },
+    "Using default range \\[0, 255\\] for CV_8U"
+  )
   expect_equal(img$depth_name, "CV_8U")
   arr <- img$to_array()
   expect_gte(min(arr), 0)
@@ -235,4 +238,50 @@ test_that("Image$fill() works with float depth CV_32F", {
   img <- Image$fill(0.5, 2L, 2L, 1L, "CV_32F", "GRAY")
   expect_equal(img$depth_name, "CV_32F")
   expect_equal(img[1, 1], c(Y = 0.5))
+})
+
+# ── randu/randn depth-aware defaults ──────────────────────────────────────────
+
+test_that("Image$randu() emits message with correct values for CV_32F", {
+  expect_message(
+    suppressWarnings(Image$randu(10L, 10L, depth = "CV_32F")),
+    "Using default range \\[0, 1\\] for CV_32F"
+  )
+})
+
+test_that("Image$randu() emits message with correct values for CV_16S", {
+  expect_message(
+    suppressWarnings(Image$randu(10L, 10L, depth = "CV_16S")),
+    "Using default range \\[-32768, 32767\\] for CV_16S"
+  )
+})
+
+test_that("Image$randu() emits no message when low and high are provided", {
+  expect_no_message(Image$randu(10L, 10L, low = 0, high = 100))
+})
+
+test_that("Image$randu() CV_32F default produces values in [0, 1]", {
+  suppressMessages(img <- Image$randu(100L, 100L, depth = "CV_32F"))
+  arr <- img$to_array()
+  expect_gte(min(arr), 0)
+  expect_lte(max(arr), 1)
+})
+
+test_that("Image$randn() emits message and uses [128, 30] default for CV_8U", {
+  expect_message(
+    { img <- Image$randn(10L, 10L) },
+    "Using default mean/sd \\[128, 30\\] for CV_8U"
+  )
+  expect_s3_class(img, "Image")
+})
+
+test_that("Image$randn() emits message with correct values for CV_16S", {
+  expect_message(
+    suppressWarnings(Image$randn(10L, 10L, depth = "CV_16S")),
+    "Using default mean/sd \\[0, 10000\\] for CV_16S"
+  )
+})
+
+test_that("Image$randn() emits no message when mean and sd are provided", {
+  expect_no_message(Image$randn(10L, 10L, mean = 128, sd = 30))
 })

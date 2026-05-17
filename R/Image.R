@@ -1834,13 +1834,28 @@ Image$ones <- function(nrow, ncol, nchan = 1L, depth = "CV_8U",
   Image$fill(1, nrow, ncol, nchan, depth, colorspace)
 }
 
-# Create an image filled with uniform random values in [low, high].
-# Defaults (low=0, high=255) are calibrated for CV_8U; adjust for other depths.
+# Create an image with uniform random values drawn from Uniform(low, high).
+# Depth-aware defaults are applied when low or high is missing; a message is
+# emitted. Suppress with suppressMessages().
 Image$randu <- function(nrow, ncol, nchan = 1L, depth = "CV_8U",
-                        colorspace = "GRAY", low = 0, high = 255) {
+                        colorspace = "GRAY", low, high) {
   .rt_check_construct_args(nrow, ncol, nchan, depth, colorspace)
-  if (length(low) != 1L || !is.numeric(low) || !is.finite(low))
-    stop("low must be a single finite numeric", call. = FALSE)
+  if (missing(low) || missing(high)) {
+    .defaults <- list(
+      CV_8U  = c(0,      255),
+      CV_16U = c(0,    65535),
+      CV_16S = c(-32768, 32767),
+      CV_32F = c(0,        1),
+      CV_64F = c(0,        1)
+    )
+    d <- .defaults[[depth]]
+    if (missing(low))  low  <- d[1]
+    if (missing(high)) high <- d[2]
+    message("Using default range [", low, ", ", high, "] for ", depth,
+            ". Pass 'low' and 'high' explicitly to suppress this message.")
+  }
+  if (length(low)  != 1L || !is.numeric(low)  || !is.finite(low))
+    stop("low must be a single finite numeric",  call. = FALSE)
   if (length(high) != 1L || !is.numeric(high) || !is.finite(high))
     stop("high must be a single finite numeric", call. = FALSE)
   if (low >= high) stop("low must be strictly less than high", call. = FALSE)
@@ -1849,11 +1864,26 @@ Image$randu <- function(nrow, ncol, nchan = 1L, depth = "CV_8U",
                      as.double(low), as.double(high)))
 }
 
-# Create an image filled with Gaussian random values ~ Normal(mean, sd).
-# Defaults (mean=128, sd=30) are calibrated for CV_8U.
+# Create an image with Gaussian random values drawn from Normal(mean, sd).
+# Integer-depth images saturate out-of-range values. Depth-aware defaults
+# applied when mean or sd is missing; a message is emitted.
 Image$randn <- function(nrow, ncol, nchan = 1L, depth = "CV_8U",
-                        colorspace = "GRAY", mean = 128, sd = 30) {
+                        colorspace = "GRAY", mean, sd) {
   .rt_check_construct_args(nrow, ncol, nchan, depth, colorspace)
+  if (missing(mean) || missing(sd)) {
+    .defaults <- list(
+      CV_8U  = c(128,   30),
+      CV_16U = c(32767, 10000),
+      CV_16S = c(0,     10000),
+      CV_32F = c(0.5,   0.167),
+      CV_64F = c(0.5,   0.167)
+    )
+    d <- .defaults[[depth]]
+    if (missing(mean)) mean <- d[1]
+    if (missing(sd))   sd   <- d[2]
+    message("Using default mean/sd [", mean, ", ", sd, "] for ", depth,
+            ". Pass 'mean' and 'sd' explicitly to suppress this message.")
+  }
   if (length(mean) != 1L || !is.numeric(mean) || !is.finite(mean))
     stop("mean must be a single finite numeric", call. = FALSE)
   if (length(sd) != 1L || !is.numeric(sd) || !is.finite(sd) || sd <= 0)
