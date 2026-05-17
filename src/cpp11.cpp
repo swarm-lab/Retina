@@ -208,6 +208,13 @@ extern "C" SEXP _Retina_rt_image_set_to(SEXP img, SEXP value, SEXP mask_ptr) {
     return cpp11::as_sexp(rt_image_set_to(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<doubles>>(value), cpp11::as_cpp<cpp11::decay_t<SEXP>>(mask_ptr)));
   END_CPP11
 }
+// construct.cpp
+external_pointer<RtImage> rt_concatenate(cpp11::list img_ptrs, std::string axis);
+extern "C" SEXP _Retina_rt_concatenate(SEXP img_ptrs, SEXP axis) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_concatenate(cpp11::as_cpp<cpp11::decay_t<cpp11::list>>(img_ptrs), cpp11::as_cpp<cpp11::decay_t<std::string>>(axis)));
+  END_CPP11
+}
 // display.cpp
 integers rt_image_to_native_raster(external_pointer<RtImage> img);
 extern "C" SEXP _Retina_rt_image_to_native_raster(SEXP img) {
@@ -563,6 +570,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_Retina_rt_affine_from_points",       (DL_FUNC) &_Retina_rt_affine_from_points,       2},
     {"_Retina_rt_affine_rotate",            (DL_FUNC) &_Retina_rt_affine_rotate,            4},
     {"_Retina_rt_build_ok",                 (DL_FUNC) &_Retina_rt_build_ok,                 0},
+    {"_Retina_rt_concatenate",              (DL_FUNC) &_Retina_rt_concatenate,              2},
     {"_Retina_rt_fill",                     (DL_FUNC) &_Retina_rt_fill,                     6},
     {"_Retina_rt_has_cuda",                 (DL_FUNC) &_Retina_rt_has_cuda,                 0},
     {"_Retina_rt_has_module",               (DL_FUNC) &_Retina_rt_has_module,               1},

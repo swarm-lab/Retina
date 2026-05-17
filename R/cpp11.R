@@ -92,14 +92,6 @@ rt_image_convert_color <- function(img, from_cs, to_cs) {
   .Call(`_Retina_rt_image_convert_color`, img, from_cs, to_cs)
 }
 
-rt_zeros <- function(rows, cols, nchan, depth, colorspace) {
-  .Call(`_Retina_rt_zeros`, rows, cols, nchan, depth, colorspace)
-}
-
-rt_ones <- function(rows, cols, nchan, depth, colorspace) {
-  .Call(`_Retina_rt_ones`, rows, cols, nchan, depth, colorspace)
-}
-
 rt_randu <- function(rows, cols, nchan, depth, colorspace, low, high) {
   .Call(`_Retina_rt_randu`, rows, cols, nchan, depth, colorspace, low, high)
 }
@@ -110,6 +102,22 @@ rt_randn <- function(rows, cols, nchan, depth, colorspace, mean, stddev) {
 
 rt_image_border <- function(img, top, bottom, left, right, border_type, value) {
   .Call(`_Retina_rt_image_border`, img, top, bottom, left, right, border_type, value)
+}
+
+rt_fill <- function(rows, cols, nchan, depth, colorspace, value_vec) {
+  .Call(`_Retina_rt_fill`, rows, cols, nchan, depth, colorspace, value_vec)
+}
+
+rt_image_tile <- function(img, nrow_rep, ncol_rep) {
+  .Call(`_Retina_rt_image_tile`, img, nrow_rep, ncol_rep)
+}
+
+rt_image_set_to <- function(img, value, mask_ptr) {
+  .Call(`_Retina_rt_image_set_to`, img, value, mask_ptr)
+}
+
+rt_concatenate <- function(img_ptrs, axis) {
+  .Call(`_Retina_rt_concatenate`, img_ptrs, axis)
 }
 
 rt_image_to_native_raster <- function(img) {

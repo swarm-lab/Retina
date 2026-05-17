@@ -508,3 +508,76 @@ test_that("$set_to_() errors when mask has wrong depth", {
   bad_mask <- Image$zeros(3L, 3L, 1L, "CV_32F", "GRAY")
   expect_error(img$set_to_(255, mask = bad_mask), "mask must be CV_8U depth")
 })
+
+# ── concatenate() ─────────────────────────────────────────────────────────────
+
+test_that("concatenate() horizontal: ncol is sum of inputs", {
+  a   <- Image$fill(10, 3L, 4L, 1L, "CV_8U", "GRAY")
+  b   <- Image$fill(20, 3L, 5L, 1L, "CV_8U", "GRAY")
+  out <- concatenate(list(a, b), "h")
+  expect_equal(out$nrow, 3L)
+  expect_equal(out$ncol, 9L)     # 4 + 5
+  expect_equal(out[1, 1], c(Y = 10))   # left portion
+  expect_equal(out[1, 5], c(Y = 20))   # right portion
+})
+
+test_that("concatenate() vertical: nrow is sum of inputs", {
+  a   <- Image$fill(10, 3L, 4L, 1L, "CV_8U", "GRAY")
+  b   <- Image$fill(20, 5L, 4L, 1L, "CV_8U", "GRAY")
+  out <- concatenate(list(a, b), "v")
+  expect_equal(out$nrow, 8L)    # 3 + 5
+  expect_equal(out$ncol, 4L)
+  expect_equal(out[1, 1], c(Y = 10))   # top portion
+  expect_equal(out[4, 1], c(Y = 20))   # bottom portion
+})
+
+test_that("concatenate() axis aliases 'horizontal' and 'vertical' work", {
+  a <- Image$zeros(2L, 3L, 1L, "CV_8U", "GRAY")
+  b <- Image$zeros(2L, 3L, 1L, "CV_8U", "GRAY")
+  expect_equal(concatenate(list(a, b), "horizontal")$ncol, 6L)
+  expect_equal(concatenate(list(a, b), "vertical")$nrow,   4L)
+})
+
+test_that("concatenate() preserves colorspace and depth", {
+  a   <- Image$zeros(2L, 2L, 3L, "CV_8U", "BGR")
+  b   <- Image$zeros(2L, 3L, 3L, "CV_8U", "BGR")
+  out <- concatenate(list(a, b), "h")
+  expect_equal(out$colorspace, "BGR")
+  expect_equal(out$depth_name, "CV_8U")
+  expect_s3_class(out, "Image")
+})
+
+test_that("concatenate() errors on fewer than 2 images", {
+  a <- Image$zeros(2L, 2L)
+  expect_error(concatenate(list(a), "h"), "at least 2")
+})
+
+test_that("concatenate() errors on mismatched depth", {
+  a <- Image$zeros(2L, 2L, 1L, "CV_8U",  "GRAY")
+  b <- Image$zeros(2L, 2L, 1L, "CV_32F", "GRAY")
+  expect_error(concatenate(list(a, b), "h"), "same depth")
+})
+
+test_that("concatenate() horizontal errors on mismatched nrow", {
+  a <- Image$zeros(2L, 2L, 1L, "CV_8U", "GRAY")
+  b <- Image$zeros(3L, 2L, 1L, "CV_8U", "GRAY")
+  expect_error(concatenate(list(a, b), "h"), "same nrow")
+})
+
+test_that("concatenate() vertical errors on mismatched ncol", {
+  a <- Image$zeros(2L, 2L, 1L, "CV_8U", "GRAY")
+  b <- Image$zeros(2L, 3L, 1L, "CV_8U", "GRAY")
+  expect_error(concatenate(list(a, b), "v"), "same ncol")
+})
+
+test_that("concatenate() errors on invalid axis", {
+  a <- Image$zeros(2L, 2L)
+  b <- Image$zeros(2L, 2L)
+  expect_error(concatenate(list(a, b), "diagonal"), "axis must be")
+})
+
+test_that("concatenate() errors on mismatched nchan", {
+  a <- Image$zeros(2L, 2L, 1L, "CV_8U", "GRAY")
+  b <- Image$zeros(2L, 2L, 3L, "CV_8U", "BGR")
+  expect_error(concatenate(list(a, b), "h"), "same nchan")
+})

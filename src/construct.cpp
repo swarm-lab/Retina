@@ -116,3 +116,24 @@ external_pointer<RtImage> rt_image_set_to(
   }
   return {new RtImage(std::move(dst), img->colorspace)};
 }
+
+// ── concatenate ───────────────────────────────────────────────────────────────
+[[cpp11::register]]
+external_pointer<RtImage> rt_concatenate(cpp11::list img_ptrs,
+                                          std::string axis) {
+  std::vector<cv::Mat> mats;
+  mats.reserve(img_ptrs.size());
+  std::string colorspace;
+  for (int i = 0; i < img_ptrs.size(); i++) {
+    auto ptr = cpp11::as_cpp<external_pointer<RtImage>>(img_ptrs[i]);
+    if (i == 0) colorspace = ptr->colorspace;
+    mats.push_back(get_cpu_mat(ptr));
+  }
+  cv::Mat result;
+  if (axis == "h" || axis == "horizontal") {
+    cv::hconcat(mats, result);
+  } else {
+    cv::vconcat(mats, result);
+  }
+  return {new RtImage(std::move(result), colorspace)};
+}
