@@ -220,3 +220,19 @@ test_that("Image$fill() errors on NA value", {
 test_that("Image$fill() errors on empty value", {
   expect_error(Image$fill(numeric(0), 3L, 3L), "value must be")
 })
+
+test_that("Image$fill() errors on non-finite value (Inf)", {
+  expect_error(Image$fill(Inf, 3L, 3L), "value must be")
+})
+
+test_that("Image$fill() works with 4-channel BGRA image", {
+  img <- Image$fill(c(10, 20, 30, 40), 2L, 2L, 4L, "CV_8U", "BGRA")
+  expect_equal(img$nchan, 4L)
+  expect_equal(img[1, 1], c(B = 10, G = 20, R = 30, A = 40))
+})
+
+test_that("Image$fill() works with float depth CV_32F", {
+  img <- Image$fill(0.5, 2L, 2L, 1L, "CV_32F", "GRAY")
+  expect_equal(img$depth_name, "CV_32F")
+  expect_equal(img[1, 1], c(Y = 0.5))
+})

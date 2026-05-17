@@ -1808,8 +1808,9 @@ Image <- R6::R6Class("Image",
 Image$fill <- function(value, nrow, ncol, nchan = 1L, depth = "CV_8U",
                        colorspace = "GRAY") {
   .rt_check_construct_args(nrow, ncol, nchan, depth, colorspace)
-  if (!is.numeric(value) || length(value) < 1L || length(value) > 4L || anyNA(value))
-    stop("value must be a non-empty numeric vector (length 1-4) with no NAs",
+  if (!is.numeric(value) || length(value) < 1L || length(value) > 4L ||
+      anyNA(value) || !all(is.finite(value)))
+    stop("value must be a non-empty finite numeric vector (length 1-4) with no NAs",
          call. = FALSE)
   if (length(value) > 1L && length(value) != nchan)
     stop("value length (", length(value), ") must equal nchan (", nchan, ") or be 1",
