@@ -1928,6 +1928,7 @@ Image$randu <- function(nrow, ncol, nchan = 1L, depth = "CV_8U",
       CV_64F = c(0,        1)
     )
     d <- .defaults[[depth]]
+    if (is.null(d)) stop("No default range for depth '", depth, "' — please provide 'low' and 'high' explicitly.", call. = FALSE)
     if (missing(low))  low  <- d[1]
     if (missing(high)) high <- d[2]
     message("Using default range [", low, ", ", high, "] for ", depth,
@@ -1958,6 +1959,7 @@ Image$randn <- function(nrow, ncol, nchan = 1L, depth = "CV_8U",
       CV_64F = c(0.5,   0.167)
     )
     d <- .defaults[[depth]]
+    if (is.null(d)) stop("No default mean/sd for depth '", depth, "' — please provide 'mean' and 'sd' explicitly.", call. = FALSE)
     if (missing(mean)) mean <- d[1]
     if (missing(sd))   sd   <- d[2]
     message("Using default mean/sd [", mean, ", ", sd, "] for ", depth,
