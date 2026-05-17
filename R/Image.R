@@ -1891,6 +1891,52 @@ Image <- R6::R6Class("Image",
       invisible(self)
     },
 
+    #' @description Create a binary mask where each pixel is 255 if all channels
+    #'   fall within `[lower[k], upper[k]]`, and 0 otherwise.
+    #' @param lower Numeric vector of length 1 or `nchan`. Lower bound per
+    #'   channel. Recycled to `nchan`. No NAs; all finite.
+    #' @param upper Numeric vector of length 1 or `nchan`. Upper bound per
+    #'   channel. Recycled to `nchan`. No NAs; all finite.
+    #' @return A new single-channel `CV_8U` `Image` with colorspace `"GRAY"`.
+    in_range = function(lower, upper) {
+      .nchan <- self$nchan
+      if (!is.numeric(lower) || anyNA(lower) || !all(is.finite(lower)))
+        stop("lower must be a finite numeric vector with no NAs", call. = FALSE)
+      if (!is.numeric(upper) || anyNA(upper) || !all(is.finite(upper)))
+        stop("upper must be a finite numeric vector with no NAs", call. = FALSE)
+      if (!(length(lower) %in% c(1L, .nchan)))
+        stop(sprintf("lower must have length 1 or %d (nchan)", .nchan), call. = FALSE)
+      if (!(length(upper) %in% c(1L, .nchan)))
+        stop(sprintf("upper must have length 1 or %d (nchan)", .nchan), call. = FALSE)
+      lo <- as.double(rep_len(lower, .nchan))
+      hi <- as.double(rep_len(upper, .nchan))
+      if (any(lo > hi))
+        stop("each lower[k] must be <= upper[k]", call. = FALSE)
+      Image$new(rt_image_in_range(private$.ptr, lo, hi))
+    },
+
+    #' @description Create a binary mask in place. See `$in_range()`.
+    #' @param lower See `$in_range()`.
+    #' @param upper See `$in_range()`.
+    #' @return `self` invisibly.
+    in_range_ = function(lower, upper) {
+      .nchan <- self$nchan
+      if (!is.numeric(lower) || anyNA(lower) || !all(is.finite(lower)))
+        stop("lower must be a finite numeric vector with no NAs", call. = FALSE)
+      if (!is.numeric(upper) || anyNA(upper) || !all(is.finite(upper)))
+        stop("upper must be a finite numeric vector with no NAs", call. = FALSE)
+      if (!(length(lower) %in% c(1L, .nchan)))
+        stop(sprintf("lower must have length 1 or %d (nchan)", .nchan), call. = FALSE)
+      if (!(length(upper) %in% c(1L, .nchan)))
+        stop(sprintf("upper must have length 1 or %d (nchan)", .nchan), call. = FALSE)
+      lo <- as.double(rep_len(lower, .nchan))
+      hi <- as.double(rep_len(upper, .nchan))
+      if (any(lo > hi))
+        stop("each lower[k] must be <= upper[k]", call. = FALSE)
+      private$.ptr <- rt_image_in_range(private$.ptr, lo, hi)
+      invisible(self)
+    },
+
     #' @description Print a summary of the image.
     #' @param ... Ignored.
     #' @return \code{self} invisibly.

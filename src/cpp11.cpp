@@ -550,6 +550,13 @@ extern "C" SEXP _Retina_rt_image_adaptive_threshold(SEXP img, SEXP maxval, SEXP 
     return cpp11::as_sexp(rt_image_adaptive_threshold(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<double>>(maxval), cpp11::as_cpp<cpp11::decay_t<int>>(method_int), cpp11::as_cpp<cpp11::decay_t<int>>(type_int), cpp11::as_cpp<cpp11::decay_t<int>>(block_size), cpp11::as_cpp<cpp11::decay_t<double>>(offset)));
   END_CPP11
 }
+// threshold.cpp
+external_pointer<RtImage> rt_image_in_range(external_pointer<RtImage> img, cpp11::doubles lo, cpp11::doubles hi);
+extern "C" SEXP _Retina_rt_image_in_range(SEXP img, SEXP lo, SEXP hi) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_image_in_range(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<cpp11::doubles>>(lo), cpp11::as_cpp<cpp11::decay_t<cpp11::doubles>>(hi)));
+  END_CPP11
+}
 // transforms.cpp
 external_pointer<RtImage> rt_image_warp_affine(external_pointer<RtImage> img, doubles m, int width, int height, std::string interpolation, std::string border_type);
 extern "C" SEXP _Retina_rt_image_warp_affine(SEXP img, SEXP m, SEXP width, SEXP height, SEXP interpolation, SEXP border_type) {
@@ -628,6 +635,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_Retina_rt_image_from_integer_array", (DL_FUNC) &_Retina_rt_image_from_integer_array, 3},
     {"_Retina_rt_image_gaussian_blur",      (DL_FUNC) &_Retina_rt_image_gaussian_blur,      5},
     {"_Retina_rt_image_get_pixel",          (DL_FUNC) &_Retina_rt_image_get_pixel,          3},
+    {"_Retina_rt_image_in_range",           (DL_FUNC) &_Retina_rt_image_in_range,           3},
     {"_Retina_rt_image_is_gpu",             (DL_FUNC) &_Retina_rt_image_is_gpu,             1},
     {"_Retina_rt_image_laplacian",          (DL_FUNC) &_Retina_rt_image_laplacian,          6},
     {"_Retina_rt_image_max",                (DL_FUNC) &_Retina_rt_image_max,                1},

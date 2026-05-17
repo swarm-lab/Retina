@@ -216,3 +216,67 @@ test_that("$adaptive_threshold() errors on non-finite offset", {
   img <- bimodal_gray_8u()
   expect_error(img$adaptive_threshold(offset = Inf), "finite")
 })
+
+# ── $in_range() ───────────────────────────────────────────────────────────────
+
+test_that("$in_range() output is single-channel CV_8U GRAY", {
+  img <- bimodal_gray_8u()
+  result <- img$in_range(40, 100)
+  expect_equal(result$nchan,      1L)
+  expect_equal(result$depth_name, "CV_8U")
+  expect_equal(result$colorspace, "GRAY")
+  expect_equal(result$nrow, img$nrow)
+  expect_equal(result$ncol, img$ncol)
+})
+
+test_that("$in_range() marks in-range pixels as 255, others as 0", {
+  img <- bimodal_gray_8u()  # 50 pixels at 50, 50 pixels at 200
+  result <- img$in_range(40, 100)
+  arr <- result$to_array()
+  expect_equal(sum(arr == 255L), 50L) # pixels at 50 are in [40, 100]
+  expect_equal(sum(arr == 0L),   50L) # pixels at 200 are not
+})
+
+test_that("$in_range() per-channel bounds on BGR image", {
+  bgr <- make_test_image()  # all pixels (B=100, G=150, R=200)
+  # range that includes B and G but excludes R
+  result <- bgr$in_range(lower = c(90, 140, 210), upper = c(110, 160, 220))
+  arr <- result$to_array()
+  expect_equal(sum(arr == 255L), 0L)  # R=200 is outside [210, 220]
+  result2 <- bgr$in_range(lower = c(90, 140, 190), upper = c(110, 160, 210))
+  arr2 <- result2$to_array()
+  expect_equal(sum(arr2 == 255L), 100L)  # all pixels in range
+})
+
+test_that("$in_range() scalar bounds are recycled to nchan", {
+  bgr <- make_test_image()  # B=100, G=150, R=200
+  # scalar that covers only B channel (90-110) — G and R are outside
+  result <- bgr$in_range(90, 110)
+  arr <- result$to_array()
+  expect_equal(sum(arr == 255L), 0L)  # G=150 and R=200 outside [90, 110]
+})
+
+test_that("$in_range_() modifies in place and returns self", {
+  img <- bimodal_gray_8u()
+  result <- img$in_range_(40, 100)
+  expect_identical(result, img)
+  expect_equal(img$nchan,      1L)
+  expect_equal(img$depth_name, "CV_8U")
+  expect_equal(img$colorspace, "GRAY")
+})
+
+test_that("$in_range() errors when lower > upper for any channel", {
+  img <- bimodal_gray_8u()
+  expect_error(img$in_range(200, 100), "lower\\[k\\].*upper\\[k\\]")
+})
+
+test_that("$in_range() errors when lower/upper length is not 1 or nchan", {
+  bgr <- make_test_image()  # nchan = 3
+  expect_error(bgr$in_range(c(0, 0), c(255, 255, 255)), "length 1 or 3")
+})
+
+test_that("$in_range() errors on NA in lower or upper", {
+  img <- bimodal_gray_8u()
+  expect_error(img$in_range(NA_real_, 200), "finite")
+  expect_error(img$in_range(0, NA_real_), "finite")
+})

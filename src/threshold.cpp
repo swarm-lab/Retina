@@ -643,3 +643,20 @@ external_pointer<RtImage> rt_image_adaptive_threshold(
                         block_size, offset);
   return {new RtImage(std::move(dst), "GRAY")};
 }
+
+// ── rt_image_in_range ─────────────────────────────────────────────────────────
+
+[[cpp11::register]]
+external_pointer<RtImage> rt_image_in_range(
+    external_pointer<RtImage> img,
+    cpp11::doubles lo, cpp11::doubles hi) {
+  // lo and hi are length nchan (recycled on the R side), zero-padded to 4 for cv::Scalar
+  cv::Scalar lower(0, 0, 0, 0), upper(0, 0, 0, 0);
+  for (int i = 0; i < (int)lo.size() && i < 4; i++) {
+    lower[i] = lo[i];
+    upper[i] = hi[i];
+  }
+  cv::Mat dst;
+  cv::inRange(get_cpu_mat(img), lower, upper, dst);
+  return {new RtImage(std::move(dst), "GRAY")};
+}
