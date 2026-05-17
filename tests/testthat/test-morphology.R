@@ -5,51 +5,51 @@ img_gray <- function() {
 
 # ── structural checks ─────────────────────────────────────────────────────────
 
-test_that("morph_open() returns correct dimensions and depth", {
+test_that("morph('open') returns correct dimensions and depth", {
   img <- img_gray()
-  result <- morph_open(img)
+  result <- img$morph("open")
   expect_equal(result$nrow, img$nrow)
   expect_equal(result$ncol, img$ncol)
   expect_equal(result$nchan, img$nchan)
   expect_equal(result$depth_name, "CV_8U")
 })
 
-test_that("morph_close() returns correct dimensions and depth", {
+test_that("morph('close') returns correct dimensions and depth", {
   img <- img_gray()
-  result <- morph_close(img)
+  result <- img$morph("close")
   expect_equal(result$nrow, img$nrow)
   expect_equal(result$ncol, img$ncol)
   expect_equal(result$depth_name, "CV_8U")
 })
 
-test_that("morph_tophat() returns correct dimensions", {
-  result <- morph_tophat(img_gray())
+test_that("morph('tophat') returns correct dimensions", {
+  result <- img_gray()$morph("tophat")
   expect_equal(result$nrow, 10L)
   expect_equal(result$ncol, 10L)
 })
 
-test_that("morph_blackhat() returns correct dimensions", {
-  result <- morph_blackhat(img_gray())
+test_that("morph('blackhat') returns correct dimensions", {
+  result <- img_gray()$morph("blackhat")
   expect_equal(result$nrow, 10L)
   expect_equal(result$ncol, 10L)
 })
 
 # ── semantic checks ───────────────────────────────────────────────────────────
 
-test_that("morph_erode() shrinks bright region (lower mean)", {
+test_that("morph('erode') shrinks bright region (lower mean)", {
   img <- img_gray()
-  result <- morph_erode(img)
+  result <- img$morph("erode")
   expect_lt(mean(result$to_array()), mean(img$to_array()))
 })
 
-test_that("morph_dilate() expands bright region (higher mean)", {
+test_that("morph('dilate') expands bright region (higher mean)", {
   img <- img_gray()
-  result <- morph_dilate(img)
+  result <- img$morph("dilate")
   expect_gt(mean(result$to_array()), mean(img$to_array()))
 })
 
-test_that("morph_gradient() produces non-zero output near edge", {
-  result <- morph_gradient(img_gray())
+test_that("morph('gradient') produces non-zero output near edge", {
+  result <- img_gray()$morph("gradient")
   expect_gt(max(result$to_array()), 0L)
 })
 
@@ -57,8 +57,8 @@ test_that("morph_gradient() produces non-zero output near edge", {
 
 test_that("iterations = 2 erodes more than iterations = 1", {
   img <- img_gray()
-  r1 <- morph_erode(img, iterations = 1L)
-  r2 <- morph_erode(img, iterations = 2L)
+  r1 <- img$morph("erode", iterations = 1L)
+  r2 <- img$morph("erode", iterations = 2L)
   expect_lt(mean(r2$to_array()), mean(r1$to_array()))
 })
 
@@ -105,8 +105,4 @@ test_that("non-matrix kernel errors", {
 test_that("invalid border_type errors", {
   expect_error(img_gray()$morph("erode", border_type = "padded"),
                "border_type must be one of")
-})
-
-test_that("non-Image input to morph_erode() errors", {
-  expect_error(morph_erode(42))
 })
