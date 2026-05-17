@@ -189,6 +189,7 @@ test_that("$adaptive_threshold_() modifies in place and returns self", {
   expect_identical(result, img)
   expect_equal(img$nchan,      1L)
   expect_equal(img$depth_name, "CV_8U")
+  expect_equal(img$colorspace, "GRAY")
 })
 
 test_that("$adaptive_threshold() errors on multi-channel image", {
