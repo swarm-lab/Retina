@@ -163,11 +163,9 @@ test_that("border_() errors on invalid type", {
                "type must be one of")
 })
 
-test_that("border() accepts 'default' as a valid type", {
+test_that("border() rejects 'default' as a type", {
   img <- Image$zeros(3L, 3L, 1L, "CV_8U", "GRAY")
-  b <- img$border(1L, type = "default")
-  expect_equal(b$nrow, 5L)
-  expect_s3_class(b, "Image")
+  expect_error(img$border(1L, type = "default"), "type must be one of")
 })
 
 # ── Image$fill() ──────────────────────────────────────────────────────────────
@@ -298,4 +296,18 @@ test_that("Image$randn() applies only missing default when mean is supplied", {
     Image$randn(10L, 10L, mean = 100),
     "Using default mean/sd \\[100, 30\\] for CV_8U"
   )
+})
+
+# ── border() argument order ────────────────────────────────────────────────────
+
+test_that("border() 2-arg form: first=vertical (top+bottom), second=horizontal (left+right)", {
+  img <- Image$zeros(3L, 3L, 1L, "CV_8U", "GRAY")
+  b <- img$border(1L, 3L)    # top=1, left=3, bottom=top=1, right=left=3
+  expect_equal(b$nrow, 5L)   # 3 + 1 + 1
+  expect_equal(b$ncol, 9L)   # 3 + 3 + 3
+})
+
+test_that("border_() rejects 'default' as a type", {
+  img <- Image$zeros(3L, 3L)
+  expect_error(img$border_(1L, type = "default"), "type must be one of")
 })
