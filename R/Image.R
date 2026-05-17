@@ -667,10 +667,12 @@ Image <- R6::R6Class("Image",
     #'   arithmetic to invert gradient sign). Default 1.
     #' @param delta Single numeric. Optional delta added to results before
     #'   storing. Default 0.
-    #' @param border_type Character. Pixel extrapolation method. One of
-    #'   \code{"reflect"}, \code{"reflect_101"},
-    #'   \code{"replicate"}, \code{"constant"}, \code{"wrap"}.
-    #'   Default \code{"reflect_101"}.
+    #' @param border_type Character. How to fill pixels outside the image
+    #'   boundary. \code{"reflect_101"} (default) mirrors the image excluding
+    #'   the edge pixel (e.g. dcb|abcde|dcb); \code{"reflect"} mirrors
+    #'   including the edge pixel (e.g. edcb|abcde|edcb); \code{"replicate"}
+    #'   repeats the nearest edge pixel; \code{"wrap"} tiles the image;
+    #'   \code{"constant"} fills with a fixed value (0, i.e. black).
     #' @return A new \code{Image}.
     #' @examples
     #' \donttest{
@@ -715,10 +717,12 @@ Image <- R6::R6Class("Image",
     #'   computed derivatives. Must be positive (use \code{convert_depth} +
     #'   arithmetic to invert gradient sign). Default 1.
     #' @param delta Single numeric. Delta added to results. Default 0.
-    #' @param border_type Character. Pixel extrapolation method. One of
-    #'   \code{"reflect"}, \code{"reflect_101"},
-    #'   \code{"replicate"}, \code{"constant"}, \code{"wrap"}.
-    #'   Default \code{"reflect_101"}.
+    #' @param border_type Character. How to fill pixels outside the image
+    #'   boundary. \code{"reflect_101"} (default) mirrors the image excluding
+    #'   the edge pixel (e.g. dcb|abcde|dcb); \code{"reflect"} mirrors
+    #'   including the edge pixel (e.g. edcb|abcde|edcb); \code{"replicate"}
+    #'   repeats the nearest edge pixel; \code{"wrap"} tiles the image;
+    #'   \code{"constant"} fills with a fixed value (0, i.e. black).
     #' @return \code{self} invisibly.
     #' @examples
     #' \donttest{
@@ -763,10 +767,12 @@ Image <- R6::R6Class("Image",
     #' @param scale Single positive numeric. Optional scale factor. Must be
     #'   positive. Default 1.
     #' @param delta Single numeric. Optional delta added to results. Default 0.
-    #' @param border_type Character. Pixel extrapolation method. One of
-    #'   \code{"reflect"}, \code{"reflect_101"},
-    #'   \code{"replicate"}, \code{"constant"}, \code{"wrap"}.
-    #'   Default \code{"reflect_101"}.
+    #' @param border_type Character. How to fill pixels outside the image
+    #'   boundary. \code{"reflect_101"} (default) mirrors the image excluding
+    #'   the edge pixel (e.g. dcb|abcde|dcb); \code{"reflect"} mirrors
+    #'   including the edge pixel (e.g. edcb|abcde|edcb); \code{"replicate"}
+    #'   repeats the nearest edge pixel; \code{"wrap"} tiles the image;
+    #'   \code{"constant"} fills with a fixed value (0, i.e. black).
     #' @return A new \code{Image}.
     #' @examples
     #' \donttest{
@@ -802,10 +808,12 @@ Image <- R6::R6Class("Image",
     #' @param scale Single positive numeric. Optional scale factor. Must be
     #'   positive. Default 1.
     #' @param delta Single numeric. Delta added to results. Default 0.
-    #' @param border_type Character. Pixel extrapolation method. One of
-    #'   \code{"reflect"}, \code{"reflect_101"},
-    #'   \code{"replicate"}, \code{"constant"}, \code{"wrap"}.
-    #'   Default \code{"reflect_101"}.
+    #' @param border_type Character. How to fill pixels outside the image
+    #'   boundary. \code{"reflect_101"} (default) mirrors the image excluding
+    #'   the edge pixel (e.g. dcb|abcde|dcb); \code{"reflect"} mirrors
+    #'   including the edge pixel (e.g. edcb|abcde|edcb); \code{"replicate"}
+    #'   repeats the nearest edge pixel; \code{"wrap"} tiles the image;
+    #'   \code{"constant"} fills with a fixed value (0, i.e. black).
     #' @return \code{self} invisibly.
     #' @examples
     #' \donttest{
@@ -913,9 +921,14 @@ Image <- R6::R6Class("Image",
     },
 
     #' @description Apply a morphological operation. Returns a new Image.
-    #' @param operation Character. One of \code{"erode"}, \code{"dilate"},
-    #'   \code{"open"}, \code{"close"}, \code{"gradient"}, \code{"tophat"},
-    #'   \code{"blackhat"}.
+    #' @param operation Character. One of \code{"erode"} (shrinks bright
+    #'   regions), \code{"dilate"} (expands bright regions), \code{"open"}
+    #'   (erode then dilate — removes small bright spots), \code{"close"}
+    #'   (dilate then erode — fills small dark holes), \code{"gradient"}
+    #'   (dilate minus erode — highlights edges), \code{"tophat"} (image minus
+    #'   open — isolates bright features smaller than the kernel),
+    #'   \code{"blackhat"} (close minus image — isolates dark features smaller
+    #'   than the kernel).
     #' @param shape Character. Structuring element shape: \code{"rect"},
     #'   \code{"cross"}, or \code{"ellipse"}. Ignored when \code{kernel} is
     #'   supplied. Default \code{"rect"}.
@@ -926,10 +939,12 @@ Image <- R6::R6Class("Image",
     #'   \code{shape} and \code{size} when supplied.
     #' @param iterations Positive integer. Number of times the operation is
     #'   applied. Default \code{1L}.
-    #' @param border_type Character. Pixel extrapolation method. One of
-    #'   \code{"reflect"}, \code{"reflect_101"},
-    #'   \code{"replicate"}, \code{"constant"}, \code{"wrap"}.
-    #'   Default \code{"reflect_101"}.
+    #' @param border_type Character. How to fill pixels outside the image
+    #'   boundary. \code{"reflect_101"} (default) mirrors the image excluding
+    #'   the edge pixel (e.g. dcb|abcde|dcb); \code{"reflect"} mirrors
+    #'   including the edge pixel (e.g. edcb|abcde|edcb); \code{"replicate"}
+    #'   repeats the nearest edge pixel; \code{"wrap"} tiles the image;
+    #'   \code{"constant"} fills with a fixed value (0, i.e. black).
     #' @return A new \code{Image}.
     #' @examples
     #' \donttest{
@@ -975,9 +990,14 @@ Image <- R6::R6Class("Image",
     },
 
     #' @description Apply a morphological operation in place.
-    #' @param operation Character. One of \code{"erode"}, \code{"dilate"},
-    #'   \code{"open"}, \code{"close"}, \code{"gradient"}, \code{"tophat"},
-    #'   \code{"blackhat"}.
+    #' @param operation Character. One of \code{"erode"} (shrinks bright
+    #'   regions), \code{"dilate"} (expands bright regions), \code{"open"}
+    #'   (erode then dilate — removes small bright spots), \code{"close"}
+    #'   (dilate then erode — fills small dark holes), \code{"gradient"}
+    #'   (dilate minus erode — highlights edges), \code{"tophat"} (image minus
+    #'   open — isolates bright features smaller than the kernel),
+    #'   \code{"blackhat"} (close minus image — isolates dark features smaller
+    #'   than the kernel).
     #' @param shape Character. Structuring element shape: \code{"rect"},
     #'   \code{"cross"}, or \code{"ellipse"}. Ignored when \code{kernel} is
     #'   supplied. Default \code{"rect"}.
@@ -988,10 +1008,12 @@ Image <- R6::R6Class("Image",
     #'   \code{shape} and \code{size} when supplied.
     #' @param iterations Positive integer. Number of times the operation is
     #'   applied. Default \code{1L}.
-    #' @param border_type Character. Pixel extrapolation method. One of
-    #'   \code{"reflect"}, \code{"reflect_101"},
-    #'   \code{"replicate"}, \code{"constant"}, \code{"wrap"}.
-    #'   Default \code{"reflect_101"}.
+    #' @param border_type Character. How to fill pixels outside the image
+    #'   boundary. \code{"reflect_101"} (default) mirrors the image excluding
+    #'   the edge pixel (e.g. dcb|abcde|dcb); \code{"reflect"} mirrors
+    #'   including the edge pixel (e.g. edcb|abcde|edcb); \code{"replicate"}
+    #'   repeats the nearest edge pixel; \code{"wrap"} tiles the image;
+    #'   \code{"constant"} fills with a fixed value (0, i.e. black).
     #' @return \code{self} invisibly.
     #' @examples
     #' \donttest{
@@ -1387,10 +1409,12 @@ Image <- R6::R6Class("Image",
     #' @param interpolation Character. One of \code{"nearest"}, \code{"linear"},
     #'   \code{"cubic"}, \code{"area"}, \code{"lanczos4"}. Default
     #'   \code{"linear"}.
-    #' @param border_type Character. Pixel extrapolation method. One of
-    #'   \code{"reflect"}, \code{"reflect_101"},
-    #'   \code{"replicate"}, \code{"constant"}, \code{"wrap"}.
-    #'   Default \code{"reflect_101"}.
+    #' @param border_type Character. How to fill pixels outside the image
+    #'   boundary. \code{"reflect_101"} (default) mirrors the image excluding
+    #'   the edge pixel (e.g. dcb|abcde|dcb); \code{"reflect"} mirrors
+    #'   including the edge pixel (e.g. edcb|abcde|edcb); \code{"replicate"}
+    #'   repeats the nearest edge pixel; \code{"wrap"} tiles the image;
+    #'   \code{"constant"} fills with a fixed value (0, i.e. black).
     #' @return A new \code{Image}.
     #' @examples
     #' \donttest{
@@ -1440,10 +1464,12 @@ Image <- R6::R6Class("Image",
     #' @param interpolation Character. One of \code{"nearest"}, \code{"linear"},
     #'   \code{"cubic"}, \code{"area"}, \code{"lanczos4"}. Default
     #'   \code{"linear"}.
-    #' @param border_type Character. Pixel extrapolation method. One of
-    #'   \code{"reflect"}, \code{"reflect_101"},
-    #'   \code{"replicate"}, \code{"constant"}, \code{"wrap"}.
-    #'   Default \code{"reflect_101"}.
+    #' @param border_type Character. How to fill pixels outside the image
+    #'   boundary. \code{"reflect_101"} (default) mirrors the image excluding
+    #'   the edge pixel (e.g. dcb|abcde|dcb); \code{"reflect"} mirrors
+    #'   including the edge pixel (e.g. edcb|abcde|edcb); \code{"replicate"}
+    #'   repeats the nearest edge pixel; \code{"wrap"} tiles the image;
+    #'   \code{"constant"} fills with a fixed value (0, i.e. black).
     #' @return \code{self} invisibly.
     #' @examples
     #' \donttest{
@@ -1492,10 +1518,12 @@ Image <- R6::R6Class("Image",
     #' @param interpolation Character. One of \code{"nearest"}, \code{"linear"},
     #'   \code{"cubic"}, \code{"area"}, \code{"lanczos4"}. Default
     #'   \code{"linear"}.
-    #' @param border_type Character. Pixel extrapolation method. One of
-    #'   \code{"reflect"}, \code{"reflect_101"},
-    #'   \code{"replicate"}, \code{"constant"}, \code{"wrap"}.
-    #'   Default \code{"reflect_101"}.
+    #' @param border_type Character. How to fill pixels outside the image
+    #'   boundary. \code{"reflect_101"} (default) mirrors the image excluding
+    #'   the edge pixel (e.g. dcb|abcde|dcb); \code{"reflect"} mirrors
+    #'   including the edge pixel (e.g. edcb|abcde|edcb); \code{"replicate"}
+    #'   repeats the nearest edge pixel; \code{"wrap"} tiles the image;
+    #'   \code{"constant"} fills with a fixed value (0, i.e. black).
     #' @return A new \code{Image}.
     #' @examples
     #' \donttest{
@@ -1544,10 +1572,12 @@ Image <- R6::R6Class("Image",
     #' @param interpolation Character. One of \code{"nearest"}, \code{"linear"},
     #'   \code{"cubic"}, \code{"area"}, \code{"lanczos4"}. Default
     #'   \code{"linear"}.
-    #' @param border_type Character. Pixel extrapolation method. One of
-    #'   \code{"reflect"}, \code{"reflect_101"},
-    #'   \code{"replicate"}, \code{"constant"}, \code{"wrap"}.
-    #'   Default \code{"reflect_101"}.
+    #' @param border_type Character. How to fill pixels outside the image
+    #'   boundary. \code{"reflect_101"} (default) mirrors the image excluding
+    #'   the edge pixel (e.g. dcb|abcde|dcb); \code{"reflect"} mirrors
+    #'   including the edge pixel (e.g. edcb|abcde|edcb); \code{"replicate"}
+    #'   repeats the nearest edge pixel; \code{"wrap"} tiles the image;
+    #'   \code{"constant"} fills with a fixed value (0, i.e. black).
     #' @return \code{self} invisibly.
     #' @examples
     #' \donttest{
@@ -1600,9 +1630,11 @@ Image <- R6::R6Class("Image",
     #' @param left Integer. Border width on the left edge. Defaults to `top`.
     #' @param bottom Integer. Border width on the bottom edge. Defaults to `top`.
     #' @param right Integer. Border width on the right edge. Defaults to `left`.
-    #' @param type Character. Border fill mode. One of `"constant"`,
-    #'   `"reflect"`, `"reflect_101"`, `"replicate"`, `"wrap"`.
-    #'   Default `"constant"`.
+    #' @param type Character. Border fill mode. `"constant"` (default) fills
+    #'   with a fixed colour (see `value`); `"reflect"` mirrors the image
+    #'   including the edge pixel; `"reflect_101"` mirrors excluding the edge
+    #'   pixel; `"replicate"` repeats the nearest edge pixel; `"wrap"` tiles
+    #'   the image.
     #' @param value Numeric vector of length 1 or `nchan`. Fill colour used when
     #'   `type = "constant"`. Recycled to `nchan` values. Default 0 (black).
     #' @return A new `Image`.
@@ -1633,9 +1665,11 @@ Image <- R6::R6Class("Image",
     #' @param left Integer. Defaults to `top`.
     #' @param bottom Integer. Defaults to `top`.
     #' @param right Integer. Defaults to `left`.
-    #' @param type Character. Border fill mode. One of `"constant"`,
-    #'   `"reflect"`, `"reflect_101"`, `"replicate"`, `"wrap"`.
-    #'   Default `"constant"`.
+    #' @param type Character. Border fill mode. `"constant"` (default) fills
+    #'   with a fixed colour (see `value`); `"reflect"` mirrors the image
+    #'   including the edge pixel; `"reflect_101"` mirrors excluding the edge
+    #'   pixel; `"replicate"` repeats the nearest edge pixel; `"wrap"` tiles
+    #'   the image.
     #' @param value Numeric vector of length 1 or `nchan`. Fill colour used when
     #'   `type = "constant"`. Recycled to `nchan` values. Default 0 (black).
     #' @return `self` invisibly.
@@ -1741,8 +1775,13 @@ Image <- R6::R6Class("Image",
     #'   the threshold is auto-computed from the image histogram.
     #' @param maxval Single finite numeric. Value assigned to above-threshold
     #'   pixels in `"binary"` and `"binary_inv"` modes. Default `255`.
-    #' @param type One of `"binary"`, `"binary_inv"`, `"trunc"`, `"tozero"`,
-    #'   `"tozero_inv"`. Default `"binary"`.
+    #' @param type Character. How pixel values are mapped relative to the
+    #'   threshold `T`. `"binary"` (default): above `T` → `maxval`, at or
+    #'   below → 0. `"binary_inv"`: above `T` → 0, at or below → `maxval`.
+    #'   `"trunc"`: above `T` → `T`, at or below → unchanged (acts as a
+    #'   ceiling). `"tozero"`: at or below `T` → 0, above → unchanged.
+    #'   `"tozero_inv"`: above `T` → 0, at or below → unchanged. `maxval` is
+    #'   only used by `"binary"` and `"binary_inv"`.
     #' @param bins Single integer >= 2. Histogram bins for auto-threshold on
     #'   non-`CV_8U` images. Ignored when `thresh` is numeric or for `CV_8U`.
     #'   Default `256`.
@@ -1780,7 +1819,7 @@ Image <- R6::R6Class("Image",
     #' @description Apply a threshold to the image, in place.
     #' @param thresh See `$threshold()`.
     #' @param maxval See `$threshold()`.
-    #' @param type See `$threshold()`.
+    #' @param type See `$threshold()` for a description of all five modes.
     #' @param bins See `$threshold()`.
     #' @return `self` invisibly.
     threshold_ = function(thresh, maxval = 255, type = "binary", bins = 256L) {
@@ -1819,7 +1858,9 @@ Image <- R6::R6Class("Image",
     #'   Default `255`.
     #' @param method `"mean"` (local neighbourhood mean) or `"gaussian"`
     #'   (Gaussian-weighted neighbourhood). Default `"mean"`.
-    #' @param type `"binary"` or `"binary_inv"`. Default `"binary"`.
+    #' @param type `"binary"` (default): pixels above the local threshold →
+    #'   `maxval`, others → 0. `"binary_inv"`: inverted — pixels above → 0,
+    #'   others → `maxval`.
     #' @param block_size Single odd integer >= 3. Neighbourhood size.
     #'   Default `11`.
     #' @param offset Single finite numeric. Constant subtracted from the local
@@ -1857,7 +1898,7 @@ Image <- R6::R6Class("Image",
     #' @description Apply an adaptive threshold to the image, in place.
     #' @param maxval See `$adaptive_threshold()`.
     #' @param method See `$adaptive_threshold()`.
-    #' @param type See `$adaptive_threshold()`.
+    #' @param type See `$adaptive_threshold()` for a description of both modes.
     #' @param block_size See `$adaptive_threshold()`.
     #' @param offset See `$adaptive_threshold()`.
     #' @return `self` invisibly.

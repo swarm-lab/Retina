@@ -341,6 +341,12 @@ img$plot()
 \item \href{#method-Image-tile_}{\code{Image$tile_()}}
 \item \href{#method-Image-set_to}{\code{Image$set_to()}}
 \item \href{#method-Image-set_to_}{\code{Image$set_to_()}}
+\item \href{#method-Image-threshold}{\code{Image$threshold()}}
+\item \href{#method-Image-threshold_}{\code{Image$threshold_()}}
+\item \href{#method-Image-adaptive_threshold}{\code{Image$adaptive_threshold()}}
+\item \href{#method-Image-adaptive_threshold_}{\code{Image$adaptive_threshold_()}}
+\item \href{#method-Image-in_range}{\code{Image$in_range()}}
+\item \href{#method-Image-in_range_}{\code{Image$in_range_()}}
 \item \href{#method-Image-print}{\code{Image$print()}}
 }
 }
@@ -1413,10 +1419,12 @@ arithmetic to invert gradient sign). Default 1.}
 \item{\code{delta}}{Single numeric. Optional delta added to results before
 storing. Default 0.}
 
-\item{\code{border_type}}{Character. Pixel extrapolation method. One of
-\code{"reflect"}, \code{"reflect_101"},
-\code{"replicate"}, \code{"constant"}, \code{"wrap"}.
-Default \code{"reflect_101"}.}
+\item{\code{border_type}}{Character. How to fill pixels outside the image
+boundary. \code{"reflect_101"} (default) mirrors the image excluding
+the edge pixel (e.g. dcb|abcde|dcb); \code{"reflect"} mirrors
+including the edge pixel (e.g. edcb|abcde|edcb); \code{"replicate"}
+repeats the nearest edge pixel; \code{"wrap"} tiles the image;
+\code{"constant"} fills with a fixed value (0, i.e. black).}
 }
 \if{html}{\out{</div>}}
 }
@@ -1473,10 +1481,12 @@ arithmetic to invert gradient sign). Default 1.}
 
 \item{\code{delta}}{Single numeric. Delta added to results. Default 0.}
 
-\item{\code{border_type}}{Character. Pixel extrapolation method. One of
-\code{"reflect"}, \code{"reflect_101"},
-\code{"replicate"}, \code{"constant"}, \code{"wrap"}.
-Default \code{"reflect_101"}.}
+\item{\code{border_type}}{Character. How to fill pixels outside the image
+boundary. \code{"reflect_101"} (default) mirrors the image excluding
+the edge pixel (e.g. dcb|abcde|dcb); \code{"reflect"} mirrors
+including the edge pixel (e.g. edcb|abcde|edcb); \code{"replicate"}
+repeats the nearest edge pixel; \code{"wrap"} tiles the image;
+\code{"constant"} fills with a fixed value (0, i.e. black).}
 }
 \if{html}{\out{</div>}}
 }
@@ -1528,10 +1538,12 @@ positive. Default 1.}
 
 \item{\code{delta}}{Single numeric. Optional delta added to results. Default 0.}
 
-\item{\code{border_type}}{Character. Pixel extrapolation method. One of
-\code{"reflect"}, \code{"reflect_101"},
-\code{"replicate"}, \code{"constant"}, \code{"wrap"}.
-Default \code{"reflect_101"}.}
+\item{\code{border_type}}{Character. How to fill pixels outside the image
+boundary. \code{"reflect_101"} (default) mirrors the image excluding
+the edge pixel (e.g. dcb|abcde|dcb); \code{"reflect"} mirrors
+including the edge pixel (e.g. edcb|abcde|edcb); \code{"replicate"}
+repeats the nearest edge pixel; \code{"wrap"} tiles the image;
+\code{"constant"} fills with a fixed value (0, i.e. black).}
 }
 \if{html}{\out{</div>}}
 }
@@ -1580,10 +1592,12 @@ positive. Default 1.}
 
 \item{\code{delta}}{Single numeric. Delta added to results. Default 0.}
 
-\item{\code{border_type}}{Character. Pixel extrapolation method. One of
-\code{"reflect"}, \code{"reflect_101"},
-\code{"replicate"}, \code{"constant"}, \code{"wrap"}.
-Default \code{"reflect_101"}.}
+\item{\code{border_type}}{Character. How to fill pixels outside the image
+boundary. \code{"reflect_101"} (default) mirrors the image excluding
+the edge pixel (e.g. dcb|abcde|dcb); \code{"reflect"} mirrors
+including the edge pixel (e.g. edcb|abcde|edcb); \code{"replicate"}
+repeats the nearest edge pixel; \code{"wrap"} tiles the image;
+\code{"constant"} fills with a fixed value (0, i.e. black).}
 }
 \if{html}{\out{</div>}}
 }
@@ -1719,9 +1733,14 @@ Apply a morphological operation. Returns a new Image.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{operation}}{Character. One of \code{"erode"}, \code{"dilate"},
-\code{"open"}, \code{"close"}, \code{"gradient"}, \code{"tophat"},
-\code{"blackhat"}.}
+\item{\code{operation}}{Character. One of \code{"erode"} (shrinks bright
+regions), \code{"dilate"} (expands bright regions), \code{"open"}
+(erode then dilate — removes small bright spots), \code{"close"}
+(dilate then erode — fills small dark holes), \code{"gradient"}
+(dilate minus erode — highlights edges), \code{"tophat"} (image minus
+open — isolates bright features smaller than the kernel),
+\code{"blackhat"} (close minus image — isolates dark features smaller
+than the kernel).}
 
 \item{\code{shape}}{Character. Structuring element shape: \code{"rect"},
 \code{"cross"}, or \code{"ellipse"}. Ignored when \code{kernel} is
@@ -1737,10 +1756,12 @@ Values are coerced to integers. Overrides
 \item{\code{iterations}}{Positive integer. Number of times the operation is
 applied. Default \code{1L}.}
 
-\item{\code{border_type}}{Character. Pixel extrapolation method. One of
-\code{"reflect"}, \code{"reflect_101"},
-\code{"replicate"}, \code{"constant"}, \code{"wrap"}.
-Default \code{"reflect_101"}.}
+\item{\code{border_type}}{Character. How to fill pixels outside the image
+boundary. \code{"reflect_101"} (default) mirrors the image excluding
+the edge pixel (e.g. dcb|abcde|dcb); \code{"reflect"} mirrors
+including the edge pixel (e.g. edcb|abcde|edcb); \code{"replicate"}
+repeats the nearest edge pixel; \code{"wrap"} tiles the image;
+\code{"constant"} fills with a fixed value (0, i.e. black).}
 }
 \if{html}{\out{</div>}}
 }
@@ -1780,9 +1801,14 @@ Apply a morphological operation in place.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{operation}}{Character. One of \code{"erode"}, \code{"dilate"},
-\code{"open"}, \code{"close"}, \code{"gradient"}, \code{"tophat"},
-\code{"blackhat"}.}
+\item{\code{operation}}{Character. One of \code{"erode"} (shrinks bright
+regions), \code{"dilate"} (expands bright regions), \code{"open"}
+(erode then dilate — removes small bright spots), \code{"close"}
+(dilate then erode — fills small dark holes), \code{"gradient"}
+(dilate minus erode — highlights edges), \code{"tophat"} (image minus
+open — isolates bright features smaller than the kernel),
+\code{"blackhat"} (close minus image — isolates dark features smaller
+than the kernel).}
 
 \item{\code{shape}}{Character. Structuring element shape: \code{"rect"},
 \code{"cross"}, or \code{"ellipse"}. Ignored when \code{kernel} is
@@ -1798,10 +1824,12 @@ Values are coerced to integers. Overrides
 \item{\code{iterations}}{Positive integer. Number of times the operation is
 applied. Default \code{1L}.}
 
-\item{\code{border_type}}{Character. Pixel extrapolation method. One of
-\code{"reflect"}, \code{"reflect_101"},
-\code{"replicate"}, \code{"constant"}, \code{"wrap"}.
-Default \code{"reflect_101"}.}
+\item{\code{border_type}}{Character. How to fill pixels outside the image
+boundary. \code{"reflect_101"} (default) mirrors the image excluding
+the edge pixel (e.g. dcb|abcde|dcb); \code{"reflect"} mirrors
+including the edge pixel (e.g. edcb|abcde|edcb); \code{"replicate"}
+repeats the nearest edge pixel; \code{"wrap"} tiles the image;
+\code{"constant"} fills with a fixed value (0, i.e. black).}
 }
 \if{html}{\out{</div>}}
 }
@@ -2229,10 +2257,12 @@ Compose multiple transforms by embedding into 3x3 with
 \code{"cubic"}, \code{"area"}, \code{"lanczos4"}. Default
 \code{"linear"}.}
 
-\item{\code{border_type}}{Character. Pixel extrapolation method. One of
-\code{"reflect"}, \code{"reflect_101"},
-\code{"replicate"}, \code{"constant"}, \code{"wrap"}.
-Default \code{"reflect_101"}.}
+\item{\code{border_type}}{Character. How to fill pixels outside the image
+boundary. \code{"reflect_101"} (default) mirrors the image excluding
+the edge pixel (e.g. dcb|abcde|dcb); \code{"reflect"} mirrors
+including the edge pixel (e.g. edcb|abcde|edcb); \code{"replicate"}
+repeats the nearest edge pixel; \code{"wrap"} tiles the image;
+\code{"constant"} fills with a fixed value (0, i.e. black).}
 }
 \if{html}{\out{</div>}}
 }
@@ -2288,10 +2318,12 @@ Compose multiple transforms by embedding into 3x3 with
 \code{"cubic"}, \code{"area"}, \code{"lanczos4"}. Default
 \code{"linear"}.}
 
-\item{\code{border_type}}{Character. Pixel extrapolation method. One of
-\code{"reflect"}, \code{"reflect_101"},
-\code{"replicate"}, \code{"constant"}, \code{"wrap"}.
-Default \code{"reflect_101"}.}
+\item{\code{border_type}}{Character. How to fill pixels outside the image
+boundary. \code{"reflect_101"} (default) mirrors the image excluding
+the edge pixel (e.g. dcb|abcde|dcb); \code{"reflect"} mirrors
+including the edge pixel (e.g. edcb|abcde|edcb); \code{"replicate"}
+repeats the nearest edge pixel; \code{"wrap"} tiles the image;
+\code{"constant"} fills with a fixed value (0, i.e. black).}
 }
 \if{html}{\out{</div>}}
 }
@@ -2345,10 +2377,12 @@ Build one with \code{\link{perspective_from_points}}.}
 \code{"cubic"}, \code{"area"}, \code{"lanczos4"}. Default
 \code{"linear"}.}
 
-\item{\code{border_type}}{Character. Pixel extrapolation method. One of
-\code{"reflect"}, \code{"reflect_101"},
-\code{"replicate"}, \code{"constant"}, \code{"wrap"}.
-Default \code{"reflect_101"}.}
+\item{\code{border_type}}{Character. How to fill pixels outside the image
+boundary. \code{"reflect_101"} (default) mirrors the image excluding
+the edge pixel (e.g. dcb|abcde|dcb); \code{"reflect"} mirrors
+including the edge pixel (e.g. edcb|abcde|edcb); \code{"replicate"}
+repeats the nearest edge pixel; \code{"wrap"} tiles the image;
+\code{"constant"} fills with a fixed value (0, i.e. black).}
 }
 \if{html}{\out{</div>}}
 }
@@ -2403,10 +2437,12 @@ Build one with \code{\link{perspective_from_points}}.}
 \code{"cubic"}, \code{"area"}, \code{"lanczos4"}. Default
 \code{"linear"}.}
 
-\item{\code{border_type}}{Character. Pixel extrapolation method. One of
-\code{"reflect"}, \code{"reflect_101"},
-\code{"replicate"}, \code{"constant"}, \code{"wrap"}.
-Default \code{"reflect_101"}.}
+\item{\code{border_type}}{Character. How to fill pixels outside the image
+boundary. \code{"reflect_101"} (default) mirrors the image excluding
+the edge pixel (e.g. dcb|abcde|dcb); \code{"reflect"} mirrors
+including the edge pixel (e.g. edcb|abcde|edcb); \code{"replicate"}
+repeats the nearest edge pixel; \code{"wrap"} tiles the image;
+\code{"constant"} fills with a fixed value (0, i.e. black).}
 }
 \if{html}{\out{</div>}}
 }
@@ -2464,9 +2500,11 @@ two-argument case for symmetric borders.
 
 \item{\code{right}}{Integer. Border width on the right edge. Defaults to `left`.}
 
-\item{\code{type}}{Character. Border fill mode. One of `"constant"`,
-`"reflect"`, `"reflect_101"`, `"replicate"`, `"wrap"`.
-Default `"constant"`.}
+\item{\code{type}}{Character. Border fill mode. `"constant"` (default) fills
+with a fixed colour (see `value`); `"reflect"` mirrors the image
+including the edge pixel; `"reflect_101"` mirrors excluding the edge
+pixel; `"replicate"` repeats the nearest edge pixel; `"wrap"` tiles
+the image.}
 
 \item{\code{value}}{Numeric vector of length 1 or `nchan`. Fill colour used when
 `type = "constant"`. Recycled to `nchan` values. Default 0 (black).}
@@ -2507,9 +2545,11 @@ See `$border()` for the rationale behind the argument order
 
 \item{\code{right}}{Integer. Defaults to `left`.}
 
-\item{\code{type}}{Character. Border fill mode. One of `"constant"`,
-`"reflect"`, `"reflect_101"`, `"replicate"`, `"wrap"`.
-Default `"constant"`.}
+\item{\code{type}}{Character. Border fill mode. `"constant"` (default) fills
+with a fixed colour (see `value`); `"reflect"` mirrors the image
+including the edge pixel; `"reflect_101"` mirrors excluding the edge
+pixel; `"replicate"` repeats the nearest edge pixel; `"wrap"` tiles
+the image.}
 
 \item{\code{value}}{Numeric vector of length 1 or `nchan`. Fill colour used when
 `type = "constant"`. Recycled to `nchan` values. Default 0 (black).}
@@ -2606,6 +2646,190 @@ Set all pixels — or only masked pixels — to a constant
 `nchan` channels. No NAs.}
 
 \item{\code{mask}}{`NULL` or a single-channel `CV_8U` `Image` same size as self.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+`self` invisibly.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-threshold"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-threshold}{}}}
+\subsection{Method \code{threshold()}}{
+Apply a threshold to the image.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$threshold(thresh, maxval = 255, type = "binary", bins = 256L)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{thresh}}{Single finite numeric or one of 17 lowercase auto-threshold
+method strings. When numeric, passed directly to OpenCV. When a string,
+the threshold is auto-computed from the image histogram.}
+
+\item{\code{maxval}}{Single finite numeric. Value assigned to above-threshold
+pixels in `"binary"` and `"binary_inv"` modes. Default `255`.}
+
+\item{\code{type}}{Character. How pixel values are mapped relative to the
+threshold `T`. `"binary"` (default): above `T` → `maxval`, at or
+below → 0. `"binary_inv"`: above `T` → 0, at or below → `maxval`.
+`"trunc"`: above `T` → `T`, at or below → unchanged (acts as a
+ceiling). `"tozero"`: at or below `T` → 0, above → unchanged.
+`"tozero_inv"`: above `T` → 0, at or below → unchanged. `maxval` is
+only used by `"binary"` and `"binary_inv"`.}
+
+\item{\code{bins}}{Single integer >= 2. Histogram bins for auto-threshold on
+non-`CV_8U` images. Ignored when `thresh` is numeric or for `CV_8U`.
+Default `256`.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A new `Image`.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-threshold_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-threshold_}{}}}
+\subsection{Method \code{threshold_()}}{
+Apply a threshold to the image, in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$threshold_(thresh, maxval = 255, type = "binary", bins = 256L)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{thresh}}{See `$threshold()`.}
+
+\item{\code{maxval}}{See `$threshold()`.}
+
+\item{\code{type}}{See `$threshold()` for a description of all five modes.}
+
+\item{\code{bins}}{See `$threshold()`.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+`self` invisibly.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-adaptive_threshold"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-adaptive_threshold}{}}}
+\subsection{Method \code{adaptive_threshold()}}{
+Apply an adaptive threshold to the image.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$adaptive_threshold(
+  maxval = 255,
+  method = "mean",
+  type = "binary",
+  block_size = 11L,
+  offset = 2
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{maxval}}{Single finite numeric. Value for above-threshold pixels.
+Default `255`.}
+
+\item{\code{method}}{`"mean"` (local neighbourhood mean) or `"gaussian"`
+(Gaussian-weighted neighbourhood). Default `"mean"`.}
+
+\item{\code{type}}{`"binary"` (default): pixels above the local threshold →
+`maxval`, others → 0. `"binary_inv"`: inverted — pixels above → 0,
+others → `maxval`.}
+
+\item{\code{block_size}}{Single odd integer >= 3. Neighbourhood size.
+Default `11`.}
+
+\item{\code{offset}}{Single finite numeric. Constant subtracted from the local
+mean (OpenCV's `C` parameter). May be negative. Default `2`.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A new single-channel `CV_8U` `Image` with colorspace `"GRAY"`.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-adaptive_threshold_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-adaptive_threshold_}{}}}
+\subsection{Method \code{adaptive_threshold_()}}{
+Apply an adaptive threshold to the image, in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$adaptive_threshold_(
+  maxval = 255,
+  method = "mean",
+  type = "binary",
+  block_size = 11L,
+  offset = 2
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{maxval}}{See `$adaptive_threshold()`.}
+
+\item{\code{method}}{See `$adaptive_threshold()`.}
+
+\item{\code{type}}{See `$adaptive_threshold()` for a description of both modes.}
+
+\item{\code{block_size}}{See `$adaptive_threshold()`.}
+
+\item{\code{offset}}{See `$adaptive_threshold()`.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+`self` invisibly.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-in_range"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-in_range}{}}}
+\subsection{Method \code{in_range()}}{
+Create a binary mask where each pixel is 255 if all channels
+  fall within `[lower[k], upper[k]]`, and 0 otherwise.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$in_range(lower, upper)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{lower}}{Numeric vector of length 1 or `nchan`. Lower bound per
+channel. Recycled to `nchan`. No NAs; all finite.}
+
+\item{\code{upper}}{Numeric vector of length 1 or `nchan`. Upper bound per
+channel. Recycled to `nchan`. No NAs; all finite.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A new single-channel `CV_8U` `Image` with colorspace `"GRAY"`.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-in_range_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-in_range_}{}}}
+\subsection{Method \code{in_range_()}}{
+Create a binary mask in place. See `$in_range()`.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$in_range_(lower, upper)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{lower}}{See `$in_range()`.}
+
+\item{\code{upper}}{See `$in_range()`.}
 }
 \if{html}{\out{</div>}}
 }
