@@ -345,3 +345,52 @@ test_that("$warp_perspective() rejects 'default' as border_type", {
   expect_error(img$warp_perspective(m, border_type = "default"),
                "border_type must be one of")
 })
+
+# ── $tile() / $tile_() ────────────────────────────────────────────────────────
+
+test_that("$tile() with nrow and ncol multiplies dimensions", {
+  img <- Image$zeros(3L, 4L, 1L, "CV_8U", "GRAY")
+  t <- img$tile(2L, 3L)
+  expect_equal(t$nrow, 6L)    # 3 * 2
+  expect_equal(t$ncol, 12L)   # 4 * 3
+})
+
+test_that("$tile() with single arg tiles equally in both directions", {
+  img <- Image$zeros(2L, 3L, 1L, "CV_8U", "GRAY")
+  t <- img$tile(3L)
+  expect_equal(t$nrow, 6L)    # 2 * 3
+  expect_equal(t$ncol, 9L)    # 3 * 3
+})
+
+test_that("$tile() preserves colorspace and depth", {
+  img <- Image$zeros(2L, 2L, 3L, "CV_8U", "BGR")
+  t <- img$tile(2L)
+  expect_equal(t$colorspace, "BGR")
+  expect_equal(t$depth_name, "CV_8U")
+  expect_s3_class(t, "Image")
+})
+
+test_that("$tile() preserves pixel values across the tiled pattern", {
+  img <- Image$fill(100, 1L, 1L, 1L, "CV_8U", "GRAY")
+  t <- img$tile(3L, 3L)
+  arr <- t$to_array()
+  expect_true(all(arr == 100))
+})
+
+test_that("$tile_() modifies in place and returns self invisibly", {
+  img <- Image$zeros(2L, 2L, 1L, "CV_8U", "GRAY")
+  result <- img$tile_(3L, 4L)
+  expect_identical(result, img)
+  expect_equal(img$nrow, 6L)    # 2 * 3
+  expect_equal(img$ncol, 8L)    # 2 * 4
+})
+
+test_that("$tile() errors on nrow < 1", {
+  img <- Image$zeros(2L, 2L)
+  expect_error(img$tile(0L), "nrow must be a single positive integer")
+})
+
+test_that("$tile() errors on ncol < 1", {
+  img <- Image$zeros(2L, 2L)
+  expect_error(img$tile(2L, 0L), "ncol must be a single positive integer")
+})

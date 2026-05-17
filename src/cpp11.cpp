@@ -194,6 +194,13 @@ extern "C" SEXP _Retina_rt_fill(SEXP rows, SEXP cols, SEXP nchan, SEXP depth, SE
     return cpp11::as_sexp(rt_fill(cpp11::as_cpp<cpp11::decay_t<int>>(rows), cpp11::as_cpp<cpp11::decay_t<int>>(cols), cpp11::as_cpp<cpp11::decay_t<int>>(nchan), cpp11::as_cpp<cpp11::decay_t<std::string>>(depth), cpp11::as_cpp<cpp11::decay_t<std::string>>(colorspace), cpp11::as_cpp<cpp11::decay_t<doubles>>(value_vec)));
   END_CPP11
 }
+// construct.cpp
+external_pointer<RtImage> rt_image_tile(external_pointer<RtImage> img, int nrow_rep, int ncol_rep);
+extern "C" SEXP _Retina_rt_image_tile(SEXP img, SEXP nrow_rep, SEXP ncol_rep) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_image_tile(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<int>>(nrow_rep), cpp11::as_cpp<cpp11::decay_t<int>>(ncol_rep)));
+  END_CPP11
+}
 // display.cpp
 integers rt_image_to_native_raster(external_pointer<RtImage> img);
 extern "C" SEXP _Retina_rt_image_to_native_raster(SEXP img) {
@@ -610,6 +617,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_Retina_rt_image_subtract_image",     (DL_FUNC) &_Retina_rt_image_subtract_image,     2},
     {"_Retina_rt_image_subtract_scalar",    (DL_FUNC) &_Retina_rt_image_subtract_scalar,    2},
     {"_Retina_rt_image_sum",                (DL_FUNC) &_Retina_rt_image_sum,                1},
+    {"_Retina_rt_image_tile",               (DL_FUNC) &_Retina_rt_image_tile,               3},
     {"_Retina_rt_image_to_cpu",             (DL_FUNC) &_Retina_rt_image_to_cpu,             1},
     {"_Retina_rt_image_to_double_array",    (DL_FUNC) &_Retina_rt_image_to_double_array,    1},
     {"_Retina_rt_image_to_gpu",             (DL_FUNC) &_Retina_rt_image_to_gpu,             1},

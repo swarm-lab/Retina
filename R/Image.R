@@ -1644,6 +1644,31 @@ Image <- R6::R6Class("Image",
       invisible(self)
     },
 
+    #' @description Tile (repeat) the image in a grid.
+    #' @param nrow Integer. Number of vertical repetitions.
+    #' @param ncol Integer. Number of horizontal repetitions. Defaults to `nrow`.
+    #' @return A new `Image` with dimensions `nrow * self$nrow` x `ncol * self$ncol`.
+    tile = function(nrow, ncol = nrow) {
+      if (length(nrow) != 1L || !isTRUE(nrow >= 1L) || !isTRUE(nrow == as.integer(nrow)))
+        stop("nrow must be a single positive integer", call. = FALSE)
+      if (length(ncol) != 1L || !isTRUE(ncol >= 1L) || !isTRUE(ncol == as.integer(ncol)))
+        stop("ncol must be a single positive integer", call. = FALSE)
+      Image$new(rt_image_tile(private$.ptr, as.integer(nrow), as.integer(ncol)))
+    },
+
+    #' @description Tile (repeat) the image in a grid, in place.
+    #' @param nrow Integer. Number of vertical repetitions.
+    #' @param ncol Integer. Number of horizontal repetitions. Defaults to `nrow`.
+    #' @return `self` invisibly.
+    tile_ = function(nrow, ncol = nrow) {
+      if (length(nrow) != 1L || !isTRUE(nrow >= 1L) || !isTRUE(nrow == as.integer(nrow)))
+        stop("nrow must be a single positive integer", call. = FALSE)
+      if (length(ncol) != 1L || !isTRUE(ncol >= 1L) || !isTRUE(ncol == as.integer(ncol)))
+        stop("ncol must be a single positive integer", call. = FALSE)
+      private$.ptr <- rt_image_tile(private$.ptr, as.integer(nrow), as.integer(ncol))
+      invisible(self)
+    },
+
     #' @description Print a summary of the image.
     #' @param ... Ignored.
     #' @return \code{self} invisibly.

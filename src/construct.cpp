@@ -86,3 +86,12 @@ external_pointer<RtImage> rt_fill(int rows, int cols, int nchan,
   cv::Mat mat(rows, cols, type, cv::Scalar(v0, v1, v2, v3));
   return {new RtImage(std::move(mat), colorspace)};
 }
+
+// ── tile ──────────────────────────────────────────────────────────────────────
+[[cpp11::register]]
+external_pointer<RtImage> rt_image_tile(external_pointer<RtImage> img,
+                                         int nrow_rep, int ncol_rep) {
+  cv::Mat dst;
+  cv::repeat(get_cpu_mat(img), nrow_rep, ncol_rep, dst);
+  return {new RtImage(std::move(dst), img->colorspace)};
+}
