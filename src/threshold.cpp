@@ -18,7 +18,7 @@ static cv::Mat get_cpu_mat(const external_pointer<RtImage>& img) {
 
 // ── bimodal helpers ───────────────────────────────────────────────────────────
 
-static bool bimodalTest(std::vector<double> y) {
+static bool bimodalTest(const std::vector<double>& y) {
   int len = (int)y.size();
   int modes = 0;
   for (int k = 1; k < len - 1; k++) {
@@ -100,6 +100,7 @@ static int _autothreshHuang(std::vector<int> data) {
   for (ih = (int)data.size() - 1; ih >= first_bin; ih--) {
     if (data[ih] != 0) { last_bin = ih; break; }
   }
+  if (first_bin == last_bin) return first_bin;
   term = 1.0 / (double)(last_bin - first_bin);
   std::vector<double> mu_0(data.size(), 0.0);
   sum_pix = num_pix = 0;
@@ -259,6 +260,7 @@ static int _autothreshME(std::vector<int> data) {
     if (!(fabs(P2[ih]) < 2.220446049250313E-16)) { last_bin = ih; break; }
   }
   max_ent = 0.0; // fixed: was std::numeric_limits<double>::max()
+  threshold = first_bin;  // initialize to first_bin in case no valid threshold is found
   for (it = first_bin; it <= last_bin; it++) {
     ent_back = 0.0;
     for (ih = 0; ih <= it; ih++) {
@@ -606,6 +608,10 @@ double rt_autothreshold_value(external_pointer<RtImage> img,
   else if (method == "triangle")     bin_idx = _autothreshTriangle(hist);
   else if (method == "yen")          bin_idx = _autothreshYen(hist);
   else stop("unknown autothreshold method '%s'", method.c_str());
+
+  if (bin_idx < 0)
+    stop("autothreshold method '%s' failed to converge for this image",
+         method.c_str());
 
   if (src.depth() == CV_8U) return (double)bin_idx;
   if (bins == 1) return min_val;
