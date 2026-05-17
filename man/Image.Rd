@@ -261,6 +261,7 @@ img$plot()
 \itemize{
 \item \href{#method-Image-new}{\code{Image$new()}}
 \item \href{#method-Image-to_array}{\code{Image$to_array()}}
+\item \href{#method-Image-to_native_raster}{\code{Image$to_native_raster()}}
 \item \href{#method-Image-plot}{\code{Image$plot()}}
 \item \href{#method-Image-write}{\code{Image$write()}}
 \item \href{#method-Image-to_gpu}{\code{Image$to_gpu()}}
@@ -336,6 +337,10 @@ img$plot()
 \item \href{#method-Image-warp_perspective_}{\code{Image$warp_perspective_()}}
 \item \href{#method-Image-border}{\code{Image$border()}}
 \item \href{#method-Image-border_}{\code{Image$border_()}}
+\item \href{#method-Image-tile}{\code{Image$tile()}}
+\item \href{#method-Image-tile_}{\code{Image$tile_()}}
+\item \href{#method-Image-set_to}{\code{Image$set_to()}}
+\item \href{#method-Image-set_to_}{\code{Image$set_to_()}}
 \item \href{#method-Image-print}{\code{Image$print()}}
 }
 }
@@ -383,6 +388,19 @@ Convert the image to an array (nrow x ncol x nchan).
 
 \subsection{Returns}{
 An array with dimensions \code{[nrow, ncol, nchan]}.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-to_native_raster"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-to_native_raster}{}}}
+\subsection{Method \code{to_native_raster()}}{
+Convert the image to a \code{nativeRaster} object.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$to_native_raster()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+A \code{nativeRaster} matrix suitable for use with \code{grid} or other graphics systems.
 }
 }
 \if{html}{\out{<hr>}}
@@ -1370,7 +1388,7 @@ Apply the Sobel operator to compute image gradients. Returns
   ddepth = "CV_32F",
   scale = 1,
   delta = 0,
-  border_type = "default"
+  border_type = "reflect_101"
 )}\if{html}{\out{</div>}}
 }
 
@@ -1396,8 +1414,9 @@ arithmetic to invert gradient sign). Default 1.}
 storing. Default 0.}
 
 \item{\code{border_type}}{Character. Pixel extrapolation method. One of
-\code{"default"}, \code{"reflect"}, \code{"reflect_101"},
-\code{"replicate"}, \code{"constant"}, \code{"wrap"}.}
+\code{"reflect"}, \code{"reflect_101"},
+\code{"replicate"}, \code{"constant"}, \code{"wrap"}.
+Default \code{"reflect_101"}.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1431,7 +1450,7 @@ Sobel operator in place.
   ddepth = "CV_32F",
   scale = 1,
   delta = 0,
-  border_type = "default"
+  border_type = "reflect_101"
 )}\if{html}{\out{</div>}}
 }
 
@@ -1455,8 +1474,9 @@ arithmetic to invert gradient sign). Default 1.}
 \item{\code{delta}}{Single numeric. Delta added to results. Default 0.}
 
 \item{\code{border_type}}{Character. Pixel extrapolation method. One of
-\code{"default"}, \code{"reflect"}, \code{"reflect_101"},
-\code{"replicate"}, \code{"constant"}, \code{"wrap"}.}
+\code{"reflect"}, \code{"reflect_101"},
+\code{"replicate"}, \code{"constant"}, \code{"wrap"}.
+Default \code{"reflect_101"}.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1489,7 +1509,7 @@ Apply the Laplacian operator to detect edges. Returns a new
   ddepth = "CV_32F",
   scale = 1,
   delta = 0,
-  border_type = "default"
+  border_type = "reflect_101"
 )}\if{html}{\out{</div>}}
 }
 
@@ -1509,8 +1529,9 @@ positive. Default 1.}
 \item{\code{delta}}{Single numeric. Optional delta added to results. Default 0.}
 
 \item{\code{border_type}}{Character. Pixel extrapolation method. One of
-\code{"default"}, \code{"reflect"}, \code{"reflect_101"},
-\code{"replicate"}, \code{"constant"}, \code{"wrap"}.}
+\code{"reflect"}, \code{"reflect_101"},
+\code{"replicate"}, \code{"constant"}, \code{"wrap"}.
+Default \code{"reflect_101"}.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1542,7 +1563,7 @@ Laplacian operator in place.
   ddepth = "CV_32F",
   scale = 1,
   delta = 0,
-  border_type = "default"
+  border_type = "reflect_101"
 )}\if{html}{\out{</div>}}
 }
 
@@ -1560,8 +1581,9 @@ positive. Default 1.}
 \item{\code{delta}}{Single numeric. Delta added to results. Default 0.}
 
 \item{\code{border_type}}{Character. Pixel extrapolation method. One of
-\code{"default"}, \code{"reflect"}, \code{"reflect_101"},
-\code{"replicate"}, \code{"constant"}, \code{"wrap"}.}
+\code{"reflect"}, \code{"reflect_101"},
+\code{"replicate"}, \code{"constant"}, \code{"wrap"}.
+Default \code{"reflect_101"}.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1690,7 +1712,7 @@ Apply a morphological operation. Returns a new Image.
   size = 3L,
   kernel = NULL,
   iterations = 1L,
-  border_type = "default"
+  border_type = "reflect_101"
 )}\if{html}{\out{</div>}}
 }
 
@@ -1716,9 +1738,9 @@ Values are coerced to integers. Overrides
 applied. Default \code{1L}.}
 
 \item{\code{border_type}}{Character. Pixel extrapolation method. One of
-\code{"default"}, \code{"reflect"}, \code{"reflect_101"},
+\code{"reflect"}, \code{"reflect_101"},
 \code{"replicate"}, \code{"constant"}, \code{"wrap"}.
-Default \code{"default"}.}
+Default \code{"reflect_101"}.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1751,7 +1773,7 @@ Apply a morphological operation in place.
   size = 3L,
   kernel = NULL,
   iterations = 1L,
-  border_type = "default"
+  border_type = "reflect_101"
 )}\if{html}{\out{</div>}}
 }
 
@@ -1777,9 +1799,9 @@ Values are coerced to integers. Overrides
 applied. Default \code{1L}.}
 
 \item{\code{border_type}}{Character. Pixel extrapolation method. One of
-\code{"default"}, \code{"reflect"}, \code{"reflect_101"},
+\code{"reflect"}, \code{"reflect_101"},
 \code{"replicate"}, \code{"constant"}, \code{"wrap"}.
-Default \code{"default"}.}
+Default \code{"reflect_101"}.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1913,7 +1935,7 @@ Rotate the image. Returns a new Image. Output retains
   cy = NULL,
   scale = 1,
   interpolation = "linear",
-  border_type = "default"
+  border_type = "reflect_101"
 )}\if{html}{\out{</div>}}
 }
 
@@ -1937,9 +1959,8 @@ during rotation. Default \code{1}.}
 \code{"linear"}.}
 
 \item{\code{border_type}}{Character. Pixel extrapolation method. One of
-\code{"default"}, \code{"reflect"}, \code{"reflect_101"},
-\code{"replicate"}, \code{"constant"}, \code{"wrap"}.
-Default \code{"default"}.}
+\code{"reflect_101"}, \code{"reflect"}, \code{"replicate"},
+\code{"constant"}, \code{"wrap"}. Default \code{"reflect_101"}.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1971,7 +1992,7 @@ Rotate the image in place.
   cy = NULL,
   scale = 1,
   interpolation = "linear",
-  border_type = "default"
+  border_type = "reflect_101"
 )}\if{html}{\out{</div>}}
 }
 
@@ -1995,9 +2016,8 @@ counter-clockwise.}
 \code{"linear"}.}
 
 \item{\code{border_type}}{Character. Pixel extrapolation method. One of
-\code{"default"}, \code{"reflect"}, \code{"reflect_101"},
-\code{"replicate"}, \code{"constant"}, \code{"wrap"}.
-Default \code{"default"}.}
+\code{"reflect_101"}, \code{"reflect"}, \code{"replicate"},
+\code{"constant"}, \code{"wrap"}. Default \code{"reflect_101"}.}
 }
 \if{html}{\out{</div>}}
 }
@@ -2185,7 +2205,7 @@ Apply an affine transformation to the image. Returns a new
   width = NULL,
   height = NULL,
   interpolation = "linear",
-  border_type = "default"
+  border_type = "reflect_101"
 )}\if{html}{\out{</div>}}
 }
 
@@ -2210,9 +2230,9 @@ Compose multiple transforms by embedding into 3x3 with
 \code{"linear"}.}
 
 \item{\code{border_type}}{Character. Pixel extrapolation method. One of
-\code{"default"}, \code{"reflect"}, \code{"reflect_101"},
+\code{"reflect"}, \code{"reflect_101"},
 \code{"replicate"}, \code{"constant"}, \code{"wrap"}.
-Default \code{"default"}.}
+Default \code{"reflect_101"}.}
 }
 \if{html}{\out{</div>}}
 }
@@ -2244,7 +2264,7 @@ Apply an affine transformation to the image in place.
   width = NULL,
   height = NULL,
   interpolation = "linear",
-  border_type = "default"
+  border_type = "reflect_101"
 )}\if{html}{\out{</div>}}
 }
 
@@ -2269,9 +2289,9 @@ Compose multiple transforms by embedding into 3x3 with
 \code{"linear"}.}
 
 \item{\code{border_type}}{Character. Pixel extrapolation method. One of
-\code{"default"}, \code{"reflect"}, \code{"reflect_101"},
+\code{"reflect"}, \code{"reflect_101"},
 \code{"replicate"}, \code{"constant"}, \code{"wrap"}.
-Default \code{"default"}.}
+Default \code{"reflect_101"}.}
 }
 \if{html}{\out{</div>}}
 }
@@ -2305,7 +2325,7 @@ Apply a perspective transformation to the image. Returns a
   width = NULL,
   height = NULL,
   interpolation = "linear",
-  border_type = "default"
+  border_type = "reflect_101"
 )}\if{html}{\out{</div>}}
 }
 
@@ -2326,9 +2346,9 @@ Build one with \code{\link{perspective_from_points}}.}
 \code{"linear"}.}
 
 \item{\code{border_type}}{Character. Pixel extrapolation method. One of
-\code{"default"}, \code{"reflect"}, \code{"reflect_101"},
+\code{"reflect"}, \code{"reflect_101"},
 \code{"replicate"}, \code{"constant"}, \code{"wrap"}.
-Default \code{"default"}.}
+Default \code{"reflect_101"}.}
 }
 \if{html}{\out{</div>}}
 }
@@ -2363,7 +2383,7 @@ Apply a perspective transformation to the image in place.
   width = NULL,
   height = NULL,
   interpolation = "linear",
-  border_type = "default"
+  border_type = "reflect_101"
 )}\if{html}{\out{</div>}}
 }
 
@@ -2384,9 +2404,9 @@ Build one with \code{\link{perspective_from_points}}.}
 \code{"linear"}.}
 
 \item{\code{border_type}}{Character. Pixel extrapolation method. One of
-\code{"default"}, \code{"reflect"}, \code{"reflect_101"},
+\code{"reflect"}, \code{"reflect_101"},
 \code{"replicate"}, \code{"constant"}, \code{"wrap"}.
-Default \code{"default"}.}
+Default \code{"reflect_101"}.}
 }
 \if{html}{\out{</div>}}
 }
@@ -2415,11 +2435,18 @@ img$plot()
 \if{latex}{\out{\hypertarget{method-Image-border}{}}}
 \subsection{Method \code{border()}}{
 Add a border around the image.
+
+The argument order `(top, left, bottom, right)` is deliberately different
+from the CSS shorthand (`top, right, bottom, left`) and from OpenCV's
+`copyMakeBorder` (`top, bottom, left, right`). With this order, the
+two-argument form `$border(v, h)` adds `v` pixels vertically (top and
+bottom) and `h` pixels horizontally (left and right) — the most natural
+two-argument case for symmetric borders.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Image$border(
   top,
-  bottom = top,
   left = top,
+  bottom = top,
   right = left,
   type = "constant",
   value = 0
@@ -2431,14 +2458,14 @@ Add a border around the image.
 \describe{
 \item{\code{top}}{Integer. Border width in pixels on the top edge.}
 
-\item{\code{bottom}}{Integer. Border width on the bottom edge. Defaults to `top`.}
-
 \item{\code{left}}{Integer. Border width on the left edge. Defaults to `top`.}
+
+\item{\code{bottom}}{Integer. Border width on the bottom edge. Defaults to `top`.}
 
 \item{\code{right}}{Integer. Border width on the right edge. Defaults to `left`.}
 
 \item{\code{type}}{Character. Border fill mode. One of `"constant"`,
-`"default"`, `"reflect"`, `"reflect_101"`, `"replicate"`, `"wrap"`.
+`"reflect"`, `"reflect_101"`, `"replicate"`, `"wrap"`.
 Default `"constant"`.}
 
 \item{\code{value}}{Numeric vector of length 1 or `nchan`. Fill colour used when
@@ -2455,11 +2482,14 @@ A new `Image`.
 \if{latex}{\out{\hypertarget{method-Image-border_}{}}}
 \subsection{Method \code{border_()}}{
 Add a border around the image, in place.
+
+See `$border()` for the rationale behind the argument order
+`(top, left, bottom, right)`.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Image$border_(
   top,
-  bottom = top,
   left = top,
+  bottom = top,
   right = left,
   type = "constant",
   value = 0
@@ -2471,18 +2501,111 @@ Add a border around the image, in place.
 \describe{
 \item{\code{top}}{Integer. Border width on the top edge.}
 
-\item{\code{bottom}}{Integer. Defaults to `top`.}
-
 \item{\code{left}}{Integer. Defaults to `top`.}
+
+\item{\code{bottom}}{Integer. Defaults to `top`.}
 
 \item{\code{right}}{Integer. Defaults to `left`.}
 
 \item{\code{type}}{Character. Border fill mode. One of `"constant"`,
-`"default"`, `"reflect"`, `"reflect_101"`, `"replicate"`, `"wrap"`.
+`"reflect"`, `"reflect_101"`, `"replicate"`, `"wrap"`.
 Default `"constant"`.}
 
 \item{\code{value}}{Numeric vector of length 1 or `nchan`. Fill colour used when
 `type = "constant"`. Recycled to `nchan` values. Default 0 (black).}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+`self` invisibly.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-tile"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-tile}{}}}
+\subsection{Method \code{tile()}}{
+Tile (repeat) the image in a grid.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$tile(nrow, ncol = nrow)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{nrow}}{Integer. Number of vertical repetitions.}
+
+\item{\code{ncol}}{Integer. Number of horizontal repetitions. Defaults to `nrow`.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A new `Image` with dimensions `nrow * self$nrow` x `ncol * self$ncol`.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-tile_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-tile_}{}}}
+\subsection{Method \code{tile_()}}{
+Tile (repeat) the image in a grid, in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$tile_(nrow, ncol = nrow)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{nrow}}{Integer. Number of vertical repetitions.}
+
+\item{\code{ncol}}{Integer. Number of horizontal repetitions. Defaults to `nrow`.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+`self` invisibly.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-set_to"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-set_to}{}}}
+\subsection{Method \code{set_to()}}{
+Set all pixels — or only masked pixels — to a constant value.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$set_to(value, mask = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{value}}{Numeric scalar or vector of length `nchan`. Recycled to
+`nchan` channels. No NAs.}
+
+\item{\code{mask}}{`NULL` (apply to all pixels) or a single-channel `CV_8U`
+`Image` with the same `nrow` and `ncol`. Non-zero pixels mark where
+`value` is written.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A new `Image`.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-set_to_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-set_to_}{}}}
+\subsection{Method \code{set_to_()}}{
+Set all pixels — or only masked pixels — to a constant
+  value, in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$set_to_(value, mask = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{value}}{Numeric scalar or vector of length `nchan`. Recycled to
+`nchan` channels. No NAs.}
+
+\item{\code{mask}}{`NULL` or a single-channel `CV_8U` `Image` same size as self.}
 }
 \if{html}{\out{</div>}}
 }
