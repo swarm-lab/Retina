@@ -115,9 +115,11 @@ test_that("$threshold('otsu') on bimodal CV_32F gives binary-like output", {
 })
 
 test_that("$threshold() returns a new Image (non-mutating)", {
-  img <- bimodal_gray_8u()
+  img    <- bimodal_gray_8u()
+  before <- img$to_array()
   result <- img$threshold(127)
-  expect_false(identical(img$to_array(), result$to_array()))
+  expect_false(identical(result, img))
+  expect_equal(img$to_array(), before)
 })
 
 test_that("$threshold_() modifies in place and returns self", {
@@ -125,6 +127,12 @@ test_that("$threshold_() modifies in place and returns self", {
   result <- img$threshold_(127)
   expect_identical(result, img)
   expect_equal(sort(unique(as.integer(img$to_array()))), c(0L, 255L))
+})
+
+test_that("$threshold_() errors on non-finite thresh", {
+  img <- bimodal_gray_8u()
+  expect_error(img$threshold_(Inf))
+  expect_error(img$threshold_(NA_real_))
 })
 
 test_that("$threshold() errors on auto method with multi-channel image", {
