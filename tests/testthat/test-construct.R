@@ -311,3 +311,37 @@ test_that("border_() rejects 'default' as a type", {
   img <- Image$zeros(3L, 3L)
   expect_error(img$border_(1L, type = "default"), "type must be one of")
 })
+
+# ── "default" border_type rejected in all methods ─────────────────────────────
+
+test_that("$sobel() rejects 'default' as border_type", {
+  img <- Image$zeros(5L, 5L, 1L, "CV_32F", "GRAY")
+  expect_error(img$sobel(1L, 0L, border_type = "default"),
+               "border_type must be one of")
+})
+
+test_that("$laplacian() rejects 'default' as border_type", {
+  img <- Image$zeros(5L, 5L, 1L, "CV_32F", "GRAY")
+  expect_error(img$laplacian(border_type = "default"),
+               "border_type must be one of")
+})
+
+test_that("$morph() rejects 'default' as border_type", {
+  img <- Image$zeros(5L, 5L, 1L, "CV_8U", "GRAY")
+  expect_error(img$morph("erode", border_type = "default"),
+               "border_type must be one of")
+})
+
+test_that("$warp_affine() rejects 'default' as border_type", {
+  img <- Image$zeros(10L, 10L, 1L, "CV_8U", "GRAY")
+  m <- matrix(c(1, 0, 0, 0, 1, 0), nrow = 2, byrow = TRUE)
+  expect_error(img$warp_affine(m, border_type = "default"),
+               "border_type must be one of")
+})
+
+test_that("$warp_perspective() rejects 'default' as border_type", {
+  img <- Image$zeros(10L, 10L, 1L, "CV_8U", "GRAY")
+  m <- diag(3)
+  expect_error(img$warp_perspective(m, border_type = "default"),
+               "border_type must be one of")
+})

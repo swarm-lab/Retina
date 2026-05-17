@@ -662,8 +662,9 @@ Image <- R6::R6Class("Image",
     #' @param delta Single numeric. Optional delta added to results before
     #'   storing. Default 0.
     #' @param border_type Character. Pixel extrapolation method. One of
-    #'   \code{"default"}, \code{"reflect"}, \code{"reflect_101"},
+    #'   \code{"reflect"}, \code{"reflect_101"},
     #'   \code{"replicate"}, \code{"constant"}, \code{"wrap"}.
+    #'   Default \code{"reflect_101"}.
     #' @return A new \code{Image}.
     #' @examples
     #' \donttest{
@@ -673,8 +674,8 @@ Image <- R6::R6Class("Image",
     #' grad_x$plot()
     #' }
     sobel = function(dx, dy, ksize = 3, ddepth = "CV_32F",
-                     scale = 1, delta = 0, border_type = "default") {
-      .valid_border <- c("default", "reflect", "reflect_101",
+                     scale = 1, delta = 0, border_type = "reflect_101") {
+      .valid_border <- c("reflect", "reflect_101",
                          "replicate", "constant", "wrap")
       if (!is.numeric(dx) || !is.numeric(dy) ||
           length(dx) != 1L || length(dy) != 1L ||
@@ -690,7 +691,7 @@ Image <- R6::R6Class("Image",
       if (!is.numeric(delta) || length(delta) != 1L)
         stop("delta must be a single numeric value", call. = FALSE)
       if (!border_type %in% .valid_border)
-        stop("border_type must be one of: default, reflect, reflect_101, replicate, constant, wrap",
+        stop("border_type must be one of: reflect, reflect_101, replicate, constant, wrap",
              call. = FALSE)
       Image$new(rt_image_sobel(private$.ptr, as.integer(dx), as.integer(dy),
                                as.integer(ksize), ddepth, as.double(scale),
@@ -709,8 +710,9 @@ Image <- R6::R6Class("Image",
     #'   arithmetic to invert gradient sign). Default 1.
     #' @param delta Single numeric. Delta added to results. Default 0.
     #' @param border_type Character. Pixel extrapolation method. One of
-    #'   \code{"default"}, \code{"reflect"}, \code{"reflect_101"},
+    #'   \code{"reflect"}, \code{"reflect_101"},
     #'   \code{"replicate"}, \code{"constant"}, \code{"wrap"}.
+    #'   Default \code{"reflect_101"}.
     #' @return \code{self} invisibly.
     #' @examples
     #' \donttest{
@@ -720,8 +722,8 @@ Image <- R6::R6Class("Image",
     #' img$plot()
     #' }
     sobel_ = function(dx, dy, ksize = 3, ddepth = "CV_32F",
-                      scale = 1, delta = 0, border_type = "default") {
-      .valid_border <- c("default", "reflect", "reflect_101",
+                      scale = 1, delta = 0, border_type = "reflect_101") {
+      .valid_border <- c("reflect", "reflect_101",
                          "replicate", "constant", "wrap")
       if (!is.numeric(dx) || !is.numeric(dy) ||
           length(dx) != 1L || length(dy) != 1L ||
@@ -737,7 +739,7 @@ Image <- R6::R6Class("Image",
       if (!is.numeric(delta) || length(delta) != 1L)
         stop("delta must be a single numeric value", call. = FALSE)
       if (!border_type %in% .valid_border)
-        stop("border_type must be one of: default, reflect, reflect_101, replicate, constant, wrap",
+        stop("border_type must be one of: reflect, reflect_101, replicate, constant, wrap",
              call. = FALSE)
       private$.ptr <- rt_image_sobel(private$.ptr, as.integer(dx), as.integer(dy),
                                      as.integer(ksize), ddepth, as.double(scale),
@@ -756,8 +758,9 @@ Image <- R6::R6Class("Image",
     #'   positive. Default 1.
     #' @param delta Single numeric. Optional delta added to results. Default 0.
     #' @param border_type Character. Pixel extrapolation method. One of
-    #'   \code{"default"}, \code{"reflect"}, \code{"reflect_101"},
+    #'   \code{"reflect"}, \code{"reflect_101"},
     #'   \code{"replicate"}, \code{"constant"}, \code{"wrap"}.
+    #'   Default \code{"reflect_101"}.
     #' @return A new \code{Image}.
     #' @examples
     #' \donttest{
@@ -767,8 +770,8 @@ Image <- R6::R6Class("Image",
     #' edges$plot()
     #' }
     laplacian = function(ksize = 1, ddepth = "CV_32F",
-                         scale = 1, delta = 0, border_type = "default") {
-      .valid_border <- c("default", "reflect", "reflect_101",
+                         scale = 1, delta = 0, border_type = "reflect_101") {
+      .valid_border <- c("reflect", "reflect_101",
                          "replicate", "constant", "wrap")
       if (!ksize %in% c(1L, 3L, 5L, 7L))
         stop("ksize must be 1, 3, 5, or 7", call. = FALSE)
@@ -779,7 +782,7 @@ Image <- R6::R6Class("Image",
       if (!is.numeric(delta) || length(delta) != 1L)
         stop("delta must be a single numeric value", call. = FALSE)
       if (!border_type %in% .valid_border)
-        stop("border_type must be one of: default, reflect, reflect_101, replicate, constant, wrap",
+        stop("border_type must be one of: reflect, reflect_101, replicate, constant, wrap",
              call. = FALSE)
       Image$new(rt_image_laplacian(private$.ptr, as.integer(ksize), ddepth,
                                    as.double(scale), as.double(delta),
@@ -794,8 +797,9 @@ Image <- R6::R6Class("Image",
     #'   positive. Default 1.
     #' @param delta Single numeric. Delta added to results. Default 0.
     #' @param border_type Character. Pixel extrapolation method. One of
-    #'   \code{"default"}, \code{"reflect"}, \code{"reflect_101"},
+    #'   \code{"reflect"}, \code{"reflect_101"},
     #'   \code{"replicate"}, \code{"constant"}, \code{"wrap"}.
+    #'   Default \code{"reflect_101"}.
     #' @return \code{self} invisibly.
     #' @examples
     #' \donttest{
@@ -805,8 +809,8 @@ Image <- R6::R6Class("Image",
     #' img$plot()
     #' }
     laplacian_ = function(ksize = 1, ddepth = "CV_32F",
-                          scale = 1, delta = 0, border_type = "default") {
-      .valid_border <- c("default", "reflect", "reflect_101",
+                          scale = 1, delta = 0, border_type = "reflect_101") {
+      .valid_border <- c("reflect", "reflect_101",
                          "replicate", "constant", "wrap")
       if (!ksize %in% c(1L, 3L, 5L, 7L))
         stop("ksize must be 1, 3, 5, or 7", call. = FALSE)
@@ -817,7 +821,7 @@ Image <- R6::R6Class("Image",
       if (!is.numeric(delta) || length(delta) != 1L)
         stop("delta must be a single numeric value", call. = FALSE)
       if (!border_type %in% .valid_border)
-        stop("border_type must be one of: default, reflect, reflect_101, replicate, constant, wrap",
+        stop("border_type must be one of: reflect, reflect_101, replicate, constant, wrap",
              call. = FALSE)
       private$.ptr <- rt_image_laplacian(private$.ptr, as.integer(ksize),
                                          ddepth, as.double(scale),
@@ -917,9 +921,9 @@ Image <- R6::R6Class("Image",
     #' @param iterations Positive integer. Number of times the operation is
     #'   applied. Default \code{1L}.
     #' @param border_type Character. Pixel extrapolation method. One of
-    #'   \code{"default"}, \code{"reflect"}, \code{"reflect_101"},
+    #'   \code{"reflect"}, \code{"reflect_101"},
     #'   \code{"replicate"}, \code{"constant"}, \code{"wrap"}.
-    #'   Default \code{"default"}.
+    #'   Default \code{"reflect_101"}.
     #' @return A new \code{Image}.
     #' @examples
     #' \donttest{
@@ -930,11 +934,11 @@ Image <- R6::R6Class("Image",
     #' }
     morph = function(operation, shape = "rect", size = 3L,
                      kernel = NULL, iterations = 1L,
-                     border_type = "default") {
+                     border_type = "reflect_101") {
       .valid_ops    <- c("erode", "dilate", "open", "close",
                          "gradient", "tophat", "blackhat")
       .valid_shapes <- c("rect", "cross", "ellipse")
-      .valid_border <- c("default", "reflect", "reflect_101",
+      .valid_border <- c("reflect", "reflect_101",
                          "replicate", "constant", "wrap")
       if (!is.character(operation) || length(operation) != 1L ||
           !operation %in% .valid_ops)
@@ -952,7 +956,7 @@ Image <- R6::R6Class("Image",
         stop("iterations must be a single positive integer", call. = FALSE)
       if (!is.character(border_type) || length(border_type) != 1L ||
           !border_type %in% .valid_border)
-        stop("border_type must be one of: default, reflect, reflect_101, replicate, constant, wrap",
+        stop("border_type must be one of: reflect, reflect_101, replicate, constant, wrap",
              call. = FALSE)
       if (is.null(kernel)) {
         Image$new(rt_image_morph(private$.ptr, operation, shape, size,
@@ -979,9 +983,9 @@ Image <- R6::R6Class("Image",
     #' @param iterations Positive integer. Number of times the operation is
     #'   applied. Default \code{1L}.
     #' @param border_type Character. Pixel extrapolation method. One of
-    #'   \code{"default"}, \code{"reflect"}, \code{"reflect_101"},
+    #'   \code{"reflect"}, \code{"reflect_101"},
     #'   \code{"replicate"}, \code{"constant"}, \code{"wrap"}.
-    #'   Default \code{"default"}.
+    #'   Default \code{"reflect_101"}.
     #' @return \code{self} invisibly.
     #' @examples
     #' \donttest{
@@ -992,11 +996,11 @@ Image <- R6::R6Class("Image",
     #' }
     morph_ = function(operation, shape = "rect", size = 3L,
                       kernel = NULL, iterations = 1L,
-                      border_type = "default") {
+                      border_type = "reflect_101") {
       .valid_ops    <- c("erode", "dilate", "open", "close",
                          "gradient", "tophat", "blackhat")
       .valid_shapes <- c("rect", "cross", "ellipse")
-      .valid_border <- c("default", "reflect", "reflect_101",
+      .valid_border <- c("reflect", "reflect_101",
                          "replicate", "constant", "wrap")
       if (!is.character(operation) || length(operation) != 1L ||
           !operation %in% .valid_ops)
@@ -1014,7 +1018,7 @@ Image <- R6::R6Class("Image",
         stop("iterations must be a single positive integer", call. = FALSE)
       if (!is.character(border_type) || length(border_type) != 1L ||
           !border_type %in% .valid_border)
-        stop("border_type must be one of: default, reflect, reflect_101, replicate, constant, wrap",
+        stop("border_type must be one of: reflect, reflect_101, replicate, constant, wrap",
              call. = FALSE)
       if (is.null(kernel)) {
         private$.ptr <- rt_image_morph(private$.ptr, operation, shape, size,
@@ -1382,9 +1386,9 @@ Image <- R6::R6Class("Image",
     #'   \code{"cubic"}, \code{"area"}, \code{"lanczos4"}. Default
     #'   \code{"linear"}.
     #' @param border_type Character. Pixel extrapolation method. One of
-    #'   \code{"default"}, \code{"reflect"}, \code{"reflect_101"},
+    #'   \code{"reflect"}, \code{"reflect_101"},
     #'   \code{"replicate"}, \code{"constant"}, \code{"wrap"}.
-    #'   Default \code{"default"}.
+    #'   Default \code{"reflect_101"}.
     #' @return A new \code{Image}.
     #' @examples
     #' \donttest{
@@ -1394,9 +1398,9 @@ Image <- R6::R6Class("Image",
     #' img$warp_affine(m)$plot()
     #' }
     warp_affine = function(m, width = NULL, height = NULL,
-                           interpolation = "linear", border_type = "default") {
+                           interpolation = "linear", border_type = "reflect_101") {
       .valid_interp  <- c("nearest", "linear", "cubic", "area", "lanczos4")
-      .valid_border  <- c("default", "reflect", "reflect_101",
+      .valid_border  <- c("reflect", "reflect_101",
                           "replicate", "constant", "wrap")
       if (!is.matrix(m) || !is.numeric(m) || !identical(dim(m), c(2L, 3L)))
         stop("m must be a 2x3 numeric matrix", call. = FALSE)
@@ -1412,7 +1416,7 @@ Image <- R6::R6Class("Image",
              call. = FALSE)
       if (!is.character(border_type) || length(border_type) != 1L ||
           !border_type %in% .valid_border)
-        stop("border_type must be one of: default, reflect, reflect_101, replicate, constant, wrap",
+        stop("border_type must be one of: reflect, reflect_101, replicate, constant, wrap",
              call. = FALSE)
       .w <- if (is.null(width))  self$ncol else as.integer(width)
       .h <- if (is.null(height)) self$nrow else as.integer(height)
@@ -1435,9 +1439,9 @@ Image <- R6::R6Class("Image",
     #'   \code{"cubic"}, \code{"area"}, \code{"lanczos4"}. Default
     #'   \code{"linear"}.
     #' @param border_type Character. Pixel extrapolation method. One of
-    #'   \code{"default"}, \code{"reflect"}, \code{"reflect_101"},
+    #'   \code{"reflect"}, \code{"reflect_101"},
     #'   \code{"replicate"}, \code{"constant"}, \code{"wrap"}.
-    #'   Default \code{"default"}.
+    #'   Default \code{"reflect_101"}.
     #' @return \code{self} invisibly.
     #' @examples
     #' \donttest{
@@ -1447,9 +1451,9 @@ Image <- R6::R6Class("Image",
     #' img$plot()
     #' }
     warp_affine_ = function(m, width = NULL, height = NULL,
-                            interpolation = "linear", border_type = "default") {
+                            interpolation = "linear", border_type = "reflect_101") {
       .valid_interp  <- c("nearest", "linear", "cubic", "area", "lanczos4")
-      .valid_border  <- c("default", "reflect", "reflect_101",
+      .valid_border  <- c("reflect", "reflect_101",
                           "replicate", "constant", "wrap")
       if (!is.matrix(m) || !is.numeric(m) || !identical(dim(m), c(2L, 3L)))
         stop("m must be a 2x3 numeric matrix", call. = FALSE)
@@ -1465,7 +1469,7 @@ Image <- R6::R6Class("Image",
              call. = FALSE)
       if (!is.character(border_type) || length(border_type) != 1L ||
           !border_type %in% .valid_border)
-        stop("border_type must be one of: default, reflect, reflect_101, replicate, constant, wrap",
+        stop("border_type must be one of: reflect, reflect_101, replicate, constant, wrap",
              call. = FALSE)
       .w <- if (is.null(width))  self$ncol else as.integer(width)
       .h <- if (is.null(height)) self$nrow else as.integer(height)
@@ -1487,9 +1491,9 @@ Image <- R6::R6Class("Image",
     #'   \code{"cubic"}, \code{"area"}, \code{"lanczos4"}. Default
     #'   \code{"linear"}.
     #' @param border_type Character. Pixel extrapolation method. One of
-    #'   \code{"default"}, \code{"reflect"}, \code{"reflect_101"},
+    #'   \code{"reflect"}, \code{"reflect_101"},
     #'   \code{"replicate"}, \code{"constant"}, \code{"wrap"}.
-    #'   Default \code{"default"}.
+    #'   Default \code{"reflect_101"}.
     #' @return A new \code{Image}.
     #' @examples
     #' \donttest{
@@ -1502,9 +1506,9 @@ Image <- R6::R6Class("Image",
     #' img$warp_perspective(m)$plot()
     #' }
     warp_perspective = function(m, width = NULL, height = NULL,
-                                interpolation = "linear", border_type = "default") {
+                                interpolation = "linear", border_type = "reflect_101") {
       .valid_interp  <- c("nearest", "linear", "cubic", "area", "lanczos4")
-      .valid_border  <- c("default", "reflect", "reflect_101",
+      .valid_border  <- c("reflect", "reflect_101",
                           "replicate", "constant", "wrap")
       if (!is.matrix(m) || !is.numeric(m) || !identical(dim(m), c(3L, 3L)))
         stop("m must be a 3x3 numeric matrix", call. = FALSE)
@@ -1520,7 +1524,7 @@ Image <- R6::R6Class("Image",
              call. = FALSE)
       if (!is.character(border_type) || length(border_type) != 1L ||
           !border_type %in% .valid_border)
-        stop("border_type must be one of: default, reflect, reflect_101, replicate, constant, wrap",
+        stop("border_type must be one of: reflect, reflect_101, replicate, constant, wrap",
              call. = FALSE)
       .w <- if (is.null(width))  self$ncol else as.integer(width)
       .h <- if (is.null(height)) self$nrow else as.integer(height)
@@ -1539,9 +1543,9 @@ Image <- R6::R6Class("Image",
     #'   \code{"cubic"}, \code{"area"}, \code{"lanczos4"}. Default
     #'   \code{"linear"}.
     #' @param border_type Character. Pixel extrapolation method. One of
-    #'   \code{"default"}, \code{"reflect"}, \code{"reflect_101"},
+    #'   \code{"reflect"}, \code{"reflect_101"},
     #'   \code{"replicate"}, \code{"constant"}, \code{"wrap"}.
-    #'   Default \code{"default"}.
+    #'   Default \code{"reflect_101"}.
     #' @return \code{self} invisibly.
     #' @examples
     #' \donttest{
@@ -1554,9 +1558,9 @@ Image <- R6::R6Class("Image",
     #' img$plot()
     #' }
     warp_perspective_ = function(m, width = NULL, height = NULL,
-                                 interpolation = "linear", border_type = "default") {
+                                 interpolation = "linear", border_type = "reflect_101") {
       .valid_interp  <- c("nearest", "linear", "cubic", "area", "lanczos4")
-      .valid_border  <- c("default", "reflect", "reflect_101",
+      .valid_border  <- c("reflect", "reflect_101",
                           "replicate", "constant", "wrap")
       if (!is.matrix(m) || !is.numeric(m) || !identical(dim(m), c(3L, 3L)))
         stop("m must be a 3x3 numeric matrix", call. = FALSE)
@@ -1572,7 +1576,7 @@ Image <- R6::R6Class("Image",
              call. = FALSE)
       if (!is.character(border_type) || length(border_type) != 1L ||
           !border_type %in% .valid_border)
-        stop("border_type must be one of: default, reflect, reflect_101, replicate, constant, wrap",
+        stop("border_type must be one of: reflect, reflect_101, replicate, constant, wrap",
              call. = FALSE)
       .w <- if (is.null(width))  self$ncol else as.integer(width)
       .h <- if (is.null(height)) self$nrow else as.integer(height)
