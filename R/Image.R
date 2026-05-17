@@ -1696,7 +1696,8 @@ Image <- R6::R6Class("Image",
 
     #' @description Set all pixels — or only masked pixels — to a constant
     #'   value, in place.
-    #' @param value Numeric scalar or vector of length `nchan`. No NAs.
+    #' @param value Numeric scalar or vector of length `nchan`. Recycled to
+    #'   `nchan` channels. No NAs.
     #' @param mask `NULL` or a single-channel `CV_8U` `Image` same size as self.
     #' @return `self` invisibly.
     set_to_ = function(value, mask = NULL) {

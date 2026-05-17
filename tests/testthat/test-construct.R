@@ -497,3 +497,14 @@ test_that("$set_to() errors when mask has more than 1 channel", {
   bad_mask <- Image$zeros(3L, 3L, 3L, "CV_8U", "BGR")
   expect_error(img$set_to(255, mask = bad_mask), "mask must be a single-channel")
 })
+
+test_that("$set_to_() errors on NA value", {
+  img <- Image$zeros(2L, 2L)
+  expect_error(img$set_to_(NA_real_), "value must be")
+})
+
+test_that("$set_to_() errors when mask has wrong depth", {
+  img      <- Image$zeros(3L, 3L, 1L, "CV_8U",  "GRAY")
+  bad_mask <- Image$zeros(3L, 3L, 1L, "CV_32F", "GRAY")
+  expect_error(img$set_to_(255, mask = bad_mask), "mask must be CV_8U depth")
+})
