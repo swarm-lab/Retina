@@ -617,3 +617,15 @@ double rt_autothreshold_value(external_pointer<RtImage> img,
   if (bins == 1) return min_val;
   return min_val + bin_idx * (max_val - min_val) / (bins - 1);
 }
+
+// ── rt_image_threshold ────────────────────────────────────────────────────────
+
+[[cpp11::register]]
+external_pointer<RtImage> rt_image_threshold(
+    external_pointer<RtImage> img,
+    double thresh, double maxval, int type_int) {
+  cv::Mat src = get_cpu_mat(img);
+  cv::Mat dst;
+  cv::threshold(src, dst, thresh, maxval, type_int);
+  return {new RtImage(std::move(dst), img->colorspace)};
+}

@@ -300,6 +300,10 @@ rt_autothreshold_value <- function(img, method, bins) {
   .Call(`_Retina_rt_autothreshold_value`, img, method, bins)
 }
 
+rt_image_threshold <- function(img, thresh, maxval, type_int) {
+  .Call(`_Retina_rt_image_threshold`, img, thresh, maxval, type_int)
+}
+
 rt_image_warp_affine <- function(img, m, width, height, interpolation, border_type) {
   .Call(`_Retina_rt_image_warp_affine`, img, m, width, height, interpolation, border_type)
 }

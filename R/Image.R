@@ -1735,6 +1735,85 @@ Image <- R6::R6Class("Image",
       invisible(self)
     },
 
+    #' @description Apply a threshold to the image.
+    #' @param thresh Single finite numeric or one of 17 lowercase auto-threshold
+    #'   method strings. When numeric, passed directly to OpenCV. When a string,
+    #'   the threshold is auto-computed from the image histogram.
+    #' @param maxval Single finite numeric. Value assigned to above-threshold
+    #'   pixels in `"binary"` and `"binary_inv"` modes. Default `255`.
+    #' @param type One of `"binary"`, `"binary_inv"`, `"trunc"`, `"tozero"`,
+    #'   `"tozero_inv"`. Default `"binary"`.
+    #' @param bins Single integer >= 2. Histogram bins for auto-threshold on
+    #'   non-`CV_8U` images. Ignored when `thresh` is numeric or for `CV_8U`.
+    #'   Default `256`.
+    #' @return A new `Image`.
+    threshold = function(thresh, maxval = 255, type = "binary", bins = 256L) {
+      if (is.character(thresh)) {
+        if (length(thresh) != 1L || !(thresh %in% .autothresh_methods))
+          stop(sprintf("thresh must be a single finite numeric or one of: %s",
+                       paste(.autothresh_methods, collapse = ", ")), call. = FALSE)
+        if (self$nchan != 1L)
+          stop("auto-threshold methods require a single-channel image", call. = FALSE)
+        bins_i <- as.integer(bins)
+        if (!is.numeric(bins) || length(bins) != 1L || is.na(bins_i) || bins_i < 2L)
+          stop("bins must be a single integer >= 2", call. = FALSE)
+        thresh_val <- rt_autothreshold_value(private$.ptr, thresh, bins_i)
+      } else {
+        if (!is.numeric(thresh) || length(thresh) != 1L || !is.finite(thresh))
+          stop("thresh must be a single finite numeric or a method string", call. = FALSE)
+        thresh_val <- as.double(thresh)
+      }
+      if (!is.numeric(maxval) || length(maxval) != 1L || !is.finite(maxval))
+        stop("maxval must be a single finite numeric", call. = FALSE)
+      type_int <- switch(type,
+        binary     = 0L,
+        binary_inv = 1L,
+        trunc      = 2L,
+        tozero     = 3L,
+        tozero_inv = 4L,
+        stop("type must be one of: binary, binary_inv, trunc, tozero, tozero_inv",
+             call. = FALSE)
+      )
+      Image$new(rt_image_threshold(private$.ptr, thresh_val, as.double(maxval), type_int))
+    },
+
+    #' @description Apply a threshold to the image, in place.
+    #' @param thresh See `$threshold()`.
+    #' @param maxval See `$threshold()`.
+    #' @param type See `$threshold()`.
+    #' @param bins See `$threshold()`.
+    #' @return `self` invisibly.
+    threshold_ = function(thresh, maxval = 255, type = "binary", bins = 256L) {
+      if (is.character(thresh)) {
+        if (length(thresh) != 1L || !(thresh %in% .autothresh_methods))
+          stop(sprintf("thresh must be a single finite numeric or one of: %s",
+                       paste(.autothresh_methods, collapse = ", ")), call. = FALSE)
+        if (self$nchan != 1L)
+          stop("auto-threshold methods require a single-channel image", call. = FALSE)
+        bins_i <- as.integer(bins)
+        if (!is.numeric(bins) || length(bins) != 1L || is.na(bins_i) || bins_i < 2L)
+          stop("bins must be a single integer >= 2", call. = FALSE)
+        thresh_val <- rt_autothreshold_value(private$.ptr, thresh, bins_i)
+      } else {
+        if (!is.numeric(thresh) || length(thresh) != 1L || !is.finite(thresh))
+          stop("thresh must be a single finite numeric or a method string", call. = FALSE)
+        thresh_val <- as.double(thresh)
+      }
+      if (!is.numeric(maxval) || length(maxval) != 1L || !is.finite(maxval))
+        stop("maxval must be a single finite numeric", call. = FALSE)
+      type_int <- switch(type,
+        binary     = 0L,
+        binary_inv = 1L,
+        trunc      = 2L,
+        tozero     = 3L,
+        tozero_inv = 4L,
+        stop("type must be one of: binary, binary_inv, trunc, tozero, tozero_inv",
+             call. = FALSE)
+      )
+      private$.ptr <- rt_image_threshold(private$.ptr, thresh_val, as.double(maxval), type_int)
+      invisible(self)
+    },
+
     #' @description Print a summary of the image.
     #' @param ... Ignored.
     #' @return \code{self} invisibly.

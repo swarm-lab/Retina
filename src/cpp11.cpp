@@ -536,6 +536,13 @@ extern "C" SEXP _Retina_rt_autothreshold_value(SEXP img, SEXP method, SEXP bins)
     return cpp11::as_sexp(rt_autothreshold_value(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<std::string>>(method), cpp11::as_cpp<cpp11::decay_t<int>>(bins)));
   END_CPP11
 }
+// threshold.cpp
+external_pointer<RtImage> rt_image_threshold(external_pointer<RtImage> img, double thresh, double maxval, int type_int);
+extern "C" SEXP _Retina_rt_image_threshold(SEXP img, SEXP thresh, SEXP maxval, SEXP type_int) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_image_threshold(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<double>>(thresh), cpp11::as_cpp<cpp11::decay_t<double>>(maxval), cpp11::as_cpp<cpp11::decay_t<int>>(type_int)));
+  END_CPP11
+}
 // transforms.cpp
 external_pointer<RtImage> rt_image_warp_affine(external_pointer<RtImage> img, doubles m, int width, int height, std::string interpolation, std::string border_type);
 extern "C" SEXP _Retina_rt_image_warp_affine(SEXP img, SEXP m, SEXP width, SEXP height, SEXP interpolation, SEXP border_type) {
@@ -641,6 +648,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_Retina_rt_image_subtract_image",     (DL_FUNC) &_Retina_rt_image_subtract_image,     2},
     {"_Retina_rt_image_subtract_scalar",    (DL_FUNC) &_Retina_rt_image_subtract_scalar,    2},
     {"_Retina_rt_image_sum",                (DL_FUNC) &_Retina_rt_image_sum,                1},
+    {"_Retina_rt_image_threshold",          (DL_FUNC) &_Retina_rt_image_threshold,          4},
     {"_Retina_rt_image_tile",               (DL_FUNC) &_Retina_rt_image_tile,               3},
     {"_Retina_rt_image_to_cpu",             (DL_FUNC) &_Retina_rt_image_to_cpu,             1},
     {"_Retina_rt_image_to_double_array",    (DL_FUNC) &_Retina_rt_image_to_double_array,    1},

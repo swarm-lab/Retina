@@ -55,3 +55,90 @@ test_that("autothreshold_value() errors when bins < 2", {
   img <- bimodal_gray_8u()
   expect_error(autothreshold_value(img, "otsu", bins = 1L), "bins")
 })
+
+# ── $threshold() ──────────────────────────────────────────────────────────────
+
+test_that("$threshold(127, type='binary') separates two levels", {
+  img <- bimodal_gray_8u()
+  result <- img$threshold(127)
+  arr <- result$to_array()
+  expect_equal(sort(unique(as.integer(arr))), c(0L, 255L))
+  # pixels that were 50 -> 0, pixels that were 200 -> 255
+  expect_equal(sum(arr == 0),   50L)
+  expect_equal(sum(arr == 255), 50L)
+})
+
+test_that("$threshold(127, type='binary_inv') inverts binary result", {
+  img <- bimodal_gray_8u()
+  result <- img$threshold(127, type = "binary_inv")
+  arr <- result$to_array()
+  expect_equal(sum(arr == 255), 50L) # pixels that were 50 -> 255
+  expect_equal(sum(arr == 0),   50L) # pixels that were 200 -> 0
+})
+
+test_that("$threshold(127, type='trunc') clips above-threshold pixels", {
+  img <- bimodal_gray_8u()
+  result <- img$threshold(127, type = "trunc")
+  arr <- result$to_array()
+  expect_equal(sort(unique(as.integer(arr))), c(50L, 127L))
+})
+
+test_that("$threshold(127, type='tozero') zeros below-threshold pixels", {
+  img <- bimodal_gray_8u()
+  result <- img$threshold(127, type = "tozero")
+  arr <- result$to_array()
+  expect_equal(sort(unique(as.integer(arr))), c(0L, 200L))
+})
+
+test_that("$threshold(127, type='tozero_inv') zeros above-threshold pixels", {
+  img <- bimodal_gray_8u()
+  result <- img$threshold(127, type = "tozero_inv")
+  arr <- result$to_array()
+  expect_equal(sort(unique(as.integer(arr))), c(0L, 50L))
+})
+
+test_that("$threshold('otsu') on bimodal CV_8U gives binary output", {
+  img <- bimodal_gray_8u()
+  result <- img$threshold("otsu")
+  arr <- result$to_array()
+  expect_equal(sort(unique(as.integer(arr))), c(0L, 255L))
+})
+
+test_that("$threshold('otsu') on bimodal CV_32F gives binary-like output", {
+  img <- bimodal_gray_32f()
+  result <- img$threshold("otsu", maxval = 1.0)
+  arr <- result$to_array()
+  vals <- sort(unique(round(as.numeric(arr), 6)))
+  expect_length(vals, 2L)
+  expect_equal(vals[1], 0)
+  expect_equal(vals[2], 1)
+})
+
+test_that("$threshold() returns a new Image (non-mutating)", {
+  img <- bimodal_gray_8u()
+  result <- img$threshold(127)
+  expect_false(identical(img$to_array(), result$to_array()))
+})
+
+test_that("$threshold_() modifies in place and returns self", {
+  img <- bimodal_gray_8u()
+  result <- img$threshold_(127)
+  expect_identical(result, img)
+  expect_equal(sort(unique(as.integer(img$to_array()))), c(0L, 255L))
+})
+
+test_that("$threshold() errors on auto method with multi-channel image", {
+  bgr <- make_test_image()
+  expect_error(bgr$threshold("otsu"), "single-channel")
+})
+
+test_that("$threshold() errors on unknown type string", {
+  img <- bimodal_gray_8u()
+  expect_error(img$threshold(127, type = "bogus"))
+})
+
+test_that("$threshold() errors on non-finite thresh", {
+  img <- bimodal_gray_8u()
+  expect_error(img$threshold(Inf))
+  expect_error(img$threshold(NA_real_))
+})
