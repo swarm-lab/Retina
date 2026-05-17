@@ -1154,9 +1154,8 @@ Image <- R6::R6Class("Image",
     #'   \code{"cubic"}, \code{"area"}, \code{"lanczos4"}. Default
     #'   \code{"linear"}.
     #' @param border_type Character. Pixel extrapolation method. One of
-    #'   \code{"default"}, \code{"reflect"}, \code{"reflect_101"},
-    #'   \code{"replicate"}, \code{"constant"}, \code{"wrap"}.
-    #'   Default \code{"default"}.
+    #'   \code{"reflect_101"}, \code{"reflect"}, \code{"replicate"},
+    #'   \code{"constant"}, \code{"wrap"}. Default \code{"reflect_101"}.
     #' @return A new \code{Image}.
     #' @examples
     #' \donttest{
@@ -1165,10 +1164,9 @@ Image <- R6::R6Class("Image",
     #' img$rotate(45)$plot()
     #' }
     rotate = function(angle, cx = NULL, cy = NULL, scale = 1,
-                      interpolation = "linear", border_type = "default") {
+                      interpolation = "linear", border_type = "reflect_101") {
       .valid_interp <- c("nearest", "linear", "cubic", "area", "lanczos4")
-      .valid_border <- c("default", "reflect", "reflect_101",
-                         "replicate", "constant", "wrap")
+      .valid_border <- c("reflect", "reflect_101", "replicate", "constant", "wrap")
       if (!is.numeric(angle) || length(angle) != 1L)
         stop("angle must be a single numeric value", call. = FALSE)
       if (!is.null(cx) && (!is.numeric(cx) || length(cx) != 1L ||
@@ -1187,7 +1185,7 @@ Image <- R6::R6Class("Image",
              call. = FALSE)
       if (!is.character(border_type) || length(border_type) != 1L ||
           !border_type %in% .valid_border)
-        stop("border_type must be one of: default, reflect, reflect_101, replicate, constant, wrap",
+        stop("border_type must be one of: reflect, reflect_101, replicate, constant, wrap",
              call. = FALSE)
       .cx <- if (is.null(cx)) self$ncol / 2 else as.double(cx)
       .cy <- if (is.null(cy)) self$nrow / 2 else as.double(cy)
@@ -1208,9 +1206,8 @@ Image <- R6::R6Class("Image",
     #'   \code{"cubic"}, \code{"area"}, \code{"lanczos4"}. Default
     #'   \code{"linear"}.
     #' @param border_type Character. Pixel extrapolation method. One of
-    #'   \code{"default"}, \code{"reflect"}, \code{"reflect_101"},
-    #'   \code{"replicate"}, \code{"constant"}, \code{"wrap"}.
-    #'   Default \code{"default"}.
+    #'   \code{"reflect_101"}, \code{"reflect"}, \code{"replicate"},
+    #'   \code{"constant"}, \code{"wrap"}. Default \code{"reflect_101"}.
     #' @return \code{self} invisibly.
     #' @examples
     #' \donttest{
@@ -1220,10 +1217,9 @@ Image <- R6::R6Class("Image",
     #' img$plot()
     #' }
     rotate_ = function(angle, cx = NULL, cy = NULL, scale = 1,
-                       interpolation = "linear", border_type = "default") {
+                       interpolation = "linear", border_type = "reflect_101") {
       .valid_interp <- c("nearest", "linear", "cubic", "area", "lanczos4")
-      .valid_border <- c("default", "reflect", "reflect_101",
-                         "replicate", "constant", "wrap")
+      .valid_border <- c("reflect", "reflect_101", "replicate", "constant", "wrap")
       if (!is.numeric(angle) || length(angle) != 1L)
         stop("angle must be a single numeric value", call. = FALSE)
       if (!is.null(cx) && (!is.numeric(cx) || length(cx) != 1L ||
@@ -1242,7 +1238,7 @@ Image <- R6::R6Class("Image",
              call. = FALSE)
       if (!is.character(border_type) || length(border_type) != 1L ||
           !border_type %in% .valid_border)
-        stop("border_type must be one of: default, reflect, reflect_101, replicate, constant, wrap",
+        stop("border_type must be one of: reflect, reflect_101, replicate, constant, wrap",
              call. = FALSE)
       .cx <- if (is.null(cx)) self$ncol / 2 else as.double(cx)
       .cy <- if (is.null(cy)) self$nrow / 2 else as.double(cy)

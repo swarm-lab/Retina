@@ -126,3 +126,12 @@ test_that("resize_() modifies image in place", {
   expect_equal(img$ncol, expected$ncol)
   expect_equal(img$nrow, expected$nrow)
 })
+
+test_that("rotate() rejects 'default' as border_type", {
+  expect_error(img_bgr()$rotate(45, border_type = "default"),
+               "border_type must be one of")
+})
+
+test_that("rotate() accepts 'reflect_101' as border_type", {
+  expect_no_error(img_bgr()$rotate(45, border_type = "reflect_101"))
+})
