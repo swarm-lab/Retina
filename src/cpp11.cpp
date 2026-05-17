@@ -543,6 +543,13 @@ extern "C" SEXP _Retina_rt_image_threshold(SEXP img, SEXP thresh, SEXP maxval, S
     return cpp11::as_sexp(rt_image_threshold(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<double>>(thresh), cpp11::as_cpp<cpp11::decay_t<double>>(maxval), cpp11::as_cpp<cpp11::decay_t<int>>(type_int)));
   END_CPP11
 }
+// threshold.cpp
+external_pointer<RtImage> rt_image_adaptive_threshold(external_pointer<RtImage> img, double maxval, int method_int, int type_int, int block_size, double offset);
+extern "C" SEXP _Retina_rt_image_adaptive_threshold(SEXP img, SEXP maxval, SEXP method_int, SEXP type_int, SEXP block_size, SEXP offset) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_image_adaptive_threshold(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<double>>(maxval), cpp11::as_cpp<cpp11::decay_t<int>>(method_int), cpp11::as_cpp<cpp11::decay_t<int>>(type_int), cpp11::as_cpp<cpp11::decay_t<int>>(block_size), cpp11::as_cpp<cpp11::decay_t<double>>(offset)));
+  END_CPP11
+}
 // transforms.cpp
 external_pointer<RtImage> rt_image_warp_affine(external_pointer<RtImage> img, doubles m, int width, int height, std::string interpolation, std::string border_type);
 extern "C" SEXP _Retina_rt_image_warp_affine(SEXP img, SEXP m, SEXP width, SEXP height, SEXP interpolation, SEXP border_type) {
@@ -591,6 +598,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_Retina_rt_has_module",               (DL_FUNC) &_Retina_rt_has_module,               1},
     {"_Retina_rt_image_absdiff_image",      (DL_FUNC) &_Retina_rt_image_absdiff_image,      2},
     {"_Retina_rt_image_absdiff_scalar",     (DL_FUNC) &_Retina_rt_image_absdiff_scalar,     2},
+    {"_Retina_rt_image_adaptive_threshold", (DL_FUNC) &_Retina_rt_image_adaptive_threshold, 6},
     {"_Retina_rt_image_add_image",          (DL_FUNC) &_Retina_rt_image_add_image,          2},
     {"_Retina_rt_image_add_scalar",         (DL_FUNC) &_Retina_rt_image_add_scalar,         2},
     {"_Retina_rt_image_add_weighted",       (DL_FUNC) &_Retina_rt_image_add_weighted,       5},

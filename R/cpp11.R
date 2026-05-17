@@ -304,6 +304,10 @@ rt_image_threshold <- function(img, thresh, maxval, type_int) {
   .Call(`_Retina_rt_image_threshold`, img, thresh, maxval, type_int)
 }
 
+rt_image_adaptive_threshold <- function(img, maxval, method_int, type_int, block_size, offset) {
+  .Call(`_Retina_rt_image_adaptive_threshold`, img, maxval, method_int, type_int, block_size, offset)
+}
+
 rt_image_warp_affine <- function(img, m, width, height, interpolation, border_type) {
   .Call(`_Retina_rt_image_warp_affine`, img, m, width, height, interpolation, border_type)
 }

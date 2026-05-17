@@ -629,3 +629,17 @@ external_pointer<RtImage> rt_image_threshold(
   cv::threshold(src, dst, thresh, maxval, type_int);
   return {new RtImage(std::move(dst), img->colorspace)};
 }
+
+// ── rt_image_adaptive_threshold ───────────────────────────────────────────────
+
+[[cpp11::register]]
+external_pointer<RtImage> rt_image_adaptive_threshold(
+    external_pointer<RtImage> img,
+    double maxval, int method_int, int type_int,
+    int block_size, double offset) {
+  cv::Mat dst;
+  cv::adaptiveThreshold(get_cpu_mat(img), dst,
+                        maxval, method_int, type_int,
+                        block_size, offset);
+  return {new RtImage(std::move(dst), "GRAY")};
+}

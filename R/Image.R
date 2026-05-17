@@ -1814,6 +1814,83 @@ Image <- R6::R6Class("Image",
       invisible(self)
     },
 
+    #' @description Apply an adaptive threshold to the image.
+    #' @param maxval Single finite numeric. Value for above-threshold pixels.
+    #'   Default `255`.
+    #' @param method `"mean"` (local neighbourhood mean) or `"gaussian"`
+    #'   (Gaussian-weighted neighbourhood). Default `"mean"`.
+    #' @param type `"binary"` or `"binary_inv"`. Default `"binary"`.
+    #' @param block_size Single odd integer >= 3. Neighbourhood size.
+    #'   Default `11`.
+    #' @param offset Single finite numeric. Constant subtracted from the local
+    #'   mean (OpenCV's `C` parameter). May be negative. Default `2`.
+    #' @return A new single-channel `CV_8U` `Image` with colorspace `"GRAY"`.
+    adaptive_threshold = function(maxval = 255, method = "mean",
+                                   type = "binary", block_size = 11L,
+                                   offset = 2) {
+      if (self$nchan != 1L || self$depth_name != "CV_8U")
+        stop("adaptive_threshold() requires a single-channel CV_8U image",
+             call. = FALSE)
+      if (!is.numeric(maxval) || length(maxval) != 1L || !is.finite(maxval))
+        stop("maxval must be a single finite numeric", call. = FALSE)
+      method_int <- switch(method,
+        mean     = 0L,
+        gaussian = 1L,
+        stop("method must be one of: mean, gaussian", call. = FALSE)
+      )
+      type_int <- switch(type,
+        binary     = 0L,
+        binary_inv = 1L,
+        stop("type must be one of: binary, binary_inv", call. = FALSE)
+      )
+      bs <- as.integer(block_size)
+      if (!is.numeric(block_size) || length(block_size) != 1L ||
+          is.na(bs) || bs < 3L || bs %% 2L == 0L)
+        stop("block_size must be a single odd integer >= 3", call. = FALSE)
+      if (!is.numeric(offset) || length(offset) != 1L || !is.finite(offset))
+        stop("offset must be a single finite numeric", call. = FALSE)
+      Image$new(rt_image_adaptive_threshold(
+        private$.ptr, as.double(maxval), method_int, type_int,
+        bs, as.double(offset)))
+    },
+
+    #' @description Apply an adaptive threshold to the image, in place.
+    #' @param maxval See `$adaptive_threshold()`.
+    #' @param method See `$adaptive_threshold()`.
+    #' @param type See `$adaptive_threshold()`.
+    #' @param block_size See `$adaptive_threshold()`.
+    #' @param offset See `$adaptive_threshold()`.
+    #' @return `self` invisibly.
+    adaptive_threshold_ = function(maxval = 255, method = "mean",
+                                    type = "binary", block_size = 11L,
+                                    offset = 2) {
+      if (self$nchan != 1L || self$depth_name != "CV_8U")
+        stop("adaptive_threshold() requires a single-channel CV_8U image",
+             call. = FALSE)
+      if (!is.numeric(maxval) || length(maxval) != 1L || !is.finite(maxval))
+        stop("maxval must be a single finite numeric", call. = FALSE)
+      method_int <- switch(method,
+        mean     = 0L,
+        gaussian = 1L,
+        stop("method must be one of: mean, gaussian", call. = FALSE)
+      )
+      type_int <- switch(type,
+        binary     = 0L,
+        binary_inv = 1L,
+        stop("type must be one of: binary, binary_inv", call. = FALSE)
+      )
+      bs <- as.integer(block_size)
+      if (!is.numeric(block_size) || length(block_size) != 1L ||
+          is.na(bs) || bs < 3L || bs %% 2L == 0L)
+        stop("block_size must be a single odd integer >= 3", call. = FALSE)
+      if (!is.numeric(offset) || length(offset) != 1L || !is.finite(offset))
+        stop("offset must be a single finite numeric", call. = FALSE)
+      private$.ptr <- rt_image_adaptive_threshold(
+        private$.ptr, as.double(maxval), method_int, type_int,
+        bs, as.double(offset))
+      invisible(self)
+    },
+
     #' @description Print a summary of the image.
     #' @param ... Ignored.
     #' @return \code{self} invisibly.

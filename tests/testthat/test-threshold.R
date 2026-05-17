@@ -150,3 +150,68 @@ test_that("$threshold() errors on non-finite thresh", {
   expect_error(img$threshold(Inf))
   expect_error(img$threshold(NA_real_))
 })
+
+# ── $adaptive_threshold() ────────────────────────────────────────────────────
+
+test_that("$adaptive_threshold() default args return single-channel CV_8U", {
+  img <- bimodal_gray_8u()
+  result <- img$adaptive_threshold()
+  expect_equal(result$nrow,       img$nrow)
+  expect_equal(result$ncol,       img$ncol)
+  expect_equal(result$nchan,      1L)
+  expect_equal(result$depth_name, "CV_8U")
+  expect_equal(result$colorspace, "GRAY")
+})
+
+test_that("$adaptive_threshold() output pixels are only 0 or 255", {
+  img <- bimodal_gray_8u()
+  arr <- img$adaptive_threshold()$to_array()
+  expect_true(all(arr == 0L | arr == 255L))
+})
+
+test_that("$adaptive_threshold(method='gaussian') produces valid output", {
+  img <- bimodal_gray_8u()
+  result <- img$adaptive_threshold(method = "gaussian")
+  arr <- result$to_array()
+  expect_true(all(arr == 0L | arr == 255L))
+})
+
+test_that("$adaptive_threshold(type='binary_inv') flips relative to 'binary'", {
+  img <- bimodal_gray_8u()
+  a_bin     <- img$adaptive_threshold(type = "binary")$to_array()
+  a_bin_inv <- img$adaptive_threshold(type = "binary_inv")$to_array()
+  expect_true(all((a_bin == 0L & a_bin_inv == 255L) | (a_bin == 255L & a_bin_inv == 0L)))
+})
+
+test_that("$adaptive_threshold_() modifies in place and returns self", {
+  img <- bimodal_gray_8u()
+  result <- img$adaptive_threshold_()
+  expect_identical(result, img)
+  expect_equal(img$nchan,      1L)
+  expect_equal(img$depth_name, "CV_8U")
+})
+
+test_that("$adaptive_threshold() errors on multi-channel image", {
+  bgr <- make_test_image()
+  expect_error(bgr$adaptive_threshold(), "single-channel CV_8U")
+})
+
+test_that("$adaptive_threshold() errors on non-CV_8U image", {
+  img <- bimodal_gray_32f()
+  expect_error(img$adaptive_threshold(), "single-channel CV_8U")
+})
+
+test_that("$adaptive_threshold() errors when block_size is even", {
+  img <- bimodal_gray_8u()
+  expect_error(img$adaptive_threshold(block_size = 10L), "odd")
+})
+
+test_that("$adaptive_threshold() errors when block_size < 3", {
+  img <- bimodal_gray_8u()
+  expect_error(img$adaptive_threshold(block_size = 1L), "block_size")
+})
+
+test_that("$adaptive_threshold() errors on non-finite offset", {
+  img <- bimodal_gray_8u()
+  expect_error(img$adaptive_threshold(offset = Inf), "finite")
+})
