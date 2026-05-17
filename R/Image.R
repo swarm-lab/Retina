@@ -112,6 +112,12 @@ Image <- R6::R6Class("Image",
       }
     },
 
+    #' @description Convert the image to a \code{nativeRaster} object.
+    #' @return A \code{nativeRaster} matrix suitable for use with \code{grid} or other graphics systems.
+    to_native_raster = function() {
+      rt_image_to_native_raster(private$.ptr)
+    },
+
     #' @description Display the image using R's graphics device.
     #' @param newpage Logical. If \code{TRUE} (default), clears the graphics
     #'   device before drawing. Set to \code{FALSE} when composing multiple
@@ -119,7 +125,7 @@ Image <- R6::R6Class("Image",
     #' @param ... Additional arguments passed to \code{grid::grid.raster()}.
     #' @return \code{self} invisibly.
     plot = function(newpage = TRUE, ...) {
-      nr <- rt_image_to_native_raster(private$.ptr)
+      nr <- self$to_native_raster()
       if (newpage) grid::grid.newpage()
       grid::grid.raster(nr, ...)
       invisible(self)
