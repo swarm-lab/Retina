@@ -2021,7 +2021,7 @@ Image <- R6::R6Class("Image",
       Image$new(rt_draw_line(private$.ptr,
                              as.integer(x1), as.integer(y1),
                              as.integer(x2), as.integer(y2),
-                             as.double(.a$color), .a$thickness, .a$line_type))
+                             .a$color, .a$thickness, .a$line_type))
     },
 
     #' @description Draw a line segment on the image in place.
@@ -2040,7 +2040,7 @@ Image <- R6::R6Class("Image",
       private$.ptr <- rt_draw_line(private$.ptr,
                                    as.integer(x1), as.integer(y1),
                                    as.integer(x2), as.integer(y2),
-                                   as.double(.a$color), .a$thickness, .a$line_type)
+                                   .a$color, .a$thickness, .a$line_type)
       invisible(self)
     },
 
@@ -2069,7 +2069,7 @@ Image <- R6::R6Class("Image",
       Image$new(rt_draw_arrow(private$.ptr,
                               as.integer(x1), as.integer(y1),
                               as.integer(x2), as.integer(y2),
-                              as.double(.a$color), .a$thickness, .a$line_type,
+                              .a$color, .a$thickness, .a$line_type,
                               as.double(tip_length)))
     },
 
@@ -2091,7 +2091,7 @@ Image <- R6::R6Class("Image",
       private$.ptr <- rt_draw_arrow(private$.ptr,
                                     as.integer(x1), as.integer(y1),
                                     as.integer(x2), as.integer(y2),
-                                    as.double(.a$color), .a$thickness, .a$line_type,
+                                    .a$color, .a$thickness, .a$line_type,
                                     as.double(tip_length))
       invisible(self)
     },
