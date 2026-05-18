@@ -140,6 +140,14 @@ rt_draw_circle <- function(img, x, y, radius, color, thickness, line_type) {
   .Call(`_Retina_rt_draw_circle`, img, x, y, radius, color, thickness, line_type)
 }
 
+rt_draw_ellipse <- function(img, x, y, rx, ry, angle, color, thickness, line_type) {
+  .Call(`_Retina_rt_draw_ellipse`, img, x, y, rx, ry, angle, color, thickness, line_type)
+}
+
+rt_draw_arc <- function(img, x, y, rx, ry, angle, start_angle, end_angle, color, thickness, line_type) {
+  .Call(`_Retina_rt_draw_arc`, img, x, y, rx, ry, angle, start_angle, end_angle, color, thickness, line_type)
+}
+
 rt_image_blur <- function(img, ksize_w, ksize_h) {
   .Call(`_Retina_rt_image_blur`, img, ksize_w, ksize_h)
 }

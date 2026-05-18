@@ -94,3 +94,32 @@ external_pointer<RtImage> rt_draw_circle(
              make_scalar(color), thickness, cv_line_type(line_type));
   return {new RtImage(std::move(dst), img->colorspace)};
 }
+
+// ── ellipse / arc ─────────────────────────────────────────────────────────────
+
+[[cpp11::register]]
+external_pointer<RtImage> rt_draw_ellipse(
+    external_pointer<RtImage> img,
+    int x, int y, int rx, int ry, double angle,
+    doubles color, int thickness, std::string line_type) {
+  cv::Mat dst = get_cpu_mat(img).clone();
+  cv::ellipse(dst,
+              cv::Point(x - 1, y - 1), cv::Size(rx, ry),
+              angle, 0.0, 360.0,
+              make_scalar(color), thickness, cv_line_type(line_type));
+  return {new RtImage(std::move(dst), img->colorspace)};
+}
+
+[[cpp11::register]]
+external_pointer<RtImage> rt_draw_arc(
+    external_pointer<RtImage> img,
+    int x, int y, int rx, int ry,
+    double angle, double start_angle, double end_angle,
+    doubles color, int thickness, std::string line_type) {
+  cv::Mat dst = get_cpu_mat(img).clone();
+  cv::ellipse(dst,
+              cv::Point(x - 1, y - 1), cv::Size(rx, ry),
+              angle, start_angle, end_angle,
+              make_scalar(color), thickness, cv_line_type(line_type));
+  return {new RtImage(std::move(dst), img->colorspace)};
+}

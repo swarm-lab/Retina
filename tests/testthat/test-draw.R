@@ -177,3 +177,64 @@ test_that("draw_circle() errors on negative radius", {
   expect_error(img_black()$draw_circle(50, 50, -1L, color = "red"),
                "radius must be a single non-negative integer")
 })
+
+# ── draw_ellipse ──────────────────────────────────────────────────────────────
+
+test_that("draw_ellipse() returns Image with same dimensions and colorspace", {
+  img    <- img_black()
+  result <- img$draw_ellipse(50, 50, 30L, 20L, color = "white")
+  expect_s3_class(result, "Image")
+  expect_equal(result$nrow,       img$nrow)
+  expect_equal(result$ncol,       img$ncol)
+  expect_equal(result$colorspace, img$colorspace)
+})
+
+test_that("draw_ellipse() filled=TRUE sets center pixel to fill color", {
+  img    <- img_black()
+  result <- img$draw_ellipse(50, 50, 30L, 20L,
+                             color = c(0, 255, 0), filled = TRUE)
+  arr    <- result$to_array()
+  expect_equal(arr[50, 50, 2], 255)  # green channel
+})
+
+test_that("draw_ellipse_() modifies in place and returns self", {
+  img      <- img_black()
+  expected <- img$draw_ellipse(50, 50, 30L, 20L, color = "white")
+  result   <- img$draw_ellipse_(50, 50, 30L, 20L, color = "white")
+  expect_identical(result, img)
+  expect_equal(img$to_array(), expected$to_array())
+})
+
+test_that("draw_ellipse() errors on rx < 1", {
+  expect_error(img_black()$draw_ellipse(50, 50, 0L, 20L, color = "red"),
+               "rx and ry must be single positive integers")
+})
+
+# ── draw_arc ──────────────────────────────────────────────────────────────────
+
+test_that("draw_arc() returns Image with same dimensions and colorspace", {
+  img    <- img_black()
+  result <- img$draw_arc(50, 50, 30L, 20L, start_angle = 0, end_angle = 180,
+                         color = "white")
+  expect_s3_class(result, "Image")
+  expect_equal(result$nrow,       img$nrow)
+  expect_equal(result$ncol,       img$ncol)
+  expect_equal(result$colorspace, img$colorspace)
+})
+
+test_that("draw_arc() changes at least one pixel", {
+  img    <- img_black()
+  result <- img$draw_arc(50, 50, 30L, 20L, start_angle = 0, end_angle = 180,
+                         color = "white")
+  expect_false(all(result$to_array() == img$to_array()))
+})
+
+test_that("draw_arc_() modifies in place and returns self", {
+  img      <- img_black()
+  expected <- img$draw_arc(50, 50, 30L, 20L, start_angle = 0, end_angle = 90,
+                           color = "white")
+  result   <- img$draw_arc_(50, 50, 30L, 20L, start_angle = 0, end_angle = 90,
+                            color = "white")
+  expect_identical(result, img)
+  expect_equal(img$to_array(), expected$to_array())
+})

@@ -2212,6 +2212,149 @@ Image <- R6::R6Class("Image",
       invisible(self)
     },
 
+    #' @description Draw an ellipse outline (or filled ellipse) on the image.
+    #'   Returns a new Image.
+    #' @param x Integer. X coordinate of the ellipse center.
+    #' @param y Integer. Y coordinate of the ellipse center.
+    #' @param rx Positive integer. Horizontal semi-axis length in pixels
+    #'   (before rotation).
+    #' @param ry Positive integer. Vertical semi-axis length in pixels
+    #'   (before rotation).
+    #' @param angle Numeric. Rotation of the ellipse in degrees (clockwise).
+    #'   Default \code{0}.
+    #' @param color An R color name, hex string, or numeric BGR(A) vector.
+    #' @param thickness Positive integer. Outline width. Ignored when
+    #'   \code{filled = TRUE}. Default \code{1L}.
+    #' @param line_type Character. One of \code{"line_4"}, \code{"line_8"}
+    #'   (default), \code{"aa"}.
+    #' @param filled Logical. If \code{TRUE}, draw a filled ellipse. Default
+    #'   \code{FALSE}.
+    #' @return A new \code{Image}.
+    #' @examples
+    #' \donttest{
+    #' img_path <- system.file("img", "flower.jpg", package = "Retina")
+    #' img <- Image$new(img_path)
+    #' img$draw_ellipse(100, 100, 80L, 40L, angle = 30, color = "red")$plot()
+    #' }
+    draw_ellipse = function(x, y, rx, ry, angle = 0, color, thickness = 1L,
+                            line_type = "line_8", filled = FALSE) {
+      if (!is.logical(filled) || length(filled) != 1L)
+        stop("filled must be a single logical value", call. = FALSE)
+      if (!is.numeric(rx) || length(rx) != 1L || !is.finite(rx) ||
+          rx != round(rx) || rx < 1L ||
+          !is.numeric(ry) || length(ry) != 1L || !is.finite(ry) ||
+          ry != round(ry) || ry < 1L)
+        stop("rx and ry must be single positive integers", call. = FALSE)
+      .a <- .rt_valid_draw_common(color, thickness, line_type, filled = filled)
+      Image$new(rt_draw_ellipse(private$.ptr,
+                                as.integer(x), as.integer(y),
+                                as.integer(rx), as.integer(ry),
+                                as.double(angle),
+                                .a$color, .a$thickness, .a$line_type))
+    },
+
+    #' @description Draw an ellipse on the image in place.
+    #' @param x Integer. X coordinate of the ellipse center.
+    #' @param y Integer. Y coordinate of the ellipse center.
+    #' @param rx Positive integer. Horizontal semi-axis length in pixels.
+    #' @param ry Positive integer. Vertical semi-axis length in pixels.
+    #' @param angle Numeric. Rotation in degrees. Default \code{0}.
+    #' @param color An R color name, hex string, or numeric BGR(A) vector.
+    #' @param thickness Positive integer. Outline width. Ignored when
+    #'   \code{filled = TRUE}. Default \code{1L}.
+    #' @param line_type Character. One of \code{"line_4"}, \code{"line_8"}
+    #'   (default), \code{"aa"}.
+    #' @param filled Logical. If \code{TRUE}, fill the ellipse. Default
+    #'   \code{FALSE}.
+    #' @return \code{self} invisibly.
+    draw_ellipse_ = function(x, y, rx, ry, angle = 0, color, thickness = 1L,
+                             line_type = "line_8", filled = FALSE) {
+      if (!is.logical(filled) || length(filled) != 1L)
+        stop("filled must be a single logical value", call. = FALSE)
+      if (!is.numeric(rx) || length(rx) != 1L || !is.finite(rx) ||
+          rx != round(rx) || rx < 1L ||
+          !is.numeric(ry) || length(ry) != 1L || !is.finite(ry) ||
+          ry != round(ry) || ry < 1L)
+        stop("rx and ry must be single positive integers", call. = FALSE)
+      .a <- .rt_valid_draw_common(color, thickness, line_type, filled = filled)
+      private$.ptr <- rt_draw_ellipse(private$.ptr,
+                                      as.integer(x), as.integer(y),
+                                      as.integer(rx), as.integer(ry),
+                                      as.double(angle),
+                                      .a$color, .a$thickness, .a$line_type)
+      invisible(self)
+    },
+
+    #' @description Draw a partial ellipse arc on the image. Returns a new
+    #'   Image.
+    #' @param x Integer. X coordinate of the ellipse center.
+    #' @param y Integer. Y coordinate of the ellipse center.
+    #' @param rx Positive integer. Horizontal semi-axis length in pixels.
+    #' @param ry Positive integer. Vertical semi-axis length in pixels.
+    #' @param angle Numeric. Rotation of the ellipse in degrees. Default
+    #'   \code{0}.
+    #' @param start_angle Numeric. Start angle of the arc in degrees.
+    #' @param end_angle Numeric. End angle of the arc in degrees. If
+    #'   \code{start_angle > end_angle}, OpenCV swaps them automatically.
+    #' @param color An R color name, hex string, or numeric BGR(A) vector.
+    #' @param thickness Positive integer. Line width in pixels. Default
+    #'   \code{1L}.
+    #' @param line_type Character. One of \code{"line_4"}, \code{"line_8"}
+    #'   (default), \code{"aa"}.
+    #' @return A new \code{Image}.
+    #' @examples
+    #' \donttest{
+    #' img_path <- system.file("img", "flower.jpg", package = "Retina")
+    #' img <- Image$new(img_path)
+    #' img$draw_arc(100, 100, 80L, 40L, start_angle = 0, end_angle = 180,
+    #'              color = "red")$plot()
+    #' }
+    draw_arc = function(x, y, rx, ry, angle = 0, start_angle, end_angle,
+                        color, thickness = 1L, line_type = "line_8") {
+      if (!is.numeric(rx) || length(rx) != 1L || !is.finite(rx) ||
+          rx != round(rx) || rx < 1L ||
+          !is.numeric(ry) || length(ry) != 1L || !is.finite(ry) ||
+          ry != round(ry) || ry < 1L)
+        stop("rx and ry must be single positive integers", call. = FALSE)
+      .a <- .rt_valid_draw_common(color, thickness, line_type)
+      Image$new(rt_draw_arc(private$.ptr,
+                            as.integer(x), as.integer(y),
+                            as.integer(rx), as.integer(ry),
+                            as.double(angle),
+                            as.double(start_angle), as.double(end_angle),
+                            .a$color, .a$thickness, .a$line_type))
+    },
+
+    #' @description Draw a partial ellipse arc on the image in place.
+    #' @param x Integer. X coordinate of the ellipse center.
+    #' @param y Integer. Y coordinate of the ellipse center.
+    #' @param rx Positive integer. Horizontal semi-axis length in pixels.
+    #' @param ry Positive integer. Vertical semi-axis length in pixels.
+    #' @param angle Numeric. Rotation in degrees. Default \code{0}.
+    #' @param start_angle Numeric. Start angle of the arc in degrees.
+    #' @param end_angle Numeric. End angle of the arc in degrees.
+    #' @param color An R color name, hex string, or numeric BGR(A) vector.
+    #' @param thickness Positive integer. Line width. Default \code{1L}.
+    #' @param line_type Character. One of \code{"line_4"}, \code{"line_8"}
+    #'   (default), \code{"aa"}.
+    #' @return \code{self} invisibly.
+    draw_arc_ = function(x, y, rx, ry, angle = 0, start_angle, end_angle,
+                         color, thickness = 1L, line_type = "line_8") {
+      if (!is.numeric(rx) || length(rx) != 1L || !is.finite(rx) ||
+          rx != round(rx) || rx < 1L ||
+          !is.numeric(ry) || length(ry) != 1L || !is.finite(ry) ||
+          ry != round(ry) || ry < 1L)
+        stop("rx and ry must be single positive integers", call. = FALSE)
+      .a <- .rt_valid_draw_common(color, thickness, line_type)
+      private$.ptr <- rt_draw_arc(private$.ptr,
+                                  as.integer(x), as.integer(y),
+                                  as.integer(rx), as.integer(ry),
+                                  as.double(angle),
+                                  as.double(start_angle), as.double(end_angle),
+                                  .a$color, .a$thickness, .a$line_type)
+      invisible(self)
+    },
+
     #' @description Print a summary of the image.
     #' @param ... Ignored.
     #' @return \code{self} invisibly.
