@@ -160,6 +160,10 @@ rt_draw_text <- function(img, text, x, y, font, font_size, italic, color, thickn
   .Call(`_Retina_rt_draw_text`, img, text, x, y, font, font_size, italic, color, thickness, line_type)
 }
 
+rt_get_text_size <- function(text, font, font_size, italic, thickness) {
+  .Call(`_Retina_rt_get_text_size`, text, font, font_size, italic, thickness)
+}
+
 rt_image_blur <- function(img, ksize_w, ksize_h) {
   .Call(`_Retina_rt_image_blur`, img, ksize_w, ksize_h)
 }

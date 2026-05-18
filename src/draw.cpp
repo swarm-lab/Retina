@@ -173,3 +173,19 @@ external_pointer<RtImage> rt_draw_text(
               false);
   return {new RtImage(std::move(dst), img->colorspace)};
 }
+
+// ── get_text_size ─────────────────────────────────────────────────────────────
+
+[[cpp11::register]]
+list rt_get_text_size(std::string text, std::string font, double font_size,
+                      bool italic, int thickness) {
+  int baseline = 0;
+  cv::Size sz  = cv::getTextSize(text, cv_font_face(font, italic),
+                                 font_size, thickness, &baseline);
+  writable::list result(3);
+  result.names() = {"width", "height", "baseline"};
+  result[0] = writable::integers({sz.width});
+  result[1] = writable::integers({sz.height});
+  result[2] = writable::integers({baseline});
+  return result;
+}

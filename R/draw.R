@@ -57,3 +57,45 @@ col2bgr <- function(color, alpha = FALSE) {
     line_type = line_type
   )
 }
+
+# ── get_text_size ─────────────────────────────────────────────────────────────
+
+#' Measure the bounding box of a text string
+#'
+#' Returns the pixel dimensions of the bounding box that would be drawn by
+#' \code{$draw_text()}, without modifying any image.
+#'
+#' @param text Character. The string to measure.
+#' @param font Character. Font face name. One of \code{"simplex"} (default),
+#'   \code{"plain"}, \code{"duplex"}, \code{"complex"}, \code{"triplex"},
+#'   \code{"complex_small"}, \code{"script_simplex"}, \code{"script_complex"}.
+#' @param font_size Numeric. Scale factor. Use the same value as in
+#'   \code{$draw_text()}. Default \code{1}.
+#' @param italic Logical. Use the italic variant. Default \code{FALSE}.
+#' @param thickness Positive integer. Character stroke width. Must match the
+#'   value used in \code{$draw_text()} to get accurate results. Default
+#'   \code{1L}.
+#' @return A named list: \code{list(width = ..., height = ..., baseline = ...)}.
+#'   All values are non-negative integers. \code{baseline} is the y-offset of
+#'   the baseline below the bottom of the bounding box.
+#' @export
+get_text_size <- function(text, font = "simplex", font_size = 1,
+                          italic = FALSE, thickness = 1L) {
+  .valid_fonts <- c("simplex", "plain", "duplex", "complex", "triplex",
+                    "complex_small", "script_simplex", "script_complex")
+  if (!is.character(text) || length(text) != 1L)
+    stop("text must be a single character string", call. = FALSE)
+  if (!is.character(font) || length(font) != 1L || !font %in% .valid_fonts)
+    stop(paste("font must be one of:", paste(.valid_fonts, collapse = ", ")),
+         call. = FALSE)
+  if (!is.numeric(font_size) || length(font_size) != 1L)
+    stop("font_size must be a single numeric value", call. = FALSE)
+  if (!is.logical(italic) || length(italic) != 1L)
+    stop("italic must be a single logical value", call. = FALSE)
+  if (!is.numeric(thickness) || length(thickness) != 1L ||
+      !is.finite(thickness) || thickness != round(thickness) || thickness < 1L)
+    stop("thickness must be a single positive integer", call. = FALSE)
+  rt_get_text_size(as.character(text), font,
+                   as.double(font_size), isTRUE(italic),
+                   as.integer(thickness))
+}

@@ -346,3 +346,34 @@ test_that("draw_text() errors on invalid line_type", {
                                      line_type = "dashed"),
                "line_type must be one of")
 })
+
+# ── get_text_size ─────────────────────────────────────────────────────────────
+
+test_that("get_text_size() returns a named list with width, height, baseline", {
+  result <- get_text_size("Hello")
+  expect_type(result, "list")
+  expect_named(result, c("width", "height", "baseline"))
+})
+
+test_that("get_text_size() returns non-negative integer values", {
+  result <- get_text_size("Hello")
+  expect_gte(result$width,    0L)
+  expect_gte(result$height,   0L)
+  expect_gte(result$baseline, 0L)
+})
+
+test_that("get_text_size() larger font_size gives larger width", {
+  small <- get_text_size("Hello", font_size = 1)
+  large <- get_text_size("Hello", font_size = 2)
+  expect_gt(large$width, small$width)
+})
+
+test_that("get_text_size() errors on invalid font", {
+  expect_error(get_text_size("x", font = "times"),
+               "font must be one of")
+})
+
+test_that("get_text_size() errors on invalid thickness", {
+  expect_error(get_text_size("x", thickness = 0L),
+               "thickness must be a single positive integer")
+})
