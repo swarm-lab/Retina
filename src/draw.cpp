@@ -156,3 +156,20 @@ external_pointer<RtImage> rt_fill_poly(
   cv::fillPoly(dst, pts_vec, make_scalar(color), cv_line_type(line_type));
   return {new RtImage(std::move(dst), img->colorspace)};
 }
+
+// ── text ──────────────────────────────────────────────────────────────────────
+
+[[cpp11::register]]
+external_pointer<RtImage> rt_draw_text(
+    external_pointer<RtImage> img,
+    std::string text, int x, int y,
+    std::string font, double font_size, bool italic,
+    doubles color, int thickness, std::string line_type) {
+  cv::Mat dst = get_cpu_mat(img).clone();
+  cv::putText(dst, text,
+              cv::Point(x - 1, y - 1),
+              cv_font_face(font, italic), font_size,
+              make_scalar(color), thickness, cv_line_type(line_type),
+              false);
+  return {new RtImage(std::move(dst), img->colorspace)};
+}

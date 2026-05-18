@@ -278,6 +278,13 @@ extern "C" SEXP _Retina_rt_fill_poly(SEXP img, SEXP xs, SEXP ys, SEXP color, SEX
     return cpp11::as_sexp(rt_fill_poly(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<integers>>(xs), cpp11::as_cpp<cpp11::decay_t<integers>>(ys), cpp11::as_cpp<cpp11::decay_t<doubles>>(color), cpp11::as_cpp<cpp11::decay_t<std::string>>(line_type)));
   END_CPP11
 }
+// draw.cpp
+external_pointer<RtImage> rt_draw_text(external_pointer<RtImage> img, std::string text, int x, int y, std::string font, double font_size, bool italic, doubles color, int thickness, std::string line_type);
+extern "C" SEXP _Retina_rt_draw_text(SEXP img, SEXP text, SEXP x, SEXP y, SEXP font, SEXP font_size, SEXP italic, SEXP color, SEXP thickness, SEXP line_type) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_draw_text(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<std::string>>(text), cpp11::as_cpp<cpp11::decay_t<int>>(x), cpp11::as_cpp<cpp11::decay_t<int>>(y), cpp11::as_cpp<cpp11::decay_t<std::string>>(font), cpp11::as_cpp<cpp11::decay_t<double>>(font_size), cpp11::as_cpp<cpp11::decay_t<bool>>(italic), cpp11::as_cpp<cpp11::decay_t<doubles>>(color), cpp11::as_cpp<cpp11::decay_t<int>>(thickness), cpp11::as_cpp<cpp11::decay_t<std::string>>(line_type)));
+  END_CPP11
+}
 // filters.cpp
 external_pointer<RtImage> rt_image_blur(external_pointer<RtImage> img, int ksize_w, int ksize_h);
 extern "C" SEXP _Retina_rt_image_blur(SEXP img, SEXP ksize_w, SEXP ksize_h) {
@@ -663,6 +670,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_Retina_rt_draw_line",                (DL_FUNC) &_Retina_rt_draw_line,                 8},
     {"_Retina_rt_draw_polyline",            (DL_FUNC) &_Retina_rt_draw_polyline,             7},
     {"_Retina_rt_draw_rectangle",           (DL_FUNC) &_Retina_rt_draw_rectangle,            8},
+    {"_Retina_rt_draw_text",                (DL_FUNC) &_Retina_rt_draw_text,                10},
     {"_Retina_rt_fill",                     (DL_FUNC) &_Retina_rt_fill,                      6},
     {"_Retina_rt_fill_poly",                (DL_FUNC) &_Retina_rt_fill_poly,                 5},
     {"_Retina_rt_has_cuda",                 (DL_FUNC) &_Retina_rt_has_cuda,                  0},

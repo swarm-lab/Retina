@@ -2475,6 +2475,91 @@ Image <- R6::R6Class("Image",
       invisible(self)
     },
 
+    #' @description Draw text on the image. Returns a new Image.
+    #' @param text Character. The string to draw.
+    #' @param x Integer. X coordinate of the bottom-left corner of the text
+    #'   bounding box.
+    #' @param y Integer. Y coordinate of the bottom-left corner of the text
+    #'   bounding box.
+    #' @param font Character. One of \code{"simplex"} (default), \code{"plain"},
+    #'   \code{"duplex"}, \code{"complex"}, \code{"triplex"},
+    #'   \code{"complex_small"}, \code{"script_simplex"},
+    #'   \code{"script_complex"}.
+    #' @param font_size Numeric. Scale factor applied to the base font size.
+    #'   Negative values mirror/reverse the text. Default \code{1}.
+    #' @param italic Logical. If \code{TRUE}, use the italic variant of the
+    #'   font. Default \code{FALSE}.
+    #' @param color An R color name, hex string, or numeric BGR(A) vector.
+    #' @param thickness Positive integer. Character stroke width. Default
+    #'   \code{1L}.
+    #' @param line_type Character. One of \code{"line_4"}, \code{"line_8"}
+    #'   (default), \code{"aa"}.
+    #' @return A new \code{Image}.
+    #' @examples
+    #' \donttest{
+    #' img_path <- system.file("img", "flower.jpg", package = "Retina")
+    #' img <- Image$new(img_path)
+    #' img$draw_text("Hello", 10, 50, font = "duplex", font_size = 1.5,
+    #'               color = "white")$plot()
+    #' }
+    draw_text = function(text, x, y, font = "simplex", font_size = 1,
+                         italic = FALSE, color, thickness = 1L,
+                         line_type = "line_8") {
+      .valid_fonts <- c("simplex", "plain", "duplex", "complex", "triplex",
+                        "complex_small", "script_simplex", "script_complex")
+      if (!is.character(text) || length(text) != 1L)
+        stop("text must be a single character string", call. = FALSE)
+      if (!is.character(font) || length(font) != 1L || !font %in% .valid_fonts)
+        stop(paste("font must be one of:", paste(.valid_fonts, collapse = ", ")),
+             call. = FALSE)
+      if (!is.numeric(font_size) || length(font_size) != 1L)
+        stop("font_size must be a single numeric value", call. = FALSE)
+      if (!is.logical(italic) || length(italic) != 1L)
+        stop("italic must be a single logical value", call. = FALSE)
+      .a <- .rt_valid_draw_common(color, thickness, line_type)
+      Image$new(rt_draw_text(private$.ptr,
+                             as.character(text),
+                             as.integer(x), as.integer(y),
+                             font, as.double(font_size), isTRUE(italic),
+                             .a$color, .a$thickness, .a$line_type))
+    },
+
+    #' @description Draw text on the image in place.
+    #' @param text Character. The string to draw.
+    #' @param x Integer. X coordinate of the bottom-left corner of the text.
+    #' @param y Integer. Y coordinate of the bottom-left corner of the text.
+    #' @param font Character. Font face name. Default \code{"simplex"}.
+    #' @param font_size Numeric. Scale factor. Negative mirrors the text.
+    #'   Default \code{1}.
+    #' @param italic Logical. Italic variant. Default \code{FALSE}.
+    #' @param color An R color name, hex string, or numeric BGR(A) vector.
+    #' @param thickness Positive integer. Stroke width. Default \code{1L}.
+    #' @param line_type Character. One of \code{"line_4"}, \code{"line_8"}
+    #'   (default), \code{"aa"}.
+    #' @return \code{self} invisibly.
+    draw_text_ = function(text, x, y, font = "simplex", font_size = 1,
+                          italic = FALSE, color, thickness = 1L,
+                          line_type = "line_8") {
+      .valid_fonts <- c("simplex", "plain", "duplex", "complex", "triplex",
+                        "complex_small", "script_simplex", "script_complex")
+      if (!is.character(text) || length(text) != 1L)
+        stop("text must be a single character string", call. = FALSE)
+      if (!is.character(font) || length(font) != 1L || !font %in% .valid_fonts)
+        stop(paste("font must be one of:", paste(.valid_fonts, collapse = ", ")),
+             call. = FALSE)
+      if (!is.numeric(font_size) || length(font_size) != 1L)
+        stop("font_size must be a single numeric value", call. = FALSE)
+      if (!is.logical(italic) || length(italic) != 1L)
+        stop("italic must be a single logical value", call. = FALSE)
+      .a <- .rt_valid_draw_common(color, thickness, line_type)
+      private$.ptr <- rt_draw_text(private$.ptr,
+                                   as.character(text),
+                                   as.integer(x), as.integer(y),
+                                   font, as.double(font_size), isTRUE(italic),
+                                   .a$color, .a$thickness, .a$line_type)
+      invisible(self)
+    },
+
     #' @description Print a summary of the image.
     #' @param ... Ignored.
     #' @return \code{self} invisibly.

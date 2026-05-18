@@ -156,6 +156,10 @@ rt_fill_poly <- function(img, xs, ys, color, line_type) {
   .Call(`_Retina_rt_fill_poly`, img, xs, ys, color, line_type)
 }
 
+rt_draw_text <- function(img, text, x, y, font, font_size, italic, color, thickness, line_type) {
+  .Call(`_Retina_rt_draw_text`, img, text, x, y, font, font_size, italic, color, thickness, line_type)
+}
+
 rt_image_blur <- function(img, ksize_w, ksize_h) {
   .Call(`_Retina_rt_image_blur`, img, ksize_w, ksize_h)
 }
