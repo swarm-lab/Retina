@@ -52,6 +52,21 @@ test_that("rotate preserves colorspace", {
   expect_equal(img_bgr()$rotate(90)$colorspace, "BGR")
 })
 
+test_that("rotate(180) centered at (5.5, 5.5) equals double flip on 10x10 image", {
+  # Asymmetric GRAY image: two isolated bright pixels at distinct positions.
+  arr <- array(0L, dim = c(10L, 10L, 1L))
+  arr[1L, 1L, 1L] <- 100L
+  arr[3L, 7L, 1L] <- 200L
+  img <- Image$new(arr, colorspace = "GRAY", depth = "CV_8U")
+  # cx=5.5, cy=5.5 in 1-based = 4.5, 4.5 in 0-based = exact centre of a 10×10 image.
+  # A 180° rotation around the exact centre maps (r,c) -> (11-r, 11-c),
+  # identical to flip(flip_h=TRUE, flip_v=TRUE).
+  # interpolation="nearest" avoids any sub-pixel blending artefacts.
+  rotated <- img$rotate(180, cx = 5.5, cy = 5.5, interpolation = "nearest")
+  flipped  <- img$flip(flip_h = TRUE, flip_v = TRUE)
+  expect_equal(rotated$to_array(), flipped$to_array())
+})
+
 # ── flip ──────────────────────────────────────────────────────────────────────
 
 test_that("flip(flip_h=TRUE) reverses columns", {
