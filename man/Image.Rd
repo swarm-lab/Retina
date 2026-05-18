@@ -236,6 +236,100 @@ dst <- matrix(c(round(w*0.1), 1,  w, 1,  w, h,  1, h), nrow = 4, byrow = TRUE)
 img$warp_perspective_(perspective_from_points(src, dst))
 img$plot()
 }
+
+## ------------------------------------------------
+## Method `Image$draw_line`
+## ------------------------------------------------
+
+\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)
+img$draw_line(1, 1, 100, 100, color = "red")$plot()
+}
+
+## ------------------------------------------------
+## Method `Image$draw_arrow`
+## ------------------------------------------------
+
+\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)
+img$draw_arrow(10, 10, 100, 100, color = "blue")$plot()
+}
+
+## ------------------------------------------------
+## Method `Image$draw_rectangle`
+## ------------------------------------------------
+
+\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)
+img$draw_rectangle(10, 10, 100, 100, color = "blue", filled = TRUE)$plot()
+}
+
+## ------------------------------------------------
+## Method `Image$draw_circle`
+## ------------------------------------------------
+
+\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)
+img$draw_circle(100, 100, 50, color = "green", filled = TRUE)$plot()
+}
+
+## ------------------------------------------------
+## Method `Image$draw_ellipse`
+## ------------------------------------------------
+
+\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)
+img$draw_ellipse(100, 100, 80L, 40L, angle = 30, color = "red")$plot()
+}
+
+## ------------------------------------------------
+## Method `Image$draw_arc`
+## ------------------------------------------------
+
+\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)
+img$draw_arc(100, 100, 80L, 40L, start_angle = 0, end_angle = 180,
+             color = "red")$plot()
+}
+
+## ------------------------------------------------
+## Method `Image$draw_polyline`
+## ------------------------------------------------
+
+\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)
+pts <- matrix(c(10, 10, 100, 10, 55, 90), nrow = 3, ncol = 2, byrow = TRUE)
+img$draw_polyline(pts, closed = TRUE, color = "yellow")$plot()
+}
+
+## ------------------------------------------------
+## Method `Image$fill_poly`
+## ------------------------------------------------
+
+\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)
+pts <- matrix(c(10, 10, 100, 10, 55, 90), nrow = 3, ncol = 2, byrow = TRUE)
+img$fill_poly(pts, color = "cyan")$plot()
+}
+
+## ------------------------------------------------
+## Method `Image$draw_text`
+## ------------------------------------------------
+
+\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)
+img$draw_text("Hello", 10, 50, font = "duplex", font_size = 1.5,
+              color = "white")$plot()
+}
 }
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
@@ -347,6 +441,24 @@ img$plot()
 \item \href{#method-Image-adaptive_threshold_}{\code{Image$adaptive_threshold_()}}
 \item \href{#method-Image-in_range}{\code{Image$in_range()}}
 \item \href{#method-Image-in_range_}{\code{Image$in_range_()}}
+\item \href{#method-Image-draw_line}{\code{Image$draw_line()}}
+\item \href{#method-Image-draw_line_}{\code{Image$draw_line_()}}
+\item \href{#method-Image-draw_arrow}{\code{Image$draw_arrow()}}
+\item \href{#method-Image-draw_arrow_}{\code{Image$draw_arrow_()}}
+\item \href{#method-Image-draw_rectangle}{\code{Image$draw_rectangle()}}
+\item \href{#method-Image-draw_rectangle_}{\code{Image$draw_rectangle_()}}
+\item \href{#method-Image-draw_circle}{\code{Image$draw_circle()}}
+\item \href{#method-Image-draw_circle_}{\code{Image$draw_circle_()}}
+\item \href{#method-Image-draw_ellipse}{\code{Image$draw_ellipse()}}
+\item \href{#method-Image-draw_ellipse_}{\code{Image$draw_ellipse_()}}
+\item \href{#method-Image-draw_arc}{\code{Image$draw_arc()}}
+\item \href{#method-Image-draw_arc_}{\code{Image$draw_arc_()}}
+\item \href{#method-Image-draw_polyline}{\code{Image$draw_polyline()}}
+\item \href{#method-Image-draw_polyline_}{\code{Image$draw_polyline_()}}
+\item \href{#method-Image-fill_poly}{\code{Image$fill_poly()}}
+\item \href{#method-Image-fill_poly_}{\code{Image$fill_poly_()}}
+\item \href{#method-Image-draw_text}{\code{Image$draw_text()}}
+\item \href{#method-Image-draw_text_}{\code{Image$draw_text_()}}
 \item \href{#method-Image-print}{\code{Image$print()}}
 }
 }
@@ -2851,6 +2963,891 @@ Create a binary mask in place. See `$in_range()`.
 }
 \subsection{Returns}{
 `self` invisibly.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-draw_line"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-draw_line}{}}}
+\subsection{Method \code{draw_line()}}{
+Draw a line segment on the image. Returns a new Image.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$draw_line(x1, y1, x2, y2, color, thickness = 1L, line_type = "line_8")}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{x1}}{Positive integer. X (column) coordinate of the start point.}
+
+\item{\code{y1}}{Positive integer. Y (row) coordinate of the start point.}
+
+\item{\code{x2}}{Positive integer. X (column) coordinate of the end point.}
+
+\item{\code{y2}}{Positive integer. Y (row) coordinate of the end point.}
+
+\item{\code{color}}{An R color name, hex string, or numeric BGR(A) vector.}
+
+\item{\code{thickness}}{Positive integer. Line width in pixels. Default \code{1L}.}
+
+\item{\code{line_type}}{Character. One of \code{"line_4"} (4-connected),
+\code{"line_8"} (8-connected, default), \code{"aa"} (anti-aliased;
+8-bit images only).}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A new \code{Image}.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)
+img$draw_line(1, 1, 100, 100, color = "red")$plot()
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-draw_line_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-draw_line_}{}}}
+\subsection{Method \code{draw_line_()}}{
+Draw a line segment on the image in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$draw_line_(x1, y1, x2, y2, color, thickness = 1L, line_type = "line_8")}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{x1}}{Positive integer. X (column) coordinate of the start point.}
+
+\item{\code{y1}}{Positive integer. Y (row) coordinate of the start point.}
+
+\item{\code{x2}}{Positive integer. X (column) coordinate of the end point.}
+
+\item{\code{y2}}{Positive integer. Y (row) coordinate of the end point.}
+
+\item{\code{color}}{An R color name, hex string, or numeric BGR(A) vector.}
+
+\item{\code{thickness}}{Positive integer. Line width in pixels. Default \code{1L}.}
+
+\item{\code{line_type}}{Character. One of \code{"line_4"}, \code{"line_8"}
+(default), \code{"aa"}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{self} invisibly.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-draw_arrow"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-draw_arrow}{}}}
+\subsection{Method \code{draw_arrow()}}{
+Draw an arrowed line on the image. Returns a new Image.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$draw_arrow(
+  x1,
+  y1,
+  x2,
+  y2,
+  color,
+  thickness = 1L,
+  line_type = "line_8",
+  tip_length = 0.1
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{x1}}{Positive integer. X coordinate of the arrow tail.}
+
+\item{\code{y1}}{Positive integer. Y coordinate of the arrow tail.}
+
+\item{\code{x2}}{Positive integer. X coordinate of the arrowhead tip.}
+
+\item{\code{y2}}{Positive integer. Y coordinate of the arrowhead tip.}
+
+\item{\code{color}}{An R color name, hex string, or numeric BGR(A) vector.}
+
+\item{\code{thickness}}{Positive integer. Line width in pixels. Default \code{1L}.}
+
+\item{\code{line_type}}{Character. One of \code{"line_4"}, \code{"line_8"}
+(default), \code{"aa"}.}
+
+\item{\code{tip_length}}{Numeric. Arrowhead length as a proportion of total
+arrow length. Negative values produce a reversed arrowhead. Default
+\code{0.1}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A new \code{Image}.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)
+img$draw_arrow(10, 10, 100, 100, color = "blue")$plot()
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-draw_arrow_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-draw_arrow_}{}}}
+\subsection{Method \code{draw_arrow_()}}{
+Draw an arrowed line on the image in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$draw_arrow_(
+  x1,
+  y1,
+  x2,
+  y2,
+  color,
+  thickness = 1L,
+  line_type = "line_8",
+  tip_length = 0.1
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{x1}}{Positive integer. X coordinate of the arrow tail.}
+
+\item{\code{y1}}{Positive integer. Y coordinate of the arrow tail.}
+
+\item{\code{x2}}{Positive integer. X coordinate of the arrowhead tip.}
+
+\item{\code{y2}}{Positive integer. Y coordinate of the arrowhead tip.}
+
+\item{\code{color}}{An R color name, hex string, or numeric BGR(A) vector.}
+
+\item{\code{thickness}}{Positive integer. Line width in pixels. Default \code{1L}.}
+
+\item{\code{line_type}}{Character. One of \code{"line_4"}, \code{"line_8"}
+(default), \code{"aa"}.}
+
+\item{\code{tip_length}}{Numeric. Arrowhead length as a proportion of total
+arrow length. Default \code{0.1}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{self} invisibly.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-draw_rectangle"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-draw_rectangle}{}}}
+\subsection{Method \code{draw_rectangle()}}{
+Draw a rectangle outline (or filled rectangle) on the
+  image. Returns a new Image.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$draw_rectangle(
+  x1,
+  y1,
+  x2,
+  y2,
+  color,
+  thickness = 1L,
+  line_type = "line_8",
+  filled = FALSE
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{x1}}{Integer. X coordinate of one corner.}
+
+\item{\code{y1}}{Integer. Y coordinate of one corner.}
+
+\item{\code{x2}}{Integer. X coordinate of the opposite corner.}
+
+\item{\code{y2}}{Integer. Y coordinate of the opposite corner.}
+
+\item{\code{color}}{An R color name, hex string, or numeric BGR(A) vector.}
+
+\item{\code{thickness}}{Positive integer. Outline width in pixels. Ignored
+when \code{filled = TRUE}. Default \code{1L}.}
+
+\item{\code{line_type}}{Character. One of \code{"line_4"}, \code{"line_8"}
+(default), \code{"aa"}.}
+
+\item{\code{filled}}{Logical. If \code{TRUE}, draw a filled rectangle.
+Default \code{FALSE}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A new \code{Image}.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)
+img$draw_rectangle(10, 10, 100, 100, color = "blue", filled = TRUE)$plot()
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-draw_rectangle_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-draw_rectangle_}{}}}
+\subsection{Method \code{draw_rectangle_()}}{
+Draw a rectangle on the image in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$draw_rectangle_(
+  x1,
+  y1,
+  x2,
+  y2,
+  color,
+  thickness = 1L,
+  line_type = "line_8",
+  filled = FALSE
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{x1}}{Integer. X coordinate of one corner.}
+
+\item{\code{y1}}{Integer. Y coordinate of one corner.}
+
+\item{\code{x2}}{Integer. X coordinate of the opposite corner.}
+
+\item{\code{y2}}{Integer. Y coordinate of the opposite corner.}
+
+\item{\code{color}}{An R color name, hex string, or numeric BGR(A) vector.}
+
+\item{\code{thickness}}{Positive integer. Outline width. Ignored when
+\code{filled = TRUE}. Default \code{1L}.}
+
+\item{\code{line_type}}{Character. One of \code{"line_4"}, \code{"line_8"}
+(default), \code{"aa"}.}
+
+\item{\code{filled}}{Logical. If \code{TRUE}, fill the rectangle. Default
+\code{FALSE}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{self} invisibly.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-draw_circle"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-draw_circle}{}}}
+\subsection{Method \code{draw_circle()}}{
+Draw a circle outline (or filled circle) on the image.
+  Returns a new Image.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$draw_circle(
+  x,
+  y,
+  radius,
+  color,
+  thickness = 1L,
+  line_type = "line_8",
+  filled = FALSE
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{x}}{Integer. X coordinate of the center.}
+
+\item{\code{y}}{Integer. Y coordinate of the center.}
+
+\item{\code{radius}}{Non-negative integer. Circle radius in pixels.}
+
+\item{\code{color}}{An R color name, hex string, or numeric BGR(A) vector.}
+
+\item{\code{thickness}}{Positive integer. Outline width. Ignored when
+\code{filled = TRUE}. Default \code{1L}.}
+
+\item{\code{line_type}}{Character. One of \code{"line_4"}, \code{"line_8"}
+(default), \code{"aa"}.}
+
+\item{\code{filled}}{Logical. If \code{TRUE}, draw a filled circle. Default
+\code{FALSE}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A new \code{Image}.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)
+img$draw_circle(100, 100, 50, color = "green", filled = TRUE)$plot()
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-draw_circle_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-draw_circle_}{}}}
+\subsection{Method \code{draw_circle_()}}{
+Draw a circle on the image in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$draw_circle_(
+  x,
+  y,
+  radius,
+  color,
+  thickness = 1L,
+  line_type = "line_8",
+  filled = FALSE
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{x}}{Integer. X coordinate of the center.}
+
+\item{\code{y}}{Integer. Y coordinate of the center.}
+
+\item{\code{radius}}{Non-negative integer. Circle radius in pixels.}
+
+\item{\code{color}}{An R color name, hex string, or numeric BGR(A) vector.}
+
+\item{\code{thickness}}{Positive integer. Outline width. Ignored when
+\code{filled = TRUE}. Default \code{1L}.}
+
+\item{\code{line_type}}{Character. One of \code{"line_4"}, \code{"line_8"}
+(default), \code{"aa"}.}
+
+\item{\code{filled}}{Logical. If \code{TRUE}, fill the circle. Default
+\code{FALSE}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{self} invisibly.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-draw_ellipse"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-draw_ellipse}{}}}
+\subsection{Method \code{draw_ellipse()}}{
+Draw an ellipse outline (or filled ellipse) on the image.
+  Returns a new Image.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$draw_ellipse(
+  x,
+  y,
+  rx,
+  ry,
+  angle = 0,
+  color,
+  thickness = 1L,
+  line_type = "line_8",
+  filled = FALSE
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{x}}{Integer. X coordinate of the ellipse center.}
+
+\item{\code{y}}{Integer. Y coordinate of the ellipse center.}
+
+\item{\code{rx}}{Positive integer. Horizontal semi-axis length in pixels
+(before rotation).}
+
+\item{\code{ry}}{Positive integer. Vertical semi-axis length in pixels
+(before rotation).}
+
+\item{\code{angle}}{Numeric. Rotation of the ellipse in degrees (clockwise).
+Default \code{0}.}
+
+\item{\code{color}}{An R color name, hex string, or numeric BGR(A) vector.}
+
+\item{\code{thickness}}{Positive integer. Outline width. Ignored when
+\code{filled = TRUE}. Default \code{1L}.}
+
+\item{\code{line_type}}{Character. One of \code{"line_4"}, \code{"line_8"}
+(default), \code{"aa"}.}
+
+\item{\code{filled}}{Logical. If \code{TRUE}, draw a filled ellipse. Default
+\code{FALSE}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A new \code{Image}.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)
+img$draw_ellipse(100, 100, 80L, 40L, angle = 30, color = "red")$plot()
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-draw_ellipse_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-draw_ellipse_}{}}}
+\subsection{Method \code{draw_ellipse_()}}{
+Draw an ellipse on the image in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$draw_ellipse_(
+  x,
+  y,
+  rx,
+  ry,
+  angle = 0,
+  color,
+  thickness = 1L,
+  line_type = "line_8",
+  filled = FALSE
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{x}}{Integer. X coordinate of the ellipse center.}
+
+\item{\code{y}}{Integer. Y coordinate of the ellipse center.}
+
+\item{\code{rx}}{Positive integer. Horizontal semi-axis length in pixels.}
+
+\item{\code{ry}}{Positive integer. Vertical semi-axis length in pixels.}
+
+\item{\code{angle}}{Numeric. Rotation in degrees. Default \code{0}.}
+
+\item{\code{color}}{An R color name, hex string, or numeric BGR(A) vector.}
+
+\item{\code{thickness}}{Positive integer. Outline width. Ignored when
+\code{filled = TRUE}. Default \code{1L}.}
+
+\item{\code{line_type}}{Character. One of \code{"line_4"}, \code{"line_8"}
+(default), \code{"aa"}.}
+
+\item{\code{filled}}{Logical. If \code{TRUE}, fill the ellipse. Default
+\code{FALSE}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{self} invisibly.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-draw_arc"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-draw_arc}{}}}
+\subsection{Method \code{draw_arc()}}{
+Draw a partial ellipse arc on the image. Returns a new
+  Image.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$draw_arc(
+  x,
+  y,
+  rx,
+  ry,
+  angle = 0,
+  start_angle,
+  end_angle,
+  color,
+  thickness = 1L,
+  line_type = "line_8"
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{x}}{Integer. X coordinate of the ellipse center.}
+
+\item{\code{y}}{Integer. Y coordinate of the ellipse center.}
+
+\item{\code{rx}}{Positive integer. Horizontal semi-axis length in pixels.}
+
+\item{\code{ry}}{Positive integer. Vertical semi-axis length in pixels.}
+
+\item{\code{angle}}{Numeric. Rotation of the ellipse in degrees. Default
+\code{0}.}
+
+\item{\code{start_angle}}{Numeric. Start angle of the arc in degrees.}
+
+\item{\code{end_angle}}{Numeric. End angle of the arc in degrees. If
+\code{start_angle > end_angle}, OpenCV swaps them automatically.}
+
+\item{\code{color}}{An R color name, hex string, or numeric BGR(A) vector.}
+
+\item{\code{thickness}}{Positive integer. Line width in pixels. Default
+\code{1L}.}
+
+\item{\code{line_type}}{Character. One of \code{"line_4"}, \code{"line_8"}
+(default), \code{"aa"}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A new \code{Image}.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)
+img$draw_arc(100, 100, 80L, 40L, start_angle = 0, end_angle = 180,
+             color = "red")$plot()
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-draw_arc_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-draw_arc_}{}}}
+\subsection{Method \code{draw_arc_()}}{
+Draw a partial ellipse arc on the image in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$draw_arc_(
+  x,
+  y,
+  rx,
+  ry,
+  angle = 0,
+  start_angle,
+  end_angle,
+  color,
+  thickness = 1L,
+  line_type = "line_8"
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{x}}{Integer. X coordinate of the ellipse center.}
+
+\item{\code{y}}{Integer. Y coordinate of the ellipse center.}
+
+\item{\code{rx}}{Positive integer. Horizontal semi-axis length in pixels.}
+
+\item{\code{ry}}{Positive integer. Vertical semi-axis length in pixels.}
+
+\item{\code{angle}}{Numeric. Rotation in degrees. Default \code{0}.}
+
+\item{\code{start_angle}}{Numeric. Start angle of the arc in degrees.}
+
+\item{\code{end_angle}}{Numeric. End angle of the arc in degrees.}
+
+\item{\code{color}}{An R color name, hex string, or numeric BGR(A) vector.}
+
+\item{\code{thickness}}{Positive integer. Line width. Default \code{1L}.}
+
+\item{\code{line_type}}{Character. One of \code{"line_4"}, \code{"line_8"}
+(default), \code{"aa"}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{self} invisibly.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-draw_polyline"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-draw_polyline}{}}}
+\subsection{Method \code{draw_polyline()}}{
+Draw a polyline (open or closed polygon outline) on the
+  image. Returns a new Image.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$draw_polyline(
+  pts,
+  closed = FALSE,
+  color,
+  thickness = 1L,
+  line_type = "line_8"
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{pts}}{A numeric matrix with exactly 2 columns (x, y) and at least
+2 rows. Each row is a vertex.}
+
+\item{\code{closed}}{Logical. If \code{TRUE}, connect the last vertex back to
+the first. Default \code{FALSE}.}
+
+\item{\code{color}}{An R color name, hex string, or numeric BGR(A) vector.}
+
+\item{\code{thickness}}{Positive integer. Line width in pixels. Default
+\code{1L}.}
+
+\item{\code{line_type}}{Character. One of \code{"line_4"}, \code{"line_8"}
+(default), \code{"aa"}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A new \code{Image}.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)
+pts <- matrix(c(10, 10, 100, 10, 55, 90), nrow = 3, ncol = 2, byrow = TRUE)
+img$draw_polyline(pts, closed = TRUE, color = "yellow")$plot()
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-draw_polyline_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-draw_polyline_}{}}}
+\subsection{Method \code{draw_polyline_()}}{
+Draw a polyline on the image in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$draw_polyline_(
+  pts,
+  closed = FALSE,
+  color,
+  thickness = 1L,
+  line_type = "line_8"
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{pts}}{A numeric matrix with exactly 2 columns and at least 2 rows.}
+
+\item{\code{closed}}{Logical. If \code{TRUE}, close the polygon. Default
+\code{FALSE}.}
+
+\item{\code{color}}{An R color name, hex string, or numeric BGR(A) vector.}
+
+\item{\code{thickness}}{Positive integer. Line width. Default \code{1L}.}
+
+\item{\code{line_type}}{Character. One of \code{"line_4"}, \code{"line_8"}
+(default), \code{"aa"}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{self} invisibly.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-fill_poly"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-fill_poly}{}}}
+\subsection{Method \code{fill_poly()}}{
+Draw a filled polygon on the image. Returns a new Image.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$fill_poly(pts, color, line_type = "line_8")}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{pts}}{A numeric matrix with exactly 2 columns (x, y) and at least
+3 rows. Each row is a vertex.}
+
+\item{\code{color}}{An R color name, hex string, or numeric BGR(A) vector.}
+
+\item{\code{line_type}}{Character. One of \code{"line_4"}, \code{"line_8"}
+(default), \code{"aa"}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A new \code{Image}.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)
+pts <- matrix(c(10, 10, 100, 10, 55, 90), nrow = 3, ncol = 2, byrow = TRUE)
+img$fill_poly(pts, color = "cyan")$plot()
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-fill_poly_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-fill_poly_}{}}}
+\subsection{Method \code{fill_poly_()}}{
+Draw a filled polygon on the image in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$fill_poly_(pts, color, line_type = "line_8")}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{pts}}{A numeric matrix with exactly 2 columns and at least 3 rows.}
+
+\item{\code{color}}{An R color name, hex string, or numeric BGR(A) vector.}
+
+\item{\code{line_type}}{Character. One of \code{"line_4"}, \code{"line_8"}
+(default), \code{"aa"}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{self} invisibly.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-draw_text"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-draw_text}{}}}
+\subsection{Method \code{draw_text()}}{
+Draw text on the image. Returns a new Image.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$draw_text(
+  text,
+  x,
+  y,
+  font = "simplex",
+  font_size = 1,
+  italic = FALSE,
+  color,
+  thickness = 1L,
+  line_type = "line_8"
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{text}}{Character. The string to draw.}
+
+\item{\code{x}}{Integer. X coordinate of the bottom-left corner of the text
+bounding box.}
+
+\item{\code{y}}{Integer. Y coordinate of the bottom-left corner of the text
+bounding box.}
+
+\item{\code{font}}{Character. One of \code{"simplex"} (default), \code{"plain"},
+\code{"duplex"}, \code{"complex"}, \code{"triplex"},
+\code{"complex_small"}, \code{"script_simplex"},
+\code{"script_complex"}.}
+
+\item{\code{font_size}}{Numeric. Scale factor applied to the base font size.
+Negative values mirror/reverse the text. Default \code{1}.}
+
+\item{\code{italic}}{Logical. If \code{TRUE}, use the italic variant of the
+font. Default \code{FALSE}.}
+
+\item{\code{color}}{An R color name, hex string, or numeric BGR(A) vector.}
+
+\item{\code{thickness}}{Positive integer. Character stroke width. Default
+\code{1L}.}
+
+\item{\code{line_type}}{Character. One of \code{"line_4"}, \code{"line_8"}
+(default), \code{"aa"}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A new \code{Image}.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)
+img$draw_text("Hello", 10, 50, font = "duplex", font_size = 1.5,
+              color = "white")$plot()
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-draw_text_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-draw_text_}{}}}
+\subsection{Method \code{draw_text_()}}{
+Draw text on the image in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$draw_text_(
+  text,
+  x,
+  y,
+  font = "simplex",
+  font_size = 1,
+  italic = FALSE,
+  color,
+  thickness = 1L,
+  line_type = "line_8"
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{text}}{Character. The string to draw.}
+
+\item{\code{x}}{Integer. X coordinate of the bottom-left corner of the text.}
+
+\item{\code{y}}{Integer. Y coordinate of the bottom-left corner of the text.}
+
+\item{\code{font}}{Character. Font face name. Default \code{"simplex"}.}
+
+\item{\code{font_size}}{Numeric. Scale factor. Negative mirrors the text.
+Default \code{1}.}
+
+\item{\code{italic}}{Logical. Italic variant. Default \code{FALSE}.}
+
+\item{\code{color}}{An R color name, hex string, or numeric BGR(A) vector.}
+
+\item{\code{thickness}}{Positive integer. Stroke width. Default \code{1L}.}
+
+\item{\code{line_type}}{Character. One of \code{"line_4"}, \code{"line_8"}
+(default), \code{"aa"}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{self} invisibly.
 }
 }
 \if{html}{\out{<hr>}}
