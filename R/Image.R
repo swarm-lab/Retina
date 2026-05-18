@@ -952,8 +952,9 @@ Image <- R6::R6Class("Image",
     #'   boundary. \code{"reflect_101"} (default) mirrors the image excluding
     #'   the edge pixel (e.g. dcb|abcde|dcb); \code{"reflect"} mirrors
     #'   including the edge pixel (e.g. edcb|abcde|edcb); \code{"replicate"}
-    #'   repeats the nearest edge pixel; \code{"wrap"} tiles the image;
-    #'   \code{"constant"} fills with a fixed value (0, i.e. black).
+    #'   repeats the nearest edge pixel; \code{"constant"} fills with a fixed
+    #'   value (0, i.e. black). \code{"wrap"} is not supported by OpenCV for
+    #'   morphological operations.
     #' @return A new \code{Image}.
     #' @examples
     #' \donttest{
@@ -969,7 +970,7 @@ Image <- R6::R6Class("Image",
                          "gradient", "tophat", "blackhat")
       .valid_shapes <- c("rect", "cross", "ellipse")
       .valid_border <- c("reflect", "reflect_101",
-                         "replicate", "constant", "wrap")
+                         "replicate", "constant")
       if (!is.character(operation) || length(operation) != 1L ||
           !operation %in% .valid_ops)
         stop("operation must be one of: erode, dilate, open, close, gradient, tophat, blackhat",
@@ -988,7 +989,7 @@ Image <- R6::R6Class("Image",
         stop("iterations must be a single positive integer", call. = FALSE)
       if (!is.character(border_type) || length(border_type) != 1L ||
           !border_type %in% .valid_border)
-        stop("border_type must be one of: reflect, reflect_101, replicate, constant, wrap",
+        stop("border_type must be one of: reflect, reflect_101, replicate, constant",
              call. = FALSE)
       if (is.null(kernel)) {
         Image$new(rt_image_morph(private$.ptr, operation, shape, size,
@@ -1028,8 +1029,9 @@ Image <- R6::R6Class("Image",
     #'   boundary. \code{"reflect_101"} (default) mirrors the image excluding
     #'   the edge pixel (e.g. dcb|abcde|dcb); \code{"reflect"} mirrors
     #'   including the edge pixel (e.g. edcb|abcde|edcb); \code{"replicate"}
-    #'   repeats the nearest edge pixel; \code{"wrap"} tiles the image;
-    #'   \code{"constant"} fills with a fixed value (0, i.e. black).
+    #'   repeats the nearest edge pixel; \code{"constant"} fills with a fixed
+    #'   value (0, i.e. black). \code{"wrap"} is not supported by OpenCV for
+    #'   morphological operations.
     #' @return \code{self} invisibly.
     #' @examples
     #' \donttest{
@@ -1045,7 +1047,7 @@ Image <- R6::R6Class("Image",
                          "gradient", "tophat", "blackhat")
       .valid_shapes <- c("rect", "cross", "ellipse")
       .valid_border <- c("reflect", "reflect_101",
-                         "replicate", "constant", "wrap")
+                         "replicate", "constant")
       if (!is.character(operation) || length(operation) != 1L ||
           !operation %in% .valid_ops)
         stop("operation must be one of: erode, dilate, open, close, gradient, tophat, blackhat",
@@ -1064,7 +1066,7 @@ Image <- R6::R6Class("Image",
         stop("iterations must be a single positive integer", call. = FALSE)
       if (!is.character(border_type) || length(border_type) != 1L ||
           !border_type %in% .valid_border)
-        stop("border_type must be one of: reflect, reflect_101, replicate, constant, wrap",
+        stop("border_type must be one of: reflect, reflect_101, replicate, constant",
              call. = FALSE)
       if (is.null(kernel)) {
         private$.ptr <- rt_image_morph(private$.ptr, operation, shape, size,

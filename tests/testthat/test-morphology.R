@@ -38,6 +38,11 @@ test_that("morph() with border_type = 'constant' runs without error", {
   expect_no_error(img_gray()$morph("erode", border_type = "constant"))
 })
 
+test_that("morph() rejects 'wrap' border_type (unsupported by OpenCV)", {
+  expect_error(img_gray()$morph("erode", border_type = "wrap"),
+               "border_type must be one of")
+})
+
 # ── semantic checks ───────────────────────────────────────────────────────────
 
 test_that("morph('erode') shrinks bright region (lower mean)", {
