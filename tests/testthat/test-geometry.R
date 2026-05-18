@@ -142,6 +142,27 @@ test_that("resize_() modifies image in place", {
   expect_equal(img$nrow, expected$nrow)
 })
 
+test_that("rotate_() modifies image in place", {
+  img      <- img_bgr()
+  expected <- img$rotate(90)
+  img$rotate_(90)
+  expect_equal(img$to_array(), expected$to_array())
+})
+
+test_that("flip_() modifies image in place", {
+  img      <- img_bgr()
+  expected <- img$flip(flip_h = TRUE)
+  img$flip_(flip_h = TRUE)
+  expect_equal(img$to_array(), expected$to_array())
+})
+
+test_that("crop_() modifies image in place", {
+  img      <- img_bgr()
+  expected <- img$crop(1L, 1L, 5L, 5L)
+  img$crop_(1L, 1L, 5L, 5L)
+  expect_equal(img$to_array(), expected$to_array())
+})
+
 test_that("rotate() rejects 'default' as border_type", {
   expect_error(img_bgr()$rotate(45, border_type = "default"),
                "border_type must be one of")
