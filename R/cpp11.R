@@ -132,6 +132,10 @@ rt_draw_arrow <- function(img, x1, y1, x2, y2, color, thickness, line_type, tip_
   .Call(`_Retina_rt_draw_arrow`, img, x1, y1, x2, y2, color, thickness, line_type, tip_length)
 }
 
+rt_draw_rectangle <- function(img, x1, y1, x2, y2, color, thickness, line_type) {
+  .Call(`_Retina_rt_draw_rectangle`, img, x1, y1, x2, y2, color, thickness, line_type)
+}
+
 rt_image_blur <- function(img, ksize_w, ksize_h) {
   .Call(`_Retina_rt_image_blur`, img, ksize_w, ksize_h)
 }

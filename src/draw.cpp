@@ -66,3 +66,17 @@ external_pointer<RtImage> rt_draw_arrow(
                   0, tip_length);
   return {new RtImage(std::move(dst), img->colorspace)};
 }
+
+// ── rectangle ─────────────────────────────────────────────────────────────────
+
+[[cpp11::register]]
+external_pointer<RtImage> rt_draw_rectangle(
+    external_pointer<RtImage> img,
+    int x1, int y1, int x2, int y2,
+    doubles color, int thickness, std::string line_type) {
+  cv::Mat dst = get_cpu_mat(img).clone();
+  cv::rectangle(dst,
+                cv::Point(x1 - 1, y1 - 1), cv::Point(x2 - 1, y2 - 1),
+                make_scalar(color), thickness, cv_line_type(line_type));
+  return {new RtImage(std::move(dst), img->colorspace)};
+}

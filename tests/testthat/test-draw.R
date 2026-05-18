@@ -107,3 +107,39 @@ test_that("draw_arrow_() modifies in place and returns self", {
   expect_identical(result, img)
   expect_equal(img$to_array(), expected$to_array())
 })
+
+# ── draw_rectangle ────────────────────────────────────────────────────────────
+
+test_that("draw_rectangle() returns Image with same dimensions and colorspace", {
+  img    <- img_black()
+  result <- img$draw_rectangle(10, 10, 90, 90, color = "white")
+  expect_s3_class(result, "Image")
+  expect_equal(result$nrow,       img$nrow)
+  expect_equal(result$ncol,       img$ncol)
+  expect_equal(result$colorspace, img$colorspace)
+})
+
+test_that("draw_rectangle() filled=TRUE sets center pixel to fill color", {
+  img    <- img_black()
+  result <- img$draw_rectangle(10, 10, 90, 90, color = c(0, 255, 0), filled = TRUE)
+  arr    <- result$to_array()
+  # center pixel (row=50, col=50): BGR green = (0, 255, 0)
+  expect_equal(arr[50, 50, 1], 0)
+  expect_equal(arr[50, 50, 2], 255)
+  expect_equal(arr[50, 50, 3], 0)
+})
+
+test_that("draw_rectangle_() modifies in place and returns self", {
+  img      <- img_black()
+  expected <- img$draw_rectangle(10, 10, 90, 90, color = "white")
+  result   <- img$draw_rectangle_(10, 10, 90, 90, color = "white")
+  expect_identical(result, img)
+  expect_equal(img$to_array(), expected$to_array())
+})
+
+test_that("draw_rectangle() errors on negative thickness", {
+  expect_error(
+    img_black()$draw_rectangle(10, 10, 90, 90, color = "red", thickness = -1L),
+    "thickness must be a single positive integer"
+  )
+})

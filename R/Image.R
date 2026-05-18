@@ -2096,6 +2096,62 @@ Image <- R6::R6Class("Image",
       invisible(self)
     },
 
+    #' @description Draw a rectangle outline (or filled rectangle) on the
+    #'   image. Returns a new Image.
+    #' @param x1 Integer. X coordinate of one corner.
+    #' @param y1 Integer. Y coordinate of one corner.
+    #' @param x2 Integer. X coordinate of the opposite corner.
+    #' @param y2 Integer. Y coordinate of the opposite corner.
+    #' @param color An R color name, hex string, or numeric BGR(A) vector.
+    #' @param thickness Positive integer. Outline width in pixels. Ignored
+    #'   when \code{filled = TRUE}. Default \code{1L}.
+    #' @param line_type Character. One of \code{"line_4"}, \code{"line_8"}
+    #'   (default), \code{"aa"}.
+    #' @param filled Logical. If \code{TRUE}, draw a filled rectangle.
+    #'   Default \code{FALSE}.
+    #' @return A new \code{Image}.
+    #' @examples
+    #' \donttest{
+    #' img_path <- system.file("img", "flower.jpg", package = "Retina")
+    #' img <- Image$new(img_path)
+    #' img$draw_rectangle(10, 10, 100, 100, color = "blue", filled = TRUE)$plot()
+    #' }
+    draw_rectangle = function(x1, y1, x2, y2, color, thickness = 1L,
+                              line_type = "line_8", filled = FALSE) {
+      if (!is.logical(filled) || length(filled) != 1L)
+        stop("filled must be a single logical value", call. = FALSE)
+      .a <- .rt_valid_draw_common(color, thickness, line_type, filled = filled)
+      Image$new(rt_draw_rectangle(private$.ptr,
+                                  as.integer(x1), as.integer(y1),
+                                  as.integer(x2), as.integer(y2),
+                                  .a$color, .a$thickness, .a$line_type))
+    },
+
+    #' @description Draw a rectangle on the image in place.
+    #' @param x1 Integer. X coordinate of one corner.
+    #' @param y1 Integer. Y coordinate of one corner.
+    #' @param x2 Integer. X coordinate of the opposite corner.
+    #' @param y2 Integer. Y coordinate of the opposite corner.
+    #' @param color An R color name, hex string, or numeric BGR(A) vector.
+    #' @param thickness Positive integer. Outline width. Ignored when
+    #'   \code{filled = TRUE}. Default \code{1L}.
+    #' @param line_type Character. One of \code{"line_4"}, \code{"line_8"}
+    #'   (default), \code{"aa"}.
+    #' @param filled Logical. If \code{TRUE}, fill the rectangle. Default
+    #'   \code{FALSE}.
+    #' @return \code{self} invisibly.
+    draw_rectangle_ = function(x1, y1, x2, y2, color, thickness = 1L,
+                               line_type = "line_8", filled = FALSE) {
+      if (!is.logical(filled) || length(filled) != 1L)
+        stop("filled must be a single logical value", call. = FALSE)
+      .a <- .rt_valid_draw_common(color, thickness, line_type, filled = filled)
+      private$.ptr <- rt_draw_rectangle(private$.ptr,
+                                        as.integer(x1), as.integer(y1),
+                                        as.integer(x2), as.integer(y2),
+                                        .a$color, .a$thickness, .a$line_type)
+      invisible(self)
+    },
+
     #' @description Print a summary of the image.
     #' @param ... Ignored.
     #' @return \code{self} invisibly.
