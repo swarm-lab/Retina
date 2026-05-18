@@ -941,8 +941,13 @@ Image <- R6::R6Class("Image",
     #' @param kernel Optional numeric matrix used as the structuring element.
     #'   Values are coerced to integers. Overrides
     #'   \code{shape} and \code{size} when supplied.
-    #' @param iterations Positive integer. Number of times the operation is
-    #'   applied. Default \code{1L}.
+    #' @param iterations Positive integer. For primitive operations
+    #'   (\code{"erode"}, \code{"dilate"}), the number of times the operation
+    #'   is applied. For compound operations (\code{"open"}, \code{"close"},
+    #'   \code{"gradient"}, \code{"tophat"}, \code{"blackhat"}), each internal
+    #'   erosion or dilation step is repeated \code{iterations} times
+    #'   independently (e.g., \code{iterations = 2} with \code{"open"} erodes
+    #'   twice then dilates twice, not opens twice). Default \code{1L}.
     #' @param border_type Character. How to fill pixels outside the image
     #'   boundary. \code{"reflect_101"} (default) mirrors the image excluding
     #'   the edge pixel (e.g. dcb|abcde|dcb); \code{"reflect"} mirrors
@@ -1012,8 +1017,13 @@ Image <- R6::R6Class("Image",
     #' @param kernel Optional numeric matrix used as the structuring element.
     #'   Values are coerced to integers. Overrides
     #'   \code{shape} and \code{size} when supplied.
-    #' @param iterations Positive integer. Number of times the operation is
-    #'   applied. Default \code{1L}.
+    #' @param iterations Positive integer. For primitive operations
+    #'   (\code{"erode"}, \code{"dilate"}), the number of times the operation
+    #'   is applied. For compound operations (\code{"open"}, \code{"close"},
+    #'   \code{"gradient"}, \code{"tophat"}, \code{"blackhat"}), each internal
+    #'   erosion or dilation step is repeated \code{iterations} times
+    #'   independently (e.g., \code{iterations = 2} with \code{"open"} erodes
+    #'   twice then dilates twice, not opens twice). Default \code{1L}.
     #' @param border_type Character. How to fill pixels outside the image
     #'   boundary. \code{"reflect_101"} (default) mirrors the image excluding
     #'   the edge pixel (e.g. dcb|abcde|dcb); \code{"reflect"} mirrors

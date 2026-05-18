@@ -1757,8 +1757,13 @@ Ignored when \code{kernel} is supplied. Default \code{3L}.}
 Values are coerced to integers. Overrides
 \code{shape} and \code{size} when supplied.}
 
-\item{\code{iterations}}{Positive integer. Number of times the operation is
-applied. Default \code{1L}.}
+\item{\code{iterations}}{Positive integer. For primitive operations
+(\code{"erode"}, \code{"dilate"}), the number of times the operation
+is applied. For compound operations (\code{"open"}, \code{"close"},
+\code{"gradient"}, \code{"tophat"}, \code{"blackhat"}), each internal
+erosion or dilation step is repeated \code{iterations} times
+independently (e.g., \code{iterations = 2} with \code{"open"} erodes
+twice then dilates twice, not opens twice). Default \code{1L}.}
 
 \item{\code{border_type}}{Character. How to fill pixels outside the image
 boundary. \code{"reflect_101"} (default) mirrors the image excluding
@@ -1825,8 +1830,13 @@ Ignored when \code{kernel} is supplied. Default \code{3L}.}
 Values are coerced to integers. Overrides
 \code{shape} and \code{size} when supplied.}
 
-\item{\code{iterations}}{Positive integer. Number of times the operation is
-applied. Default \code{1L}.}
+\item{\code{iterations}}{Positive integer. For primitive operations
+(\code{"erode"}, \code{"dilate"}), the number of times the operation
+is applied. For compound operations (\code{"open"}, \code{"close"},
+\code{"gradient"}, \code{"tophat"}, \code{"blackhat"}), each internal
+erosion or dilation step is repeated \code{iterations} times
+independently (e.g., \code{iterations = 2} with \code{"open"} erodes
+twice then dilates twice, not opens twice). Default \code{1L}.}
 
 \item{\code{border_type}}{Character. How to fill pixels outside the image
 boundary. \code{"reflect_101"} (default) mirrors the image excluding
