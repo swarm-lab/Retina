@@ -2066,8 +2066,6 @@ Image <- R6::R6Class("Image",
     draw_arrow = function(x1, y1, x2, y2, color, thickness = 1L,
                           line_type = "line_8", tip_length = 0.1) {
       .a <- .rt_valid_draw_common(color, thickness, line_type)
-      if (!is.numeric(tip_length) || length(tip_length) != 1L)
-        stop("tip_length must be a single numeric value", call. = FALSE)
       Image$new(rt_draw_arrow(private$.ptr,
                               as.integer(x1), as.integer(y1),
                               as.integer(x2), as.integer(y2),
@@ -2090,8 +2088,6 @@ Image <- R6::R6Class("Image",
     draw_arrow_ = function(x1, y1, x2, y2, color, thickness = 1L,
                            line_type = "line_8", tip_length = 0.1) {
       .a <- .rt_valid_draw_common(color, thickness, line_type)
-      if (!is.numeric(tip_length) || length(tip_length) != 1L)
-        stop("tip_length must be a single numeric value", call. = FALSE)
       private$.ptr <- rt_draw_arrow(private$.ptr,
                                     as.integer(x1), as.integer(y1),
                                     as.integer(x2), as.integer(y2),
