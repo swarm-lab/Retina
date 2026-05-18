@@ -238,3 +238,74 @@ test_that("draw_arc_() modifies in place and returns self", {
   expect_identical(result, img)
   expect_equal(img$to_array(), expected$to_array())
 })
+
+# ── draw_polyline ─────────────────────────────────────────────────────────────
+
+test_that("draw_polyline() returns Image with same dimensions and colorspace", {
+  img  <- img_black()
+  pts  <- matrix(c(10, 50, 90, 50, 90, 90), nrow = 3L, ncol = 2L, byrow = TRUE)
+  result <- img$draw_polyline(pts, color = "white")
+  expect_s3_class(result, "Image")
+  expect_equal(result$nrow,       img$nrow)
+  expect_equal(result$ncol,       img$ncol)
+  expect_equal(result$colorspace, img$colorspace)
+})
+
+test_that("draw_polyline() changes at least one pixel", {
+  img  <- img_black()
+  pts  <- matrix(c(10, 50, 90, 50, 90, 90), nrow = 3L, ncol = 2L, byrow = TRUE)
+  result <- img$draw_polyline(pts, color = "white")
+  expect_false(all(result$to_array() == img$to_array()))
+})
+
+test_that("draw_polyline_() modifies in place and returns self", {
+  img      <- img_black()
+  pts      <- matrix(c(10, 50, 90, 50, 90, 90), nrow = 3L, ncol = 2L, byrow = TRUE)
+  expected <- img$draw_polyline(pts, color = "white")
+  result   <- img$draw_polyline_(pts, color = "white")
+  expect_identical(result, img)
+  expect_equal(img$to_array(), expected$to_array())
+})
+
+test_that("draw_polyline() errors on non-matrix pts", {
+  expect_error(img_black()$draw_polyline(c(1, 2, 3, 4), color = "red"),
+               "pts must be a numeric matrix")
+})
+
+test_that("draw_polyline() errors on pts with wrong ncol", {
+  expect_error(img_black()$draw_polyline(matrix(1:9, nrow = 3, ncol = 3), color = "red"),
+               "pts must have exactly 2 columns")
+})
+
+test_that("draw_polyline() errors on pts with fewer than 2 rows", {
+  pts <- matrix(c(10, 50), nrow = 1L, ncol = 2L)
+  expect_error(img_black()$draw_polyline(pts, color = "red"),
+               "pts must have at least 2 rows")
+})
+
+# ── fill_poly ─────────────────────────────────────────────────────────────────
+
+test_that("fill_poly() sets interior pixel to fill color", {
+  img  <- img_black()
+  # large triangle with center near (50, 50)
+  pts  <- matrix(c(10, 10,  90, 10,  50, 90), nrow = 3L, ncol = 2L, byrow = TRUE)
+  result <- img$fill_poly(pts, color = c(0, 255, 0))
+  arr    <- result$to_array()
+  # (row=30, col=50) is well inside the triangle
+  expect_equal(arr[30, 50, 2], 255)
+})
+
+test_that("fill_poly_() modifies in place and returns self", {
+  img      <- img_black()
+  pts      <- matrix(c(10, 10, 90, 10, 50, 90), nrow = 3L, ncol = 2L, byrow = TRUE)
+  expected <- img$fill_poly(pts, color = "white")
+  result   <- img$fill_poly_(pts, color = "white")
+  expect_identical(result, img)
+  expect_equal(img$to_array(), expected$to_array())
+})
+
+test_that("fill_poly() errors on pts with fewer than 3 rows", {
+  pts <- matrix(c(10, 10, 90, 10), nrow = 2L, ncol = 2L)
+  expect_error(img_black()$fill_poly(pts, color = "red"),
+               "pts must have at least 3 rows")
+})

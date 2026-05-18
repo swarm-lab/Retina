@@ -264,6 +264,20 @@ extern "C" SEXP _Retina_rt_draw_arc(SEXP img, SEXP x, SEXP y, SEXP rx, SEXP ry, 
     return cpp11::as_sexp(rt_draw_arc(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<int>>(x), cpp11::as_cpp<cpp11::decay_t<int>>(y), cpp11::as_cpp<cpp11::decay_t<int>>(rx), cpp11::as_cpp<cpp11::decay_t<int>>(ry), cpp11::as_cpp<cpp11::decay_t<double>>(angle), cpp11::as_cpp<cpp11::decay_t<double>>(start_angle), cpp11::as_cpp<cpp11::decay_t<double>>(end_angle), cpp11::as_cpp<cpp11::decay_t<doubles>>(color), cpp11::as_cpp<cpp11::decay_t<int>>(thickness), cpp11::as_cpp<cpp11::decay_t<std::string>>(line_type)));
   END_CPP11
 }
+// draw.cpp
+external_pointer<RtImage> rt_draw_polyline(external_pointer<RtImage> img, integers xs, integers ys, bool closed, doubles color, int thickness, std::string line_type);
+extern "C" SEXP _Retina_rt_draw_polyline(SEXP img, SEXP xs, SEXP ys, SEXP closed, SEXP color, SEXP thickness, SEXP line_type) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_draw_polyline(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<integers>>(xs), cpp11::as_cpp<cpp11::decay_t<integers>>(ys), cpp11::as_cpp<cpp11::decay_t<bool>>(closed), cpp11::as_cpp<cpp11::decay_t<doubles>>(color), cpp11::as_cpp<cpp11::decay_t<int>>(thickness), cpp11::as_cpp<cpp11::decay_t<std::string>>(line_type)));
+  END_CPP11
+}
+// draw.cpp
+external_pointer<RtImage> rt_fill_poly(external_pointer<RtImage> img, integers xs, integers ys, doubles color, std::string line_type);
+extern "C" SEXP _Retina_rt_fill_poly(SEXP img, SEXP xs, SEXP ys, SEXP color, SEXP line_type) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_fill_poly(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<integers>>(xs), cpp11::as_cpp<cpp11::decay_t<integers>>(ys), cpp11::as_cpp<cpp11::decay_t<doubles>>(color), cpp11::as_cpp<cpp11::decay_t<std::string>>(line_type)));
+  END_CPP11
+}
 // filters.cpp
 external_pointer<RtImage> rt_image_blur(external_pointer<RtImage> img, int ksize_w, int ksize_h);
 extern "C" SEXP _Retina_rt_image_blur(SEXP img, SEXP ksize_w, SEXP ksize_h) {
@@ -647,8 +661,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_Retina_rt_draw_circle",              (DL_FUNC) &_Retina_rt_draw_circle,               7},
     {"_Retina_rt_draw_ellipse",             (DL_FUNC) &_Retina_rt_draw_ellipse,              9},
     {"_Retina_rt_draw_line",                (DL_FUNC) &_Retina_rt_draw_line,                 8},
+    {"_Retina_rt_draw_polyline",            (DL_FUNC) &_Retina_rt_draw_polyline,             7},
     {"_Retina_rt_draw_rectangle",           (DL_FUNC) &_Retina_rt_draw_rectangle,            8},
     {"_Retina_rt_fill",                     (DL_FUNC) &_Retina_rt_fill,                      6},
+    {"_Retina_rt_fill_poly",                (DL_FUNC) &_Retina_rt_fill_poly,                 5},
     {"_Retina_rt_has_cuda",                 (DL_FUNC) &_Retina_rt_has_cuda,                  0},
     {"_Retina_rt_has_module",               (DL_FUNC) &_Retina_rt_has_module,                1},
     {"_Retina_rt_image_absdiff_image",      (DL_FUNC) &_Retina_rt_image_absdiff_image,       2},

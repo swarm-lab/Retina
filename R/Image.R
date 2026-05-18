@@ -2355,6 +2355,126 @@ Image <- R6::R6Class("Image",
       invisible(self)
     },
 
+    #' @description Draw a polyline (open or closed polygon outline) on the
+    #'   image. Returns a new Image.
+    #' @param pts A numeric matrix with exactly 2 columns (x, y) and at least
+    #'   2 rows. Each row is a vertex.
+    #' @param closed Logical. If \code{TRUE}, connect the last vertex back to
+    #'   the first. Default \code{FALSE}.
+    #' @param color An R color name, hex string, or numeric BGR(A) vector.
+    #' @param thickness Positive integer. Line width in pixels. Default
+    #'   \code{1L}.
+    #' @param line_type Character. One of \code{"line_4"}, \code{"line_8"}
+    #'   (default), \code{"aa"}.
+    #' @return A new \code{Image}.
+    #' @examples
+    #' \donttest{
+    #' img_path <- system.file("img", "flower.jpg", package = "Retina")
+    #' img <- Image$new(img_path)
+    #' pts <- matrix(c(10, 10, 100, 10, 55, 90), nrow = 3, ncol = 2, byrow = TRUE)
+    #' img$draw_polyline(pts, closed = TRUE, color = "yellow")$plot()
+    #' }
+    draw_polyline = function(pts, closed = FALSE, color, thickness = 1L,
+                             line_type = "line_8") {
+      if (!is.matrix(pts) || !is.numeric(pts))
+        stop("pts must be a numeric matrix", call. = FALSE)
+      if (ncol(pts) != 2L)
+        stop("pts must have exactly 2 columns (x, y)", call. = FALSE)
+      if (nrow(pts) < 2L)
+        stop("pts must have at least 2 rows", call. = FALSE)
+      if (!is.logical(closed) || length(closed) != 1L)
+        stop("closed must be a single logical value", call. = FALSE)
+      .a <- .rt_valid_draw_common(color, thickness, line_type)
+      Image$new(rt_draw_polyline(private$.ptr,
+                                 as.integer(pts[, 1L]),
+                                 as.integer(pts[, 2L]),
+                                 isTRUE(closed),
+                                 .a$color, .a$thickness, .a$line_type))
+    },
+
+    #' @description Draw a polyline on the image in place.
+    #' @param pts A numeric matrix with exactly 2 columns and at least 2 rows.
+    #' @param closed Logical. If \code{TRUE}, close the polygon. Default
+    #'   \code{FALSE}.
+    #' @param color An R color name, hex string, or numeric BGR(A) vector.
+    #' @param thickness Positive integer. Line width. Default \code{1L}.
+    #' @param line_type Character. One of \code{"line_4"}, \code{"line_8"}
+    #'   (default), \code{"aa"}.
+    #' @return \code{self} invisibly.
+    draw_polyline_ = function(pts, closed = FALSE, color, thickness = 1L,
+                              line_type = "line_8") {
+      if (!is.matrix(pts) || !is.numeric(pts))
+        stop("pts must be a numeric matrix", call. = FALSE)
+      if (ncol(pts) != 2L)
+        stop("pts must have exactly 2 columns (x, y)", call. = FALSE)
+      if (nrow(pts) < 2L)
+        stop("pts must have at least 2 rows", call. = FALSE)
+      if (!is.logical(closed) || length(closed) != 1L)
+        stop("closed must be a single logical value", call. = FALSE)
+      .a <- .rt_valid_draw_common(color, thickness, line_type)
+      private$.ptr <- rt_draw_polyline(private$.ptr,
+                                       as.integer(pts[, 1L]),
+                                       as.integer(pts[, 2L]),
+                                       isTRUE(closed),
+                                       .a$color, .a$thickness, .a$line_type)
+      invisible(self)
+    },
+
+    #' @description Draw a filled polygon on the image. Returns a new Image.
+    #' @param pts A numeric matrix with exactly 2 columns (x, y) and at least
+    #'   3 rows. Each row is a vertex.
+    #' @param color An R color name, hex string, or numeric BGR(A) vector.
+    #' @param line_type Character. One of \code{"line_4"}, \code{"line_8"}
+    #'   (default), \code{"aa"}.
+    #' @return A new \code{Image}.
+    #' @examples
+    #' \donttest{
+    #' img_path <- system.file("img", "flower.jpg", package = "Retina")
+    #' img <- Image$new(img_path)
+    #' pts <- matrix(c(10, 10, 100, 10, 55, 90), nrow = 3, ncol = 2, byrow = TRUE)
+    #' img$fill_poly(pts, color = "cyan")$plot()
+    #' }
+    fill_poly = function(pts, color, line_type = "line_8") {
+      if (!is.matrix(pts) || !is.numeric(pts))
+        stop("pts must be a numeric matrix", call. = FALSE)
+      if (ncol(pts) != 2L)
+        stop("pts must have exactly 2 columns (x, y)", call. = FALSE)
+      if (nrow(pts) < 3L)
+        stop("pts must have at least 3 rows", call. = FALSE)
+      if (!is.character(line_type) || length(line_type) != 1L ||
+          !line_type %in% c("line_4", "line_8", "aa"))
+        stop("line_type must be one of: line_4, line_8, aa", call. = FALSE)
+      .color <- as.double(col2bgr(color)[1:3])
+      Image$new(rt_fill_poly(private$.ptr,
+                             as.integer(pts[, 1L]),
+                             as.integer(pts[, 2L]),
+                             .color, line_type))
+    },
+
+    #' @description Draw a filled polygon on the image in place.
+    #' @param pts A numeric matrix with exactly 2 columns and at least 3 rows.
+    #' @param color An R color name, hex string, or numeric BGR(A) vector.
+    #' @param line_type Character. One of \code{"line_4"}, \code{"line_8"}
+    #'   (default), \code{"aa"}.
+    #' @return \code{self} invisibly.
+    fill_poly_ = function(pts, color, line_type = "line_8") {
+      if (!is.matrix(pts) || !is.numeric(pts))
+        stop("pts must be a numeric matrix", call. = FALSE)
+      if (ncol(pts) != 2L)
+        stop("pts must have exactly 2 columns (x, y)", call. = FALSE)
+      if (nrow(pts) < 3L)
+        stop("pts must have at least 3 rows", call. = FALSE)
+      if (!is.character(line_type) || length(line_type) != 1L ||
+          !line_type %in% c("line_4", "line_8", "aa"))
+        stop("line_type must be one of: line_4, line_8, aa", call. = FALSE)
+      .color <- as.double(col2bgr(color)[1:3])
+      private$.ptr <- rt_fill_poly(private$.ptr,
+                                   as.integer(pts[, 1L]),
+                                   as.integer(pts[, 2L]),
+                                   .color, line_type)
+      invisible(self)
+    },
+
     #' @description Print a summary of the image.
     #' @param ... Ignored.
     #' @return \code{self} invisibly.

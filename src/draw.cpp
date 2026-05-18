@@ -123,3 +123,36 @@ external_pointer<RtImage> rt_draw_arc(
               make_scalar(color), thickness, cv_line_type(line_type));
   return {new RtImage(std::move(dst), img->colorspace)};
 }
+
+// ── polyline / fill_poly ──────────────────────────────────────────────────────
+
+[[cpp11::register]]
+external_pointer<RtImage> rt_draw_polyline(
+    external_pointer<RtImage> img,
+    integers xs, integers ys,
+    bool closed, doubles color, int thickness, std::string line_type) {
+  cv::Mat dst = get_cpu_mat(img).clone();
+  std::vector<cv::Point> pts;
+  pts.reserve(xs.size());
+  for (int i = 0; i < xs.size(); ++i)
+    pts.push_back(cv::Point(xs[i] - 1, ys[i] - 1));
+  std::vector<std::vector<cv::Point>> pts_vec = {pts};
+  cv::polylines(dst, pts_vec, closed, make_scalar(color),
+                thickness, cv_line_type(line_type));
+  return {new RtImage(std::move(dst), img->colorspace)};
+}
+
+[[cpp11::register]]
+external_pointer<RtImage> rt_fill_poly(
+    external_pointer<RtImage> img,
+    integers xs, integers ys,
+    doubles color, std::string line_type) {
+  cv::Mat dst = get_cpu_mat(img).clone();
+  std::vector<cv::Point> pts;
+  pts.reserve(xs.size());
+  for (int i = 0; i < xs.size(); ++i)
+    pts.push_back(cv::Point(xs[i] - 1, ys[i] - 1));
+  std::vector<std::vector<cv::Point>> pts_vec = {pts};
+  cv::fillPoly(dst, pts_vec, make_scalar(color), cv_line_type(line_type));
+  return {new RtImage(std::move(dst), img->colorspace)};
+}
