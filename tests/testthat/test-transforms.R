@@ -199,6 +199,13 @@ test_that("warp_affine with translation shifts pixels correctly", {
   expect_true(all(out[, 3, 1] == 200L))
 })
 
+test_that("warp_affine() with non-default interpolation and border_type runs without error", {
+  m <- cbind(diag(2), c(0, 0))
+  expect_no_error(
+    img_10x10()$warp_affine(m, interpolation = "nearest", border_type = "constant")
+  )
+})
+
 # ── warp_perspective ──────────────────────────────────────────────────────────
 
 test_that("warp_perspective with identity matrix preserves dimensions", {

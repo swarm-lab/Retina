@@ -34,6 +34,10 @@ test_that("morph('blackhat') returns correct dimensions", {
   expect_equal(result$ncol, 10L)
 })
 
+test_that("morph() with border_type = 'constant' runs without error", {
+  expect_no_error(img_gray()$morph("erode", border_type = "constant"))
+})
+
 # ── semantic checks ───────────────────────────────────────────────────────────
 
 test_that("morph('erode') shrinks bright region (lower mean)", {

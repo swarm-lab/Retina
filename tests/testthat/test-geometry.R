@@ -36,6 +36,12 @@ test_that("resize preserves colorspace", {
   expect_equal(img_bgr()$resize(fx = 2, fy = 2)$colorspace, "BGR")
 })
 
+test_that("resize() with interpolation = 'nearest' returns correct dimensions", {
+  result <- img_bgr()$resize(fx = 2, fy = 2, interpolation = "nearest")
+  expect_equal(result$ncol, 20L)
+  expect_equal(result$nrow, 20L)
+})
+
 # ── rotate ────────────────────────────────────────────────────────────────────
 
 test_that("rotate(90) preserves dimensions", {
@@ -170,4 +176,8 @@ test_that("rotate() rejects 'default' as border_type", {
 
 test_that("rotate() accepts 'reflect_101' as border_type", {
   expect_no_error(img_bgr()$rotate(45, border_type = "reflect_101"))
+})
+
+test_that("rotate() with non-default interpolation and border_type runs without error", {
+  expect_no_error(img_bgr()$rotate(45, interpolation = "cubic", border_type = "replicate"))
 })

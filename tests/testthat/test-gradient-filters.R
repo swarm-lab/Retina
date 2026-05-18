@@ -63,6 +63,10 @@ test_that("sobel() throws for invalid border_type", {
                "border_type must be one of")
 })
 
+test_that("sobel() with border_type = 'replicate' runs without error", {
+  expect_no_error(img_uniform()$sobel(1, 0, border_type = "replicate"))
+})
+
 # ── laplacian ─────────────────────────────────────────────────────────────────
 
 test_that("laplacian() on uniform image returns all-zero output", {
@@ -106,4 +110,8 @@ test_that("laplacian() throws for even ksize", {
 test_that("laplacian() throws for unsupported ddepth", {
   expect_error(img_uniform()$laplacian(ddepth = "CV_8U"),
                "ddepth must be one of")
+})
+
+test_that("laplacian() with border_type = 'reflect' runs without error", {
+  expect_no_error(img_uniform()$laplacian(border_type = "reflect"))
 })
