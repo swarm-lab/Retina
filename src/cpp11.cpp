@@ -243,6 +243,13 @@ extern "C" SEXP _Retina_rt_draw_rectangle(SEXP img, SEXP x1, SEXP y1, SEXP x2, S
     return cpp11::as_sexp(rt_draw_rectangle(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<int>>(x1), cpp11::as_cpp<cpp11::decay_t<int>>(y1), cpp11::as_cpp<cpp11::decay_t<int>>(x2), cpp11::as_cpp<cpp11::decay_t<int>>(y2), cpp11::as_cpp<cpp11::decay_t<doubles>>(color), cpp11::as_cpp<cpp11::decay_t<int>>(thickness), cpp11::as_cpp<cpp11::decay_t<std::string>>(line_type)));
   END_CPP11
 }
+// draw.cpp
+external_pointer<RtImage> rt_draw_circle(external_pointer<RtImage> img, int x, int y, int radius, doubles color, int thickness, std::string line_type);
+extern "C" SEXP _Retina_rt_draw_circle(SEXP img, SEXP x, SEXP y, SEXP radius, SEXP color, SEXP thickness, SEXP line_type) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_draw_circle(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<int>>(x), cpp11::as_cpp<cpp11::decay_t<int>>(y), cpp11::as_cpp<cpp11::decay_t<int>>(radius), cpp11::as_cpp<cpp11::decay_t<doubles>>(color), cpp11::as_cpp<cpp11::decay_t<int>>(thickness), cpp11::as_cpp<cpp11::decay_t<std::string>>(line_type)));
+  END_CPP11
+}
 // filters.cpp
 external_pointer<RtImage> rt_image_blur(external_pointer<RtImage> img, int ksize_w, int ksize_h);
 extern "C" SEXP _Retina_rt_image_blur(SEXP img, SEXP ksize_w, SEXP ksize_h) {
@@ -622,6 +629,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_Retina_rt_build_ok",                 (DL_FUNC) &_Retina_rt_build_ok,                 0},
     {"_Retina_rt_concatenate",              (DL_FUNC) &_Retina_rt_concatenate,              2},
     {"_Retina_rt_draw_arrow",               (DL_FUNC) &_Retina_rt_draw_arrow,               9},
+    {"_Retina_rt_draw_circle",              (DL_FUNC) &_Retina_rt_draw_circle,              7},
     {"_Retina_rt_draw_line",                (DL_FUNC) &_Retina_rt_draw_line,                8},
     {"_Retina_rt_draw_rectangle",           (DL_FUNC) &_Retina_rt_draw_rectangle,           8},
     {"_Retina_rt_fill",                     (DL_FUNC) &_Retina_rt_fill,                     6},

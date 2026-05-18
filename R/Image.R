@@ -2152,6 +2152,66 @@ Image <- R6::R6Class("Image",
       invisible(self)
     },
 
+    #' @description Draw a circle outline (or filled circle) on the image.
+    #'   Returns a new Image.
+    #' @param x Integer. X coordinate of the center.
+    #' @param y Integer. Y coordinate of the center.
+    #' @param radius Non-negative integer. Circle radius in pixels.
+    #' @param color An R color name, hex string, or numeric BGR(A) vector.
+    #' @param thickness Positive integer. Outline width. Ignored when
+    #'   \code{filled = TRUE}. Default \code{1L}.
+    #' @param line_type Character. One of \code{"line_4"}, \code{"line_8"}
+    #'   (default), \code{"aa"}.
+    #' @param filled Logical. If \code{TRUE}, draw a filled circle. Default
+    #'   \code{FALSE}.
+    #' @return A new \code{Image}.
+    #' @examples
+    #' \donttest{
+    #' img_path <- system.file("img", "flower.jpg", package = "Retina")
+    #' img <- Image$new(img_path)
+    #' img$draw_circle(100, 100, 50, color = "green", filled = TRUE)$plot()
+    #' }
+    draw_circle = function(x, y, radius, color, thickness = 1L,
+                           line_type = "line_8", filled = FALSE) {
+      if (!is.logical(filled) || length(filled) != 1L)
+        stop("filled must be a single logical value", call. = FALSE)
+      if (!is.numeric(radius) || length(radius) != 1L ||
+          !is.finite(radius) || radius != round(radius) || radius < 0L)
+        stop("radius must be a single non-negative integer", call. = FALSE)
+      .a <- .rt_valid_draw_common(color, thickness, line_type, filled = filled)
+      Image$new(rt_draw_circle(private$.ptr,
+                               as.integer(x), as.integer(y),
+                               as.integer(radius),
+                               .a$color, .a$thickness, .a$line_type))
+    },
+
+    #' @description Draw a circle on the image in place.
+    #' @param x Integer. X coordinate of the center.
+    #' @param y Integer. Y coordinate of the center.
+    #' @param radius Non-negative integer. Circle radius in pixels.
+    #' @param color An R color name, hex string, or numeric BGR(A) vector.
+    #' @param thickness Positive integer. Outline width. Ignored when
+    #'   \code{filled = TRUE}. Default \code{1L}.
+    #' @param line_type Character. One of \code{"line_4"}, \code{"line_8"}
+    #'   (default), \code{"aa"}.
+    #' @param filled Logical. If \code{TRUE}, fill the circle. Default
+    #'   \code{FALSE}.
+    #' @return \code{self} invisibly.
+    draw_circle_ = function(x, y, radius, color, thickness = 1L,
+                            line_type = "line_8", filled = FALSE) {
+      if (!is.logical(filled) || length(filled) != 1L)
+        stop("filled must be a single logical value", call. = FALSE)
+      if (!is.numeric(radius) || length(radius) != 1L ||
+          !is.finite(radius) || radius != round(radius) || radius < 0L)
+        stop("radius must be a single non-negative integer", call. = FALSE)
+      .a <- .rt_valid_draw_common(color, thickness, line_type, filled = filled)
+      private$.ptr <- rt_draw_circle(private$.ptr,
+                                     as.integer(x), as.integer(y),
+                                     as.integer(radius),
+                                     .a$color, .a$thickness, .a$line_type)
+      invisible(self)
+    },
+
     #' @description Print a summary of the image.
     #' @param ... Ignored.
     #' @return \code{self} invisibly.

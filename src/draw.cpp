@@ -80,3 +80,17 @@ external_pointer<RtImage> rt_draw_rectangle(
                 make_scalar(color), thickness, cv_line_type(line_type));
   return {new RtImage(std::move(dst), img->colorspace)};
 }
+
+// ── circle ────────────────────────────────────────────────────────────────────
+
+[[cpp11::register]]
+external_pointer<RtImage> rt_draw_circle(
+    external_pointer<RtImage> img,
+    int x, int y, int radius,
+    doubles color, int thickness, std::string line_type) {
+  cv::Mat dst = get_cpu_mat(img).clone();
+  cv::circle(dst,
+             cv::Point(x - 1, y - 1), radius,
+             make_scalar(color), thickness, cv_line_type(line_type));
+  return {new RtImage(std::move(dst), img->colorspace)};
+}
