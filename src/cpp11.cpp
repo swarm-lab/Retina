@@ -222,6 +222,20 @@ extern "C" SEXP _Retina_rt_image_to_native_raster(SEXP img) {
     return cpp11::as_sexp(rt_image_to_native_raster(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img)));
   END_CPP11
 }
+// draw.cpp
+external_pointer<RtImage> rt_draw_line(external_pointer<RtImage> img, int x1, int y1, int x2, int y2, doubles color, int thickness, std::string line_type);
+extern "C" SEXP _Retina_rt_draw_line(SEXP img, SEXP x1, SEXP y1, SEXP x2, SEXP y2, SEXP color, SEXP thickness, SEXP line_type) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_draw_line(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<int>>(x1), cpp11::as_cpp<cpp11::decay_t<int>>(y1), cpp11::as_cpp<cpp11::decay_t<int>>(x2), cpp11::as_cpp<cpp11::decay_t<int>>(y2), cpp11::as_cpp<cpp11::decay_t<doubles>>(color), cpp11::as_cpp<cpp11::decay_t<int>>(thickness), cpp11::as_cpp<cpp11::decay_t<std::string>>(line_type)));
+  END_CPP11
+}
+// draw.cpp
+external_pointer<RtImage> rt_draw_arrow(external_pointer<RtImage> img, int x1, int y1, int x2, int y2, doubles color, int thickness, std::string line_type, double tip_length);
+extern "C" SEXP _Retina_rt_draw_arrow(SEXP img, SEXP x1, SEXP y1, SEXP x2, SEXP y2, SEXP color, SEXP thickness, SEXP line_type, SEXP tip_length) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_draw_arrow(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<int>>(x1), cpp11::as_cpp<cpp11::decay_t<int>>(y1), cpp11::as_cpp<cpp11::decay_t<int>>(x2), cpp11::as_cpp<cpp11::decay_t<int>>(y2), cpp11::as_cpp<cpp11::decay_t<doubles>>(color), cpp11::as_cpp<cpp11::decay_t<int>>(thickness), cpp11::as_cpp<cpp11::decay_t<std::string>>(line_type), cpp11::as_cpp<cpp11::decay_t<double>>(tip_length)));
+  END_CPP11
+}
 // filters.cpp
 external_pointer<RtImage> rt_image_blur(external_pointer<RtImage> img, int ksize_w, int ksize_h);
 extern "C" SEXP _Retina_rt_image_blur(SEXP img, SEXP ksize_w, SEXP ksize_h) {
@@ -600,6 +614,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_Retina_rt_autothreshold_value",      (DL_FUNC) &_Retina_rt_autothreshold_value,      3},
     {"_Retina_rt_build_ok",                 (DL_FUNC) &_Retina_rt_build_ok,                 0},
     {"_Retina_rt_concatenate",              (DL_FUNC) &_Retina_rt_concatenate,              2},
+    {"_Retina_rt_draw_arrow",               (DL_FUNC) &_Retina_rt_draw_arrow,               9},
+    {"_Retina_rt_draw_line",                (DL_FUNC) &_Retina_rt_draw_line,                8},
     {"_Retina_rt_fill",                     (DL_FUNC) &_Retina_rt_fill,                     6},
     {"_Retina_rt_has_cuda",                 (DL_FUNC) &_Retina_rt_has_cuda,                 0},
     {"_Retina_rt_has_module",               (DL_FUNC) &_Retina_rt_has_module,               1},

@@ -1998,6 +1998,108 @@ Image <- R6::R6Class("Image",
       invisible(self)
     },
 
+    #' @description Draw a line segment on the image. Returns a new Image.
+    #' @param x1 Positive integer. X (column) coordinate of the start point.
+    #' @param y1 Positive integer. Y (row) coordinate of the start point.
+    #' @param x2 Positive integer. X (column) coordinate of the end point.
+    #' @param y2 Positive integer. Y (row) coordinate of the end point.
+    #' @param color An R color name, hex string, or numeric BGR(A) vector.
+    #' @param thickness Positive integer. Line width in pixels. Default \code{1L}.
+    #' @param line_type Character. One of \code{"line_4"} (4-connected),
+    #'   \code{"line_8"} (8-connected, default), \code{"aa"} (anti-aliased;
+    #'   8-bit images only).
+    #' @return A new \code{Image}.
+    #' @examples
+    #' \donttest{
+    #' img_path <- system.file("img", "flower.jpg", package = "Retina")
+    #' img <- Image$new(img_path)
+    #' img$draw_line(1, 1, 100, 100, color = "red")$plot()
+    #' }
+    draw_line = function(x1, y1, x2, y2, color, thickness = 1L,
+                         line_type = "line_8") {
+      .a <- .rt_valid_draw_common(color, thickness, line_type)
+      Image$new(rt_draw_line(private$.ptr,
+                             as.integer(x1), as.integer(y1),
+                             as.integer(x2), as.integer(y2),
+                             as.double(.a$color), .a$thickness, .a$line_type))
+    },
+
+    #' @description Draw a line segment on the image in place.
+    #' @param x1 Positive integer. X (column) coordinate of the start point.
+    #' @param y1 Positive integer. Y (row) coordinate of the start point.
+    #' @param x2 Positive integer. X (column) coordinate of the end point.
+    #' @param y2 Positive integer. Y (row) coordinate of the end point.
+    #' @param color An R color name, hex string, or numeric BGR(A) vector.
+    #' @param thickness Positive integer. Line width in pixels. Default \code{1L}.
+    #' @param line_type Character. One of \code{"line_4"}, \code{"line_8"}
+    #'   (default), \code{"aa"}.
+    #' @return \code{self} invisibly.
+    draw_line_ = function(x1, y1, x2, y2, color, thickness = 1L,
+                          line_type = "line_8") {
+      .a <- .rt_valid_draw_common(color, thickness, line_type)
+      private$.ptr <- rt_draw_line(private$.ptr,
+                                   as.integer(x1), as.integer(y1),
+                                   as.integer(x2), as.integer(y2),
+                                   as.double(.a$color), .a$thickness, .a$line_type)
+      invisible(self)
+    },
+
+    #' @description Draw an arrowed line on the image. Returns a new Image.
+    #' @param x1 Positive integer. X coordinate of the arrow tail.
+    #' @param y1 Positive integer. Y coordinate of the arrow tail.
+    #' @param x2 Positive integer. X coordinate of the arrowhead tip.
+    #' @param y2 Positive integer. Y coordinate of the arrowhead tip.
+    #' @param color An R color name, hex string, or numeric BGR(A) vector.
+    #' @param thickness Positive integer. Line width in pixels. Default \code{1L}.
+    #' @param line_type Character. One of \code{"line_4"}, \code{"line_8"}
+    #'   (default), \code{"aa"}.
+    #' @param tip_length Numeric. Arrowhead length as a proportion of total
+    #'   arrow length. Negative values produce a reversed arrowhead. Default
+    #'   \code{0.1}.
+    #' @return A new \code{Image}.
+    #' @examples
+    #' \donttest{
+    #' img_path <- system.file("img", "flower.jpg", package = "Retina")
+    #' img <- Image$new(img_path)
+    #' img$draw_arrow(10, 10, 100, 100, color = "blue")$plot()
+    #' }
+    draw_arrow = function(x1, y1, x2, y2, color, thickness = 1L,
+                          line_type = "line_8", tip_length = 0.1) {
+      .a <- .rt_valid_draw_common(color, thickness, line_type)
+      if (!is.numeric(tip_length) || length(tip_length) != 1L)
+        stop("tip_length must be a single numeric value", call. = FALSE)
+      Image$new(rt_draw_arrow(private$.ptr,
+                              as.integer(x1), as.integer(y1),
+                              as.integer(x2), as.integer(y2),
+                              as.double(.a$color), .a$thickness, .a$line_type,
+                              as.double(tip_length)))
+    },
+
+    #' @description Draw an arrowed line on the image in place.
+    #' @param x1 Positive integer. X coordinate of the arrow tail.
+    #' @param y1 Positive integer. Y coordinate of the arrow tail.
+    #' @param x2 Positive integer. X coordinate of the arrowhead tip.
+    #' @param y2 Positive integer. Y coordinate of the arrowhead tip.
+    #' @param color An R color name, hex string, or numeric BGR(A) vector.
+    #' @param thickness Positive integer. Line width in pixels. Default \code{1L}.
+    #' @param line_type Character. One of \code{"line_4"}, \code{"line_8"}
+    #'   (default), \code{"aa"}.
+    #' @param tip_length Numeric. Arrowhead length as a proportion of total
+    #'   arrow length. Default \code{0.1}.
+    #' @return \code{self} invisibly.
+    draw_arrow_ = function(x1, y1, x2, y2, color, thickness = 1L,
+                           line_type = "line_8", tip_length = 0.1) {
+      .a <- .rt_valid_draw_common(color, thickness, line_type)
+      if (!is.numeric(tip_length) || length(tip_length) != 1L)
+        stop("tip_length must be a single numeric value", call. = FALSE)
+      private$.ptr <- rt_draw_arrow(private$.ptr,
+                                    as.integer(x1), as.integer(y1),
+                                    as.integer(x2), as.integer(y2),
+                                    as.double(.a$color), .a$thickness, .a$line_type,
+                                    as.double(tip_length))
+      invisible(self)
+    },
+
     #' @description Print a summary of the image.
     #' @param ... Ignored.
     #' @return \code{self} invisibly.

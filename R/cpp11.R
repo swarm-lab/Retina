@@ -124,6 +124,14 @@ rt_image_to_native_raster <- function(img) {
   .Call(`_Retina_rt_image_to_native_raster`, img)
 }
 
+rt_draw_line <- function(img, x1, y1, x2, y2, color, thickness, line_type) {
+  .Call(`_Retina_rt_draw_line`, img, x1, y1, x2, y2, color, thickness, line_type)
+}
+
+rt_draw_arrow <- function(img, x1, y1, x2, y2, color, thickness, line_type, tip_length) {
+  .Call(`_Retina_rt_draw_arrow`, img, x1, y1, x2, y2, color, thickness, line_type, tip_length)
+}
+
 rt_image_blur <- function(img, ksize_w, ksize_h) {
   .Call(`_Retina_rt_image_blur`, img, ksize_w, ksize_h)
 }
