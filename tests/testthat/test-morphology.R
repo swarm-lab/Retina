@@ -110,3 +110,19 @@ test_that("invalid border_type errors", {
   expect_error(img_gray()$morph("erode", border_type = "padded"),
                "border_type must be one of")
 })
+
+test_that("morph() with kernel skips shape validation", {
+  k <- matrix(c(0L, 1L, 0L, 1L, 1L, 1L, 0L, 1L, 0L), nrow = 3L)
+  expect_no_error(img_gray()$morph("erode", shape = "diamond", kernel = k))
+})
+
+test_that("morph() with kernel skips size validation", {
+  k <- matrix(c(0L, 1L, 0L, 1L, 1L, 1L, 0L, 1L, 0L), nrow = 3L)
+  expect_no_error(img_gray()$morph("erode", size = 4L, kernel = k))
+})
+
+test_that("morph_() with kernel skips shape validation", {
+  k <- matrix(c(0L, 1L, 0L, 1L, 1L, 1L, 0L, 1L, 0L), nrow = 3L)
+  img <- img_gray()
+  expect_no_error(img$morph_("erode", shape = "diamond", kernel = k))
+})

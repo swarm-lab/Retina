@@ -969,13 +969,15 @@ Image <- R6::R6Class("Image",
           !operation %in% .valid_ops)
         stop("operation must be one of: erode, dilate, open, close, gradient, tophat, blackhat",
              call. = FALSE)
-      if (!is.character(shape) || length(shape) != 1L || !shape %in% .valid_shapes)
-        stop("shape must be one of: rect, cross, ellipse", call. = FALSE)
-      size <- as.integer(size)
-      if (length(size) != 1L || is.na(size) || size < 1L || size %% 2L == 0L)
-        stop("size must be a single positive odd integer", call. = FALSE)
       if (!is.null(kernel) && !is.matrix(kernel))
         stop("kernel must be a numeric matrix", call. = FALSE)
+      if (is.null(kernel)) {
+        if (!is.character(shape) || length(shape) != 1L || !shape %in% .valid_shapes)
+          stop("shape must be one of: rect, cross, ellipse", call. = FALSE)
+        size <- as.integer(size)
+        if (length(size) != 1L || is.na(size) || size < 1L || size %% 2L == 0L)
+          stop("size must be a single positive odd integer", call. = FALSE)
+      }
       iterations <- as.integer(iterations)
       if (length(iterations) != 1L || is.na(iterations) || iterations < 1L)
         stop("iterations must be a single positive integer", call. = FALSE)
@@ -1038,13 +1040,15 @@ Image <- R6::R6Class("Image",
           !operation %in% .valid_ops)
         stop("operation must be one of: erode, dilate, open, close, gradient, tophat, blackhat",
              call. = FALSE)
-      if (!is.character(shape) || length(shape) != 1L || !shape %in% .valid_shapes)
-        stop("shape must be one of: rect, cross, ellipse", call. = FALSE)
-      size <- as.integer(size)
-      if (length(size) != 1L || is.na(size) || size < 1L || size %% 2L == 0L)
-        stop("size must be a single positive odd integer", call. = FALSE)
       if (!is.null(kernel) && !is.matrix(kernel))
         stop("kernel must be a numeric matrix", call. = FALSE)
+      if (is.null(kernel)) {
+        if (!is.character(shape) || length(shape) != 1L || !shape %in% .valid_shapes)
+          stop("shape must be one of: rect, cross, ellipse", call. = FALSE)
+        size <- as.integer(size)
+        if (length(size) != 1L || is.na(size) || size < 1L || size %% 2L == 0L)
+          stop("size must be a single positive odd integer", call. = FALSE)
+      }
       iterations <- as.integer(iterations)
       if (length(iterations) != 1L || is.na(iterations) || iterations < 1L)
         stop("iterations must be a single positive integer", call. = FALSE)
