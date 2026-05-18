@@ -42,7 +42,7 @@ col2bgr <- function(color, alpha = FALSE) {
 # ── shared validation helper ──────────────────────────────────────────────────
 
 .rt_valid_draw_common <- function(color, thickness, line_type, filled = FALSE) {
-  .color <- col2bgr(color)
+  .color <- col2bgr(color)[1:3]
   if (!isTRUE(filled)) {
     if (!is.numeric(thickness) || length(thickness) != 1L ||
         !is.finite(thickness) || thickness != round(thickness) || thickness < 1L)
