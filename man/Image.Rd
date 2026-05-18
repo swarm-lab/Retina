@@ -1423,8 +1423,9 @@ storing. Default 0.}
 boundary. \code{"reflect_101"} (default) mirrors the image excluding
 the edge pixel (e.g. dcb|abcde|dcb); \code{"reflect"} mirrors
 including the edge pixel (e.g. edcb|abcde|edcb); \code{"replicate"}
-repeats the nearest edge pixel; \code{"wrap"} tiles the image;
-\code{"constant"} fills with a fixed value (0, i.e. black).}
+repeats the nearest edge pixel; \code{"constant"} fills with a fixed
+value (0, i.e. black). \code{"wrap"} is not supported by OpenCV for
+these operations.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1485,8 +1486,9 @@ arithmetic to invert gradient sign). Default 1.}
 boundary. \code{"reflect_101"} (default) mirrors the image excluding
 the edge pixel (e.g. dcb|abcde|dcb); \code{"reflect"} mirrors
 including the edge pixel (e.g. edcb|abcde|edcb); \code{"replicate"}
-repeats the nearest edge pixel; \code{"wrap"} tiles the image;
-\code{"constant"} fills with a fixed value (0, i.e. black).}
+repeats the nearest edge pixel; \code{"constant"} fills with a fixed
+value (0, i.e. black). \code{"wrap"} is not supported by OpenCV for
+these operations.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1542,8 +1544,9 @@ positive. Default 1.}
 boundary. \code{"reflect_101"} (default) mirrors the image excluding
 the edge pixel (e.g. dcb|abcde|dcb); \code{"reflect"} mirrors
 including the edge pixel (e.g. edcb|abcde|edcb); \code{"replicate"}
-repeats the nearest edge pixel; \code{"wrap"} tiles the image;
-\code{"constant"} fills with a fixed value (0, i.e. black).}
+repeats the nearest edge pixel; \code{"constant"} fills with a fixed
+value (0, i.e. black). \code{"wrap"} is not supported by OpenCV for
+these operations.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1596,8 +1599,9 @@ positive. Default 1.}
 boundary. \code{"reflect_101"} (default) mirrors the image excluding
 the edge pixel (e.g. dcb|abcde|dcb); \code{"reflect"} mirrors
 including the edge pixel (e.g. edcb|abcde|edcb); \code{"replicate"}
-repeats the nearest edge pixel; \code{"wrap"} tiles the image;
-\code{"constant"} fills with a fixed value (0, i.e. black).}
+repeats the nearest edge pixel; \code{"constant"} fills with a fixed
+value (0, i.e. black). \code{"wrap"} is not supported by OpenCV for
+these operations.}
 }
 \if{html}{\out{</div>}}
 }

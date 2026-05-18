@@ -671,8 +671,9 @@ Image <- R6::R6Class("Image",
     #'   boundary. \code{"reflect_101"} (default) mirrors the image excluding
     #'   the edge pixel (e.g. dcb|abcde|dcb); \code{"reflect"} mirrors
     #'   including the edge pixel (e.g. edcb|abcde|edcb); \code{"replicate"}
-    #'   repeats the nearest edge pixel; \code{"wrap"} tiles the image;
-    #'   \code{"constant"} fills with a fixed value (0, i.e. black).
+    #'   repeats the nearest edge pixel; \code{"constant"} fills with a fixed
+    #'   value (0, i.e. black). \code{"wrap"} is not supported by OpenCV for
+    #'   these operations.
     #' @return A new \code{Image}.
     #' @examples
     #' \donttest{
@@ -684,7 +685,7 @@ Image <- R6::R6Class("Image",
     sobel = function(dx, dy, ksize = 3, ddepth = "CV_32F",
                      scale = 1, delta = 0, border_type = "reflect_101") {
       .valid_border <- c("reflect", "reflect_101",
-                         "replicate", "constant", "wrap")
+                         "replicate", "constant")
       if (!is.numeric(dx) || !is.numeric(dy) ||
           length(dx) != 1L || length(dy) != 1L ||
           dx < 0 || dy < 0 || (dx + dy) < 1)
@@ -699,7 +700,7 @@ Image <- R6::R6Class("Image",
       if (!is.numeric(delta) || length(delta) != 1L)
         stop("delta must be a single numeric value", call. = FALSE)
       if (!border_type %in% .valid_border)
-        stop("border_type must be one of: reflect, reflect_101, replicate, constant, wrap",
+        stop("border_type must be one of: reflect, reflect_101, replicate, constant",
              call. = FALSE)
       Image$new(rt_image_sobel(private$.ptr, as.integer(dx), as.integer(dy),
                                as.integer(ksize), ddepth, as.double(scale),
@@ -721,8 +722,9 @@ Image <- R6::R6Class("Image",
     #'   boundary. \code{"reflect_101"} (default) mirrors the image excluding
     #'   the edge pixel (e.g. dcb|abcde|dcb); \code{"reflect"} mirrors
     #'   including the edge pixel (e.g. edcb|abcde|edcb); \code{"replicate"}
-    #'   repeats the nearest edge pixel; \code{"wrap"} tiles the image;
-    #'   \code{"constant"} fills with a fixed value (0, i.e. black).
+    #'   repeats the nearest edge pixel; \code{"constant"} fills with a fixed
+    #'   value (0, i.e. black). \code{"wrap"} is not supported by OpenCV for
+    #'   these operations.
     #' @return \code{self} invisibly.
     #' @examples
     #' \donttest{
@@ -734,7 +736,7 @@ Image <- R6::R6Class("Image",
     sobel_ = function(dx, dy, ksize = 3, ddepth = "CV_32F",
                       scale = 1, delta = 0, border_type = "reflect_101") {
       .valid_border <- c("reflect", "reflect_101",
-                         "replicate", "constant", "wrap")
+                         "replicate", "constant")
       if (!is.numeric(dx) || !is.numeric(dy) ||
           length(dx) != 1L || length(dy) != 1L ||
           dx < 0 || dy < 0 || (dx + dy) < 1)
@@ -749,7 +751,7 @@ Image <- R6::R6Class("Image",
       if (!is.numeric(delta) || length(delta) != 1L)
         stop("delta must be a single numeric value", call. = FALSE)
       if (!border_type %in% .valid_border)
-        stop("border_type must be one of: reflect, reflect_101, replicate, constant, wrap",
+        stop("border_type must be one of: reflect, reflect_101, replicate, constant",
              call. = FALSE)
       private$.ptr <- rt_image_sobel(private$.ptr, as.integer(dx), as.integer(dy),
                                      as.integer(ksize), ddepth, as.double(scale),
@@ -771,8 +773,9 @@ Image <- R6::R6Class("Image",
     #'   boundary. \code{"reflect_101"} (default) mirrors the image excluding
     #'   the edge pixel (e.g. dcb|abcde|dcb); \code{"reflect"} mirrors
     #'   including the edge pixel (e.g. edcb|abcde|edcb); \code{"replicate"}
-    #'   repeats the nearest edge pixel; \code{"wrap"} tiles the image;
-    #'   \code{"constant"} fills with a fixed value (0, i.e. black).
+    #'   repeats the nearest edge pixel; \code{"constant"} fills with a fixed
+    #'   value (0, i.e. black). \code{"wrap"} is not supported by OpenCV for
+    #'   these operations.
     #' @return A new \code{Image}.
     #' @examples
     #' \donttest{
@@ -784,7 +787,7 @@ Image <- R6::R6Class("Image",
     laplacian = function(ksize = 1, ddepth = "CV_32F",
                          scale = 1, delta = 0, border_type = "reflect_101") {
       .valid_border <- c("reflect", "reflect_101",
-                         "replicate", "constant", "wrap")
+                         "replicate", "constant")
       if (!ksize %in% c(1L, 3L, 5L, 7L))
         stop("ksize must be 1, 3, 5, or 7", call. = FALSE)
       if (!ddepth %in% c("CV_16S", "CV_32F", "CV_64F"))
@@ -794,7 +797,7 @@ Image <- R6::R6Class("Image",
       if (!is.numeric(delta) || length(delta) != 1L)
         stop("delta must be a single numeric value", call. = FALSE)
       if (!border_type %in% .valid_border)
-        stop("border_type must be one of: reflect, reflect_101, replicate, constant, wrap",
+        stop("border_type must be one of: reflect, reflect_101, replicate, constant",
              call. = FALSE)
       Image$new(rt_image_laplacian(private$.ptr, as.integer(ksize), ddepth,
                                    as.double(scale), as.double(delta),
@@ -812,8 +815,9 @@ Image <- R6::R6Class("Image",
     #'   boundary. \code{"reflect_101"} (default) mirrors the image excluding
     #'   the edge pixel (e.g. dcb|abcde|dcb); \code{"reflect"} mirrors
     #'   including the edge pixel (e.g. edcb|abcde|edcb); \code{"replicate"}
-    #'   repeats the nearest edge pixel; \code{"wrap"} tiles the image;
-    #'   \code{"constant"} fills with a fixed value (0, i.e. black).
+    #'   repeats the nearest edge pixel; \code{"constant"} fills with a fixed
+    #'   value (0, i.e. black). \code{"wrap"} is not supported by OpenCV for
+    #'   these operations.
     #' @return \code{self} invisibly.
     #' @examples
     #' \donttest{
@@ -825,7 +829,7 @@ Image <- R6::R6Class("Image",
     laplacian_ = function(ksize = 1, ddepth = "CV_32F",
                           scale = 1, delta = 0, border_type = "reflect_101") {
       .valid_border <- c("reflect", "reflect_101",
-                         "replicate", "constant", "wrap")
+                         "replicate", "constant")
       if (!ksize %in% c(1L, 3L, 5L, 7L))
         stop("ksize must be 1, 3, 5, or 7", call. = FALSE)
       if (!ddepth %in% c("CV_16S", "CV_32F", "CV_64F"))
@@ -835,7 +839,7 @@ Image <- R6::R6Class("Image",
       if (!is.numeric(delta) || length(delta) != 1L)
         stop("delta must be a single numeric value", call. = FALSE)
       if (!border_type %in% .valid_border)
-        stop("border_type must be one of: reflect, reflect_101, replicate, constant, wrap",
+        stop("border_type must be one of: reflect, reflect_101, replicate, constant",
              call. = FALSE)
       private$.ptr <- rt_image_laplacian(private$.ptr, as.integer(ksize),
                                          ddepth, as.double(scale),
