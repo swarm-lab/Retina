@@ -29,3 +29,14 @@ rt_channel_names <- function(colorspace, nchan) {
     stop("other must be an Image or a numeric vector", call. = FALSE)
   }
 }
+
+.rt_infer_ddepth <- function(depth_name) {
+  switch(depth_name,
+    CV_8U  = "CV_16S",
+    CV_16U = "CV_32F",
+    CV_16S = "CV_32F",
+    CV_32F = "CV_32F",
+    CV_64F = "CV_64F",
+    stop("No ddepth inference for depth '", depth_name, "'", call. = FALSE)
+  )
+}

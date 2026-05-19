@@ -21,8 +21,25 @@ test_that("sobel() returns Image with same dimensions and colorspace", {
   expect_equal(result$colorspace, img$colorspace)
 })
 
-test_that("sobel() default output depth is CV_32F", {
-  result <- img_uniform()$sobel(1, 0)
+test_that("sobel() with NULL ddepth on CV_8U produces CV_16S with message", {
+  expect_message(
+    result <- img_uniform()$sobel(1, 0),
+    'ddepth not specified; using "CV_16S" for a CV_8U image.'
+  )
+  expect_equal(result$depth_name, "CV_16S")
+})
+
+test_that("sobel() with NULL ddepth on CV_32F produces CV_32F with message", {
+  img <- Image$new(array(0.5, dim = c(10L, 10L, 1L)), depth = "CV_32F")
+  expect_message(
+    result <- img$sobel(1L, 0L),
+    'ddepth not specified; using "CV_32F" for a CV_32F image.'
+  )
+  expect_equal(result$depth_name, "CV_32F")
+})
+
+test_that("sobel() with explicit ddepth produces no message", {
+  expect_no_message(result <- img_uniform()$sobel(1L, 0L, ddepth = "CV_32F"))
   expect_equal(result$depth_name, "CV_32F")
 })
 
@@ -33,9 +50,8 @@ test_that("sobel() with ddepth = CV_16S gives CV_16S output", {
 
 test_that("sobel_() modifies in place and returns self", {
   img <- img_uniform()
-  result <- img$sobel_(1, 0)
+  result <- img$sobel_(1, 0, ddepth = "CV_16S")
   expect_identical(result, img)
-  expect_equal(img$depth_name, "CV_32F")
 })
 
 test_that("sobel() throws for dx = 0 and dy = 0", {
@@ -80,8 +96,25 @@ test_that("laplacian() returns Image with same dimensions and colorspace", {
   expect_equal(result$colorspace, img$colorspace)
 })
 
-test_that("laplacian() default output depth is CV_32F", {
-  result <- img_uniform()$laplacian()
+test_that("laplacian() with NULL ddepth on CV_8U produces CV_16S with message", {
+  expect_message(
+    result <- img_uniform()$laplacian(),
+    'ddepth not specified; using "CV_16S" for a CV_8U image.'
+  )
+  expect_equal(result$depth_name, "CV_16S")
+})
+
+test_that("laplacian() with NULL ddepth on CV_32F produces CV_32F with message", {
+  img <- Image$new(array(0.5, dim = c(10L, 10L, 1L)), depth = "CV_32F")
+  expect_message(
+    result <- img$laplacian(),
+    'ddepth not specified; using "CV_32F" for a CV_32F image.'
+  )
+  expect_equal(result$depth_name, "CV_32F")
+})
+
+test_that("laplacian() with explicit ddepth produces no message", {
+  expect_no_message(result <- img_uniform()$laplacian(ddepth = "CV_32F"))
   expect_equal(result$depth_name, "CV_32F")
 })
 
@@ -92,9 +125,8 @@ test_that("laplacian() with ddepth = CV_16S gives CV_16S output", {
 
 test_that("laplacian_() modifies in place and returns self", {
   img <- img_uniform()
-  result <- img$laplacian_()
+  result <- img$laplacian_(ddepth = "CV_16S")
   expect_identical(result, img)
-  expect_equal(img$depth_name, "CV_32F")
 })
 
 test_that("laplacian() throws for even ksize", {
