@@ -102,7 +102,7 @@ test_that("[.Image with k returns single scalar", {
 
 test_that("[.Image range returns Image with correct dimensions", {
   result <- img_3x4()[1:2, 1:3]
-  expect_true(inherits(result, "Image"))
+  expect_s3_class(result, "Image")
   expect_equal(result$nrow, 2L)
   expect_equal(result$ncol, 3L)
 })
@@ -220,7 +220,7 @@ test_that("[<-.Image range write (ROI copy) pastes src into dst", {
 test_that("[<-.Image returns the modified image", {
   img <- img_3x4()
   result <- `[<-`(img, 1L, 1L, value = c(1L, 2L, 3L))
-  expect_true(inherits(result, "Image"))
+  expect_s3_class(result, "Image")
 })
 
 test_that("[<-.Image errors when value length mismatches nchan", {

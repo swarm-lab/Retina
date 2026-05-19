@@ -1,7 +1,7 @@
 test_that("rt_image_to_native_raster() returns correct nativeRaster dimensions", {
   img <- make_test_image()
   nr <- Retina:::rt_image_to_native_raster(img$.__enclos_env__$private$.ptr)
-  expect_true(inherits(nr, "nativeRaster"))
+  expect_s3_class(nr, "nativeRaster")
   expect_equal(dim(nr), c(10L, 10L))
 })
 

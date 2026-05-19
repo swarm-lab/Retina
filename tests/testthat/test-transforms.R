@@ -50,7 +50,7 @@ test_that("affine_shear with zero shear returns identity-like matrix", {
 test_that("affine_rotate returns a 2x3 numeric matrix", {
   m <- affine_rotate(45, cx = 5, cy = 5)
   expect_true(is.matrix(m))
-  expect_true(is.numeric(m))
+  expect_type(m, "double")
   expect_equal(dim(m), c(2L, 3L))
 })
 

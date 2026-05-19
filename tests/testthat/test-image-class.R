@@ -135,21 +135,21 @@ test_that("Image$new() throws for unsupported depth string", {
 test_that("to_array() returns integer array for CV_16S with correct values", {
   img <- Image$new(array(100L, dim = c(5L, 5L, 3L)), depth = "CV_16S")
   arr <- img$to_array()
-  expect_true(is.integer(arr))
+  expect_type(arr, "integer")
   expect_equal(arr[1, 1, 1], 100L)
 })
 
 test_that("to_array() returns double array for CV_32F with correct values", {
   img <- Image$new(array(0.5, dim = c(5L, 5L, 3L)), depth = "CV_32F")
   arr <- img$to_array()
-  expect_true(is.double(arr))
+  expect_type(arr, "double")
   expect_equal(arr[1, 1, 1], 0.5, tolerance = 1e-6)
 })
 
 test_that("to_array() returns double array for CV_64F with correct values", {
   img <- Image$new(array(0.5, dim = c(5L, 5L, 3L)), depth = "CV_64F")
   arr <- img$to_array()
-  expect_true(is.double(arr))
+  expect_type(arr, "double")
   expect_equal(arr[1, 1, 1], 0.5, tolerance = 1e-15)
 })
 
@@ -194,7 +194,7 @@ test_that("to_array() round-trips negative values for CV_16S", {
   arr <- array(-100L, dim = c(5L, 5L, 3L))
   img <- Image$new(arr, depth = "CV_16S")
   result <- img$to_array()
-  expect_true(is.integer(result))
+  expect_type(result, "integer")
   expect_equal(result[1, 1, 1], -100L)
 })
 
