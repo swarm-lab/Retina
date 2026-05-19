@@ -10,5 +10,6 @@ docs/*
 !docs/superpowers/**
 .DS_store
 .claude/
+.mnem/
 ..Rcheck/
 tests/testthat/Rplots.pdf
