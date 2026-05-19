@@ -9,3 +9,6 @@ docs/*
 !docs/superpowers/
 !docs/superpowers/**
 .DS_store
+.claude/
+..Rcheck/
+tests/testthat/Rplots.pdf
