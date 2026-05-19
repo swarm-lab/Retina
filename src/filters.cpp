@@ -125,3 +125,23 @@ external_pointer<RtImage> rt_image_scharr(
              scale, delta, cv_border_type(border_type));
   return {new RtImage(std::move(dst), img->colorspace)};
 }
+
+// ── filter2D ──────────────────────────────────────────────────────────────────
+
+[[cpp11::register]]
+external_pointer<RtImage> rt_image_filter2d(
+    external_pointer<RtImage> img,
+    cpp11::doubles kernel_data,
+    int kernel_nrow, int kernel_ncol,
+    int ddepth, int anchor_x, int anchor_y,
+    double delta, std::string border_type) {
+  cv::Mat kernel(kernel_nrow, kernel_ncol, CV_64F);
+  for (int j = 0; j < kernel_ncol; j++)
+    for (int i = 0; i < kernel_nrow; i++)
+      kernel.at<double>(i, j) = kernel_data[i + j * kernel_nrow];
+  cv::Mat dst;
+  cv::filter2D(get_cpu_mat(img), dst, ddepth, kernel,
+               cv::Point(anchor_x, anchor_y), delta,
+               cv_border_type(border_type));
+  return {new RtImage(std::move(dst), img->colorspace)};
+}

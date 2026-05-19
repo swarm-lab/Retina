@@ -341,6 +341,20 @@ extern "C" SEXP _Retina_rt_image_canny(SEXP img, SEXP low_threshold, SEXP high_t
     return cpp11::as_sexp(rt_image_canny(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<double>>(low_threshold), cpp11::as_cpp<cpp11::decay_t<double>>(high_threshold), cpp11::as_cpp<cpp11::decay_t<int>>(aperture_size), cpp11::as_cpp<cpp11::decay_t<bool>>(L2_gradient)));
   END_CPP11
 }
+// filters.cpp
+external_pointer<RtImage> rt_image_scharr(external_pointer<RtImage> img, int dx, int dy, std::string ddepth, double scale, double delta, std::string border_type);
+extern "C" SEXP _Retina_rt_image_scharr(SEXP img, SEXP dx, SEXP dy, SEXP ddepth, SEXP scale, SEXP delta, SEXP border_type) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_image_scharr(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<int>>(dx), cpp11::as_cpp<cpp11::decay_t<int>>(dy), cpp11::as_cpp<cpp11::decay_t<std::string>>(ddepth), cpp11::as_cpp<cpp11::decay_t<double>>(scale), cpp11::as_cpp<cpp11::decay_t<double>>(delta), cpp11::as_cpp<cpp11::decay_t<std::string>>(border_type)));
+  END_CPP11
+}
+// filters.cpp
+external_pointer<RtImage> rt_image_filter2d(external_pointer<RtImage> img, cpp11::doubles kernel_data, int kernel_nrow, int kernel_ncol, int ddepth, int anchor_x, int anchor_y, double delta, std::string border_type);
+extern "C" SEXP _Retina_rt_image_filter2d(SEXP img, SEXP kernel_data, SEXP kernel_nrow, SEXP kernel_ncol, SEXP ddepth, SEXP anchor_x, SEXP anchor_y, SEXP delta, SEXP border_type) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_image_filter2d(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<cpp11::doubles>>(kernel_data), cpp11::as_cpp<cpp11::decay_t<int>>(kernel_nrow), cpp11::as_cpp<cpp11::decay_t<int>>(kernel_ncol), cpp11::as_cpp<cpp11::decay_t<int>>(ddepth), cpp11::as_cpp<cpp11::decay_t<int>>(anchor_x), cpp11::as_cpp<cpp11::decay_t<int>>(anchor_y), cpp11::as_cpp<cpp11::decay_t<double>>(delta), cpp11::as_cpp<cpp11::decay_t<std::string>>(border_type)));
+  END_CPP11
+}
 // geometry.cpp
 external_pointer<RtImage> rt_image_resize(external_pointer<RtImage> img, int width, int height, double fx, double fy, std::string interpolation);
 extern "C" SEXP _Retina_rt_image_resize(SEXP img, SEXP width, SEXP height, SEXP fx, SEXP fy, SEXP interpolation) {
@@ -710,6 +724,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_Retina_rt_image_divide_image",       (DL_FUNC) &_Retina_rt_image_divide_image,        2},
     {"_Retina_rt_image_divide_scalar",      (DL_FUNC) &_Retina_rt_image_divide_scalar,       2},
     {"_Retina_rt_image_extract_region",     (DL_FUNC) &_Retina_rt_image_extract_region,      5},
+    {"_Retina_rt_image_filter2d",           (DL_FUNC) &_Retina_rt_image_filter2d,            9},
     {"_Retina_rt_image_flip",               (DL_FUNC) &_Retina_rt_image_flip,                2},
     {"_Retina_rt_image_from_double_array",  (DL_FUNC) &_Retina_rt_image_from_double_array,   3},
     {"_Retina_rt_image_from_integer_array", (DL_FUNC) &_Retina_rt_image_from_integer_array,  3},
@@ -735,6 +750,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_Retina_rt_image_read",               (DL_FUNC) &_Retina_rt_image_read,                1},
     {"_Retina_rt_image_resize",             (DL_FUNC) &_Retina_rt_image_resize,              6},
     {"_Retina_rt_image_rotate",             (DL_FUNC) &_Retina_rt_image_rotate,              7},
+    {"_Retina_rt_image_scharr",             (DL_FUNC) &_Retina_rt_image_scharr,              7},
     {"_Retina_rt_image_sd",                 (DL_FUNC) &_Retina_rt_image_sd,                  1},
     {"_Retina_rt_image_set_colorspace",     (DL_FUNC) &_Retina_rt_image_set_colorspace,      2},
     {"_Retina_rt_image_set_pixel",          (DL_FUNC) &_Retina_rt_image_set_pixel,           4},

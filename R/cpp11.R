@@ -192,6 +192,14 @@ rt_image_canny <- function(img, low_threshold, high_threshold, aperture_size, L2
   .Call(`_Retina_rt_image_canny`, img, low_threshold, high_threshold, aperture_size, L2_gradient)
 }
 
+rt_image_scharr <- function(img, dx, dy, ddepth, scale, delta, border_type) {
+  .Call(`_Retina_rt_image_scharr`, img, dx, dy, ddepth, scale, delta, border_type)
+}
+
+rt_image_filter2d <- function(img, kernel_data, kernel_nrow, kernel_ncol, ddepth, anchor_x, anchor_y, delta, border_type) {
+  .Call(`_Retina_rt_image_filter2d`, img, kernel_data, kernel_nrow, kernel_ncol, ddepth, anchor_x, anchor_y, delta, border_type)
+}
+
 rt_image_resize <- function(img, width, height, fx, fy, interpolation) {
   .Call(`_Retina_rt_image_resize`, img, width, height, fx, fy, interpolation)
 }

@@ -1045,6 +1045,131 @@ Image <- R6::R6Class("Image",
       invisible(self)
     },
 
+    #' @description Apply an arbitrary 2D convolution kernel. Returns a new Image.
+    #' @param kernel Numeric matrix. The convolution kernel. Values are coerced
+    #'   to double.
+    #' @param ddepth Character or \code{NULL}. Output depth. One of
+    #'   \code{"CV_8U"}, \code{"CV_16U"}, \code{"CV_16S"}, \code{"CV_32F"},
+    #'   \code{"CV_64F"}. When \code{NULL} (default), the output depth matches
+    #'   the input depth (OpenCV \code{-1}).
+    #' @param anchor \code{NULL} (default, kernel centre) or a length-2 integer
+    #'   vector \code{c(col, row)} specifying the anchor pixel within the kernel
+    #'   (0-based).
+    #' @param delta Single numeric. Constant added to every output pixel after
+    #'   convolution. Default \code{0}.
+    #' @param border_type Character. How to fill pixels outside the image
+    #'   boundary. \code{"reflect_101"} (default) mirrors the image excluding
+    #'   the edge pixel (e.g. dcb|abcde|dcb); \code{"reflect"} mirrors
+    #'   including the edge pixel (e.g. edcb|abcde|edcb); \code{"replicate"}
+    #'   repeats the nearest edge pixel; \code{"constant"} fills with a fixed
+    #'   value (0, i.e. black); \code{"wrap"} tiles the image at the boundary.
+    #' @return A new \code{Image}.
+    #' @examples
+    #' \donttest{
+    #' img_path <- system.file("img", "flower.jpg", package = "Retina")
+    #' img <- Image$new(img_path)
+    #' sharpen <- matrix(c(0,-1,0,-1,5,-1,0,-1,0), nrow = 3)
+    #' sharpened <- img$filter2D(sharpen)
+    #' sharpened$plot()
+    #' }
+    filter2D = function(kernel, ddepth = NULL, anchor = NULL, delta = 0,
+                        border_type = "reflect_101") {
+      .valid_border <- c("reflect", "reflect_101", "replicate", "constant", "wrap")
+      .valid_depths <- c("CV_8U", "CV_16U", "CV_16S", "CV_32F", "CV_64F")
+      if (!is.matrix(kernel) || !is.numeric(kernel))
+        stop("kernel must be a numeric matrix", call. = FALSE)
+      if (any(!is.finite(kernel)))
+        stop("kernel must not contain NA or infinite values", call. = FALSE)
+      if (!is.null(ddepth)) {
+        if (!is.character(ddepth) || length(ddepth) != 1L ||
+            !ddepth %in% .valid_depths)
+          stop("ddepth must be NULL or one of: CV_8U, CV_16U, CV_16S, CV_32F, CV_64F",
+               call. = FALSE)
+      }
+      if (!is.null(anchor)) {
+        anchor <- as.integer(anchor)
+        if (length(anchor) != 2L || any(is.na(anchor)))
+          stop("anchor must be NULL or a length-2 integer vector", call. = FALSE)
+        if (anchor[1L] < 0L || anchor[1L] >= ncol(kernel) ||
+            anchor[2L] < 0L || anchor[2L] >= nrow(kernel))
+          stop("anchor values are out of kernel bounds (0-based)", call. = FALSE)
+      }
+      if (!is.numeric(delta) || length(delta) != 1L || !is.finite(delta))
+        stop("delta must be a single finite numeric", call. = FALSE)
+      if (!is.character(border_type) || length(border_type) != 1L ||
+          !border_type %in% .valid_border)
+        stop("border_type must be one of: reflect, reflect_101, replicate, constant, wrap",
+             call. = FALSE)
+      .ddepth_int <- if (is.null(ddepth)) -1L else {
+        c(CV_8U = 0L, CV_16U = 2L, CV_16S = 3L, CV_32F = 5L, CV_64F = 6L)[[ddepth]]
+      }
+      .anchor_x <- if (is.null(anchor)) -1L else anchor[1L]
+      .anchor_y <- if (is.null(anchor)) -1L else anchor[2L]
+      Image$new(rt_image_filter2d(private$.ptr,
+                                  as.double(as.vector(kernel)),
+                                  nrow(kernel), ncol(kernel),
+                                  .ddepth_int, .anchor_x, .anchor_y,
+                                  as.double(delta), border_type))
+    },
+
+    #' @description Apply an arbitrary 2D convolution kernel in place.
+    #' @param kernel Numeric matrix. The convolution kernel.
+    #' @param ddepth Character or \code{NULL}. Output depth. Default \code{NULL}
+    #'   (preserves input depth).
+    #' @param anchor \code{NULL} (kernel centre) or \code{c(col, row)} (0-based).
+    #' @param delta Single numeric. Additive offset. Default \code{0}.
+    #' @param border_type Character. Border handling mode. Default
+    #'   \code{"reflect_101"}.
+    #' @return \code{self} invisibly.
+    #' @examples
+    #' \donttest{
+    #' img_path <- system.file("img", "flower.jpg", package = "Retina")
+    #' img <- Image$new(img_path)
+    #' sharpen <- matrix(c(0,-1,0,-1,5,-1,0,-1,0), nrow = 3)
+    #' img$filter2D_(sharpen)
+    #' img$plot()
+    #' }
+    filter2D_ = function(kernel, ddepth = NULL, anchor = NULL, delta = 0,
+                         border_type = "reflect_101") {
+      .valid_border <- c("reflect", "reflect_101", "replicate", "constant", "wrap")
+      .valid_depths <- c("CV_8U", "CV_16U", "CV_16S", "CV_32F", "CV_64F")
+      if (!is.matrix(kernel) || !is.numeric(kernel))
+        stop("kernel must be a numeric matrix", call. = FALSE)
+      if (any(!is.finite(kernel)))
+        stop("kernel must not contain NA or infinite values", call. = FALSE)
+      if (!is.null(ddepth)) {
+        if (!is.character(ddepth) || length(ddepth) != 1L ||
+            !ddepth %in% .valid_depths)
+          stop("ddepth must be NULL or one of: CV_8U, CV_16U, CV_16S, CV_32F, CV_64F",
+               call. = FALSE)
+      }
+      if (!is.null(anchor)) {
+        anchor <- as.integer(anchor)
+        if (length(anchor) != 2L || any(is.na(anchor)))
+          stop("anchor must be NULL or a length-2 integer vector", call. = FALSE)
+        if (anchor[1L] < 0L || anchor[1L] >= ncol(kernel) ||
+            anchor[2L] < 0L || anchor[2L] >= nrow(kernel))
+          stop("anchor values are out of kernel bounds (0-based)", call. = FALSE)
+      }
+      if (!is.numeric(delta) || length(delta) != 1L || !is.finite(delta))
+        stop("delta must be a single finite numeric", call. = FALSE)
+      if (!is.character(border_type) || length(border_type) != 1L ||
+          !border_type %in% .valid_border)
+        stop("border_type must be one of: reflect, reflect_101, replicate, constant, wrap",
+             call. = FALSE)
+      .ddepth_int <- if (is.null(ddepth)) -1L else {
+        c(CV_8U = 0L, CV_16U = 2L, CV_16S = 3L, CV_32F = 5L, CV_64F = 6L)[[ddepth]]
+      }
+      .anchor_x <- if (is.null(anchor)) -1L else anchor[1L]
+      .anchor_y <- if (is.null(anchor)) -1L else anchor[2L]
+      private$.ptr <- rt_image_filter2d(private$.ptr,
+                                        as.double(as.vector(kernel)),
+                                        nrow(kernel), ncol(kernel),
+                                        .ddepth_int, .anchor_x, .anchor_y,
+                                        as.double(delta), border_type)
+      invisible(self)
+    },
+
     #' @description Apply a morphological operation. Returns a new Image.
     #' @param operation Character. One of \code{"erode"} (shrinks bright
     #'   regions), \code{"dilate"} (expands bright regions), \code{"open"}
