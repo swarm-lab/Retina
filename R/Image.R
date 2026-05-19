@@ -2929,6 +2929,73 @@ Image <- R6::R6Class("Image",
       invisible(self)
     },
 
+    # ── Histogram ─────────────────────────────────────────────────────────────
+
+    #' @description Compute a per-channel histogram of pixel values.
+    #' @param bins Single positive integer. Number of histogram bins. Default
+    #'   \code{256}.
+    #' @param range Length-2 numeric vector \code{c(lo, hi)} giving the
+    #'   pixel-value range to histogram. \code{NULL} (default) applies a
+    #'   depth-appropriate default and emits a message.
+    #' @param freq Logical. \code{TRUE} (default): \code{count} column contains
+    #'   raw pixel counts (consistent with base R \code{hist(freq = TRUE)}).
+    #'   \code{FALSE}: \code{count} column contains probability densities
+    #'   (counts / (total_pixels * bin_width)).
+    #' @return A tidy data frame with columns \code{bin_center} (double),
+    #'   \code{channel} (character), and \code{count} (double). One row per
+    #'   bin per channel, ordered by channel then ascending \code{bin_center}.
+    #' @examples
+    #' \donttest{
+    #' img_path <- system.file("img", "flower.jpg", package = "Retina")
+    #' img <- Image$new(img_path)$to_gray()
+    #' h <- img$hist(bins = 256L, range = c(0, 256))
+    #' # plot with ggplot2:
+    #' # ggplot2::ggplot(h, ggplot2::aes(x = bin_center, y = count)) +
+    #' #   ggplot2::geom_col()
+    #' }
+    hist = function(bins = 256L, range = NULL, freq = TRUE) {
+      .depth_ranges <- list(
+        CV_8U  = c(0, 256),
+        CV_16U = c(0, 65536),
+        CV_16S = c(-32768, 32768),
+        CV_32F = c(0, 1),
+        CV_64F = c(0, 1)
+      )
+      bins <- as.integer(bins)
+      if (!is.integer(bins) || length(bins) != 1L || is.na(bins) || bins < 1L)
+        stop("bins must be a single positive integer", call. = FALSE)
+      if (is.null(range)) {
+        r <- .depth_ranges[[self$depth_name]]
+        if (is.null(r))
+          stop("No default range for depth '", self$depth_name,
+               "' — provide range explicitly.", call. = FALSE)
+        range <- r
+        message("range not specified; using [", range[1], ", ", range[2],
+                "] for ", self$depth_name, " image.")
+      }
+      if (!is.numeric(range) || length(range) != 2L ||
+          !all(is.finite(range)) || range[1] >= range[2])
+        stop("range must be a length-2 finite numeric vector with range[1] < range[2]",
+             call. = FALSE)
+      if (!is.logical(freq) || length(freq) != 1L || is.na(freq))
+        stop("freq must be a single logical value", call. = FALSE)
+
+      ch_names    <- rt_channel_names(self$colorspace, self$nchan)
+      counts_list <- rt_hist(private$.ptr, bins,
+                             as.double(range[1]), as.double(range[2]))
+      bin_width   <- (range[2] - range[1]) / bins
+      bin_centers <- range[1] + (seq_len(bins) - 0.5) * bin_width
+      total_px    <- self$nrow * self$ncol
+
+      dfs <- lapply(seq_along(ch_names), \(i) {
+        counts <- counts_list[[i]]
+        if (!freq) counts <- counts / (total_px * bin_width)
+        data.frame(bin_center = bin_centers, channel = ch_names[i],
+                   count = counts, stringsAsFactors = FALSE)
+      })
+      do.call(rbind, dfs)
+    },
+
     #' @description Print a summary of the image.
     #' @param ... Ignored.
     #' @return \code{self} invisibly.

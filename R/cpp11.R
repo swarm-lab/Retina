@@ -228,6 +228,34 @@ rt_image_crop <- function(img, x1, y1, x2, y2) {
   .Call(`_Retina_rt_image_crop`, img, x1, y1, x2, y2)
 }
 
+rt_hist <- function(img, bins, range_lo, range_hi) {
+  .Call(`_Retina_rt_hist`, img, bins, range_lo, range_hi)
+}
+
+rt_hist_eq <- function(img) {
+  .Call(`_Retina_rt_hist_eq`, img)
+}
+
+rt_lut <- function(img, lut_vals) {
+  .Call(`_Retina_rt_lut`, img, lut_vals)
+}
+
+rt_clahe <- function(img, clip_limit, tile_w, tile_h) {
+  .Call(`_Retina_rt_clahe`, img, clip_limit, tile_w, tile_h)
+}
+
+rt_minmax_loc <- function(img) {
+  .Call(`_Retina_rt_minmax_loc`, img)
+}
+
+rt_count_nonzero <- function(img) {
+  .Call(`_Retina_rt_count_nonzero`, img)
+}
+
+rt_find_nonzero <- function(img) {
+  .Call(`_Retina_rt_find_nonzero`, img)
+}
+
 rt_build_ok <- function() {
   .Call(`_Retina_rt_build_ok`)
 }
