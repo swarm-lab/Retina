@@ -200,6 +200,18 @@ rt_image_filter2d <- function(img, kernel_data, kernel_nrow, kernel_ncol, ddepth
   .Call(`_Retina_rt_image_filter2d`, img, kernel_data, kernel_nrow, kernel_ncol, ddepth, anchor_x, anchor_y, delta, border_type)
 }
 
+rt_image_sep_filter2d <- function(img, kernel_x, kernel_y, ddepth, anchor_x, anchor_y, delta, border_type) {
+  .Call(`_Retina_rt_image_sep_filter2d`, img, kernel_x, kernel_y, ddepth, anchor_x, anchor_y, delta, border_type)
+}
+
+rt_get_structuring_element <- function(shape, width, height) {
+  .Call(`_Retina_rt_get_structuring_element`, shape, width, height)
+}
+
+rt_get_gabor_kernel <- function(ksize_w, ksize_h, sigma, theta_rad, lambda, gamma_val, psi, ktype) {
+  .Call(`_Retina_rt_get_gabor_kernel`, ksize_w, ksize_h, sigma, theta_rad, lambda, gamma_val, psi, ktype)
+}
+
 rt_image_resize <- function(img, width, height, fx, fy, interpolation) {
   .Call(`_Retina_rt_image_resize`, img, width, height, fx, fy, interpolation)
 }

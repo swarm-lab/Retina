@@ -355,6 +355,27 @@ extern "C" SEXP _Retina_rt_image_filter2d(SEXP img, SEXP kernel_data, SEXP kerne
     return cpp11::as_sexp(rt_image_filter2d(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<cpp11::doubles>>(kernel_data), cpp11::as_cpp<cpp11::decay_t<int>>(kernel_nrow), cpp11::as_cpp<cpp11::decay_t<int>>(kernel_ncol), cpp11::as_cpp<cpp11::decay_t<int>>(ddepth), cpp11::as_cpp<cpp11::decay_t<int>>(anchor_x), cpp11::as_cpp<cpp11::decay_t<int>>(anchor_y), cpp11::as_cpp<cpp11::decay_t<double>>(delta), cpp11::as_cpp<cpp11::decay_t<std::string>>(border_type)));
   END_CPP11
 }
+// filters.cpp
+external_pointer<RtImage> rt_image_sep_filter2d(external_pointer<RtImage> img, cpp11::doubles kernel_x, cpp11::doubles kernel_y, int ddepth, int anchor_x, int anchor_y, double delta, std::string border_type);
+extern "C" SEXP _Retina_rt_image_sep_filter2d(SEXP img, SEXP kernel_x, SEXP kernel_y, SEXP ddepth, SEXP anchor_x, SEXP anchor_y, SEXP delta, SEXP border_type) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_image_sep_filter2d(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<cpp11::doubles>>(kernel_x), cpp11::as_cpp<cpp11::decay_t<cpp11::doubles>>(kernel_y), cpp11::as_cpp<cpp11::decay_t<int>>(ddepth), cpp11::as_cpp<cpp11::decay_t<int>>(anchor_x), cpp11::as_cpp<cpp11::decay_t<int>>(anchor_y), cpp11::as_cpp<cpp11::decay_t<double>>(delta), cpp11::as_cpp<cpp11::decay_t<std::string>>(border_type)));
+  END_CPP11
+}
+// filters.cpp
+cpp11::writable::integers rt_get_structuring_element(std::string shape, int width, int height);
+extern "C" SEXP _Retina_rt_get_structuring_element(SEXP shape, SEXP width, SEXP height) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_get_structuring_element(cpp11::as_cpp<cpp11::decay_t<std::string>>(shape), cpp11::as_cpp<cpp11::decay_t<int>>(width), cpp11::as_cpp<cpp11::decay_t<int>>(height)));
+  END_CPP11
+}
+// filters.cpp
+cpp11::writable::doubles rt_get_gabor_kernel(int ksize_w, int ksize_h, double sigma, double theta_rad, double lambda, double gamma_val, double psi, int ktype);
+extern "C" SEXP _Retina_rt_get_gabor_kernel(SEXP ksize_w, SEXP ksize_h, SEXP sigma, SEXP theta_rad, SEXP lambda, SEXP gamma_val, SEXP psi, SEXP ktype) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_get_gabor_kernel(cpp11::as_cpp<cpp11::decay_t<int>>(ksize_w), cpp11::as_cpp<cpp11::decay_t<int>>(ksize_h), cpp11::as_cpp<cpp11::decay_t<double>>(sigma), cpp11::as_cpp<cpp11::decay_t<double>>(theta_rad), cpp11::as_cpp<cpp11::decay_t<double>>(lambda), cpp11::as_cpp<cpp11::decay_t<double>>(gamma_val), cpp11::as_cpp<cpp11::decay_t<double>>(psi), cpp11::as_cpp<cpp11::decay_t<int>>(ktype)));
+  END_CPP11
+}
 // geometry.cpp
 external_pointer<RtImage> rt_image_resize(external_pointer<RtImage> img, int width, int height, double fx, double fy, std::string interpolation);
 extern "C" SEXP _Retina_rt_image_resize(SEXP img, SEXP width, SEXP height, SEXP fx, SEXP fy, SEXP interpolation) {
@@ -694,6 +715,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_Retina_rt_draw_text",                (DL_FUNC) &_Retina_rt_draw_text,                10},
     {"_Retina_rt_fill",                     (DL_FUNC) &_Retina_rt_fill,                      6},
     {"_Retina_rt_fill_poly",                (DL_FUNC) &_Retina_rt_fill_poly,                 5},
+    {"_Retina_rt_get_gabor_kernel",         (DL_FUNC) &_Retina_rt_get_gabor_kernel,          8},
+    {"_Retina_rt_get_structuring_element",  (DL_FUNC) &_Retina_rt_get_structuring_element,   3},
     {"_Retina_rt_get_text_size",            (DL_FUNC) &_Retina_rt_get_text_size,             5},
     {"_Retina_rt_has_cuda",                 (DL_FUNC) &_Retina_rt_has_cuda,                  0},
     {"_Retina_rt_has_module",               (DL_FUNC) &_Retina_rt_has_module,                1},
@@ -752,6 +775,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_Retina_rt_image_rotate",             (DL_FUNC) &_Retina_rt_image_rotate,              7},
     {"_Retina_rt_image_scharr",             (DL_FUNC) &_Retina_rt_image_scharr,              7},
     {"_Retina_rt_image_sd",                 (DL_FUNC) &_Retina_rt_image_sd,                  1},
+    {"_Retina_rt_image_sep_filter2d",       (DL_FUNC) &_Retina_rt_image_sep_filter2d,        8},
     {"_Retina_rt_image_set_colorspace",     (DL_FUNC) &_Retina_rt_image_set_colorspace,      2},
     {"_Retina_rt_image_set_pixel",          (DL_FUNC) &_Retina_rt_image_set_pixel,           4},
     {"_Retina_rt_image_set_to",             (DL_FUNC) &_Retina_rt_image_set_to,              3},
