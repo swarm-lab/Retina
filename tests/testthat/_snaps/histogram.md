@@ -78,3 +78,35 @@
       Error:
       ! ref$count must be non-negative
 
+# CLAHE() throws for multi-channel image
+
+    Code
+      img_bgr_flat()$CLAHE()
+    Condition
+      Error:
+      ! CLAHE() requires a single-channel image; use split_channels() + lapply() for multi-channel images
+
+# CLAHE() throws for non-CV_8U/CV_16U depth
+
+    Code
+      img$CLAHE()
+    Condition
+      Error:
+      ! CLAHE() requires a CV_8U or CV_16U image
+
+# CLAHE() throws for non-positive clip_limit
+
+    Code
+      img_gray_flat()$CLAHE(clip_limit = 0)
+    Condition
+      Error:
+      ! clip_limit must be a single positive finite numeric
+
+# CLAHE() throws for invalid tile_grid_size
+
+    Code
+      img_gray_flat()$CLAHE(tile_grid_size = 0L)
+    Condition
+      Error:
+      ! tile_grid_size must be a length-1 or length-2 positive integer vector
+

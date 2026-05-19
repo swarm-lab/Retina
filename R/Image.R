@@ -3116,6 +3116,76 @@ Image <- R6::R6Class("Image",
       invisible(self)
     },
 
+    #' @description Apply Contrast Limited Adaptive Histogram Equalization
+    #'   (CLAHE). Returns a new Image. Requires a single-channel \code{CV_8U}
+    #'   or \code{CV_16U} image.
+    #' @param clip_limit Single positive numeric. Threshold for contrast
+    #'   limiting — higher values allow more contrast enhancement, lower values
+    #'   reduce noise amplification. Default \code{40.0}.
+    #' @param tile_grid_size Length-1 or length-2 positive integer vector
+    #'   \code{c(width, height)}. Number of tiles in each direction. A scalar
+    #'   \code{n} is recycled to \code{c(n, n)} for square tiles. Default
+    #'   \code{c(8L, 8L)}.
+    #' @return A new \code{Image} of the same depth as the input.
+    #' @examples
+    #' \donttest{
+    #' img_path <- system.file("img", "brick_wall.jpg", package = "Retina")
+    #' img <- Image$new(img_path)$to_gray()
+    #' out <- img$CLAHE(clip_limit = 2.0, tile_grid_size = c(8L, 8L))
+    #' out$plot()
+    #' }
+    CLAHE = function(clip_limit = 40.0, tile_grid_size = c(8L, 8L)) {
+      if (self$nchan != 1L)
+        stop("CLAHE() requires a single-channel image; ",
+             "use split_channels() + lapply() for multi-channel images",
+             call. = FALSE)
+      if (!self$depth_name %in% c("CV_8U", "CV_16U"))
+        stop("CLAHE() requires a CV_8U or CV_16U image", call. = FALSE)
+      if (!is.numeric(clip_limit) || length(clip_limit) != 1L ||
+          !is.finite(clip_limit) || clip_limit <= 0)
+        stop("clip_limit must be a single positive finite numeric", call. = FALSE)
+      tgs <- as.integer(tile_grid_size)
+      if (!is.numeric(tile_grid_size) || !length(tile_grid_size) %in% 1:2 ||
+          any(is.na(tgs)) || any(tgs < 1L))
+        stop("tile_grid_size must be a length-1 or length-2 positive integer vector",
+             call. = FALSE)
+      if (length(tgs) == 1L) tgs <- c(tgs, tgs)
+      Image$new(rt_clahe(private$.ptr, as.double(clip_limit),
+                         as.integer(tgs[1]), as.integer(tgs[2])))
+    },
+
+    #' @description Apply CLAHE in place. See \code{$CLAHE()} for details.
+    #' @param clip_limit See \code{$CLAHE()}.
+    #' @param tile_grid_size See \code{$CLAHE()}.
+    #' @return \code{self} invisibly.
+    #' @examples
+    #' \donttest{
+    #' img_path <- system.file("img", "brick_wall.jpg", package = "Retina")
+    #' img <- Image$new(img_path)$to_gray()
+    #' img$CLAHE_(clip_limit = 2.0, tile_grid_size = c(8L, 8L))
+    #' img$plot()
+    #' }
+    CLAHE_ = function(clip_limit = 40.0, tile_grid_size = c(8L, 8L)) {
+      if (self$nchan != 1L)
+        stop("CLAHE_() requires a single-channel image; ",
+             "use split_channels() + lapply() for multi-channel images",
+             call. = FALSE)
+      if (!self$depth_name %in% c("CV_8U", "CV_16U"))
+        stop("CLAHE_() requires a CV_8U or CV_16U image", call. = FALSE)
+      if (!is.numeric(clip_limit) || length(clip_limit) != 1L ||
+          !is.finite(clip_limit) || clip_limit <= 0)
+        stop("clip_limit must be a single positive finite numeric", call. = FALSE)
+      tgs <- as.integer(tile_grid_size)
+      if (!is.numeric(tile_grid_size) || !length(tile_grid_size) %in% 1:2 ||
+          any(is.na(tgs)) || any(tgs < 1L))
+        stop("tile_grid_size must be a length-1 or length-2 positive integer vector",
+             call. = FALSE)
+      if (length(tgs) == 1L) tgs <- c(tgs, tgs)
+      private$.ptr <- rt_clahe(private$.ptr, as.double(clip_limit),
+                               as.integer(tgs[1]), as.integer(tgs[2]))
+      invisible(self)
+    },
+
     #' @description Print a summary of the image.
     #' @param ... Ignored.
     #' @return \code{self} invisibly.

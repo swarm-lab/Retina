@@ -172,3 +172,63 @@ test_that("hist_match() throws for ref with negative counts", {
   ref_hist$count[1] <- -1
   expect_snapshot(error = TRUE, img_gray_flat()$hist_match(ref_hist))
 })
+
+# ── $CLAHE() / $CLAHE_() ──────────────────────────────────────────────────────
+
+test_that("CLAHE() returns an Image with same dimensions and colorspace", {
+  img <- img_gray_flat()
+  out <- img$CLAHE()
+  expect_s3_class(out, "Image")
+  expect_equal(out$nrow, img$nrow)
+  expect_equal(out$ncol, img$ncol)
+  expect_equal(out$nchan, 1L)
+  expect_equal(out$depth_name, "CV_8U")
+  expect_equal(out$colorspace, img$colorspace)
+})
+
+test_that("CLAHE() does not modify self", {
+  img  <- img_gray_flat()
+  orig <- img$to_array()
+  img$CLAHE()
+  expect_equal(img$to_array(), orig)
+})
+
+test_that("CLAHE_() modifies self and returns self", {
+  img    <- img_gray_flat()
+  result <- img$CLAHE_()
+  expect_identical(result, img)
+})
+
+test_that("CLAHE() accepts scalar tile_grid_size (square tiles)", {
+  img <- img_gray_flat()
+  expect_s3_class(img$CLAHE(tile_grid_size = 4L), "Image")
+})
+
+test_that("CLAHE() accepts length-2 tile_grid_size", {
+  img <- img_gray_flat()
+  expect_s3_class(img$CLAHE(tile_grid_size = c(4L, 8L)), "Image")
+})
+
+test_that("CLAHE() works on CV_16U single-channel image", {
+  img <- Image$new(array(1000L, dim = c(10L, 10L, 1L)),
+                   colorspace = "GRAY", depth = "CV_16U")
+  expect_s3_class(img$CLAHE(), "Image")
+})
+
+test_that("CLAHE() throws for multi-channel image", {
+  expect_snapshot(error = TRUE, img_bgr_flat()$CLAHE())
+})
+
+test_that("CLAHE() throws for non-CV_8U/CV_16U depth", {
+  img <- Image$new(array(0.5, dim = c(10L, 10L, 1L)),
+                   colorspace = "GRAY", depth = "CV_32F")
+  expect_snapshot(error = TRUE, img$CLAHE())
+})
+
+test_that("CLAHE() throws for non-positive clip_limit", {
+  expect_snapshot(error = TRUE, img_gray_flat()$CLAHE(clip_limit = 0))
+})
+
+test_that("CLAHE() throws for invalid tile_grid_size", {
+  expect_snapshot(error = TRUE, img_gray_flat()$CLAHE(tile_grid_size = 0L))
+})
