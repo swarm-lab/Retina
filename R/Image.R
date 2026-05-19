@@ -3068,6 +3068,8 @@ Image <- R6::R6Class("Image",
              call. = FALSE)
       if (any(ref$count < 0))
         stop("ref$count must be non-negative", call. = FALSE)
+      if (sum(ref$count) == 0)
+        stop("ref$count must sum to a positive value", call. = FALSE)
 
       src_hist <- self$hist(bins = 256L, range = c(0, 256), freq = TRUE)
       src_cdf  <- cumsum(src_hist$count) / sum(src_hist$count)
@@ -3085,7 +3087,7 @@ Image <- R6::R6Class("Image",
     #' ref_path <- system.file("img", "flower.jpg",     package = "Retina")
     #' src <- Image$new(img_path)$to_gray()
     #' ref <- Image$new(ref_path)$to_gray()
-    #' ref_hist <- ref$hist(bins = 256L, range = c(0, 255))
+    #' ref_hist <- ref$hist(bins = 256L, range = c(0, 256))
     #' src$hist_match_(ref_hist)
     #' src$plot()
     #' }
@@ -3103,6 +3105,8 @@ Image <- R6::R6Class("Image",
              call. = FALSE)
       if (any(ref$count < 0))
         stop("ref$count must be non-negative", call. = FALSE)
+      if (sum(ref$count) == 0)
+        stop("ref$count must sum to a positive value", call. = FALSE)
 
       src_hist <- self$hist(bins = 256L, range = c(0, 256), freq = TRUE)
       src_cdf  <- cumsum(src_hist$count) / sum(src_hist$count)
