@@ -85,3 +85,46 @@ test_that("filter2D() throws for invalid ddepth", {
   k <- matrix(c(0, 0, 0, 0, 1, 0, 0, 0, 0), nrow = 3L)
   expect_snapshot(error = TRUE, img_uniform()$filter2D(k, ddepth = "CV_99"))
 })
+
+# ── sep_filter2D ──────────────────────────────────────────────────────────────
+
+test_that("sep_filter2D() box kernels match blur() on uniform image", {
+  result <- img_uniform()$sep_filter2D(rep(1 / 3, 3), rep(1 / 3, 3))
+  blur_result <- img_uniform()$blur(c(3L, 3L))
+  expect_equal(result$to_array()[5, 5, 1], blur_result$to_array()[5, 5, 1])
+})
+
+test_that("sep_filter2D() ddepth = NULL preserves input depth", {
+  result <- img_uniform()$sep_filter2D(rep(1 / 3, 3), rep(1 / 3, 3))
+  expect_equal(result$depth_name, "CV_8U")
+})
+
+test_that("sep_filter2D() returns Image with same dimensions and colorspace", {
+  img <- img_uniform()
+  result <- img$sep_filter2D(rep(1 / 3, 3), rep(1 / 3, 3))
+  expect_s3_class(result, "Image")
+  expect_equal(result$nrow, img$nrow)
+  expect_equal(result$ncol, img$ncol)
+  expect_equal(result$nchan, img$nchan)
+  expect_equal(result$colorspace, img$colorspace)
+})
+
+test_that("sep_filter2D_() modifies in place and returns self", {
+  img <- img_uniform()
+  result <- img$sep_filter2D_(rep(1 / 3, 3), rep(1 / 3, 3))
+  expect_identical(result, img)
+})
+
+test_that("sep_filter2D() throws for non-numeric kernel_x", {
+  expect_snapshot(error = TRUE, img_uniform()$sep_filter2D("a", rep(1 / 3, 3)))
+})
+
+test_that("sep_filter2D() throws for kernel_y with NA", {
+  expect_snapshot(error = TRUE,
+    img_uniform()$sep_filter2D(rep(1 / 3, 3), c(1 / 3, NA_real_, 1 / 3)))
+})
+
+test_that("sep_filter2D() throws for out-of-bounds anchor", {
+  expect_snapshot(error = TRUE,
+    img_uniform()$sep_filter2D(rep(1 / 3, 3), rep(1 / 3, 3), anchor = c(5L, 1L)))
+})

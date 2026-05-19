@@ -145,3 +145,22 @@ external_pointer<RtImage> rt_image_filter2d(
                cv_border_type(border_type));
   return {new RtImage(std::move(dst), img->colorspace)};
 }
+
+// ── sep_filter2D ──────────────────────────────────────────────────────────────
+
+[[cpp11::register]]
+external_pointer<RtImage> rt_image_sep_filter2d(
+    external_pointer<RtImage> img,
+    cpp11::doubles kernel_x, cpp11::doubles kernel_y,
+    int ddepth, int anchor_x, int anchor_y,
+    double delta, std::string border_type) {
+  int nx = kernel_x.size(), ny = kernel_y.size();
+  cv::Mat kx(1, nx, CV_64F), ky(1, ny, CV_64F);
+  for (int i = 0; i < nx; i++) kx.at<double>(0, i) = kernel_x[i];
+  for (int i = 0; i < ny; i++) ky.at<double>(0, i) = kernel_y[i];
+  cv::Mat dst;
+  cv::sepFilter2D(get_cpu_mat(img), dst, ddepth, kx, ky,
+                  cv::Point(anchor_x, anchor_y), delta,
+                  cv_border_type(border_type));
+  return {new RtImage(std::move(dst), img->colorspace)};
+}

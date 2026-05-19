@@ -1170,6 +1170,129 @@ Image <- R6::R6Class("Image",
       invisible(self)
     },
 
+    #' @description Apply a separable filter using two 1D kernels (one horizontal,
+    #'   one vertical). Returns a new Image. Equivalent to applying
+    #'   \code{kernel_x} along columns then \code{kernel_y} along rows, but
+    #'   computed more efficiently.
+    #' @param kernel_x Numeric vector. Horizontal (column-direction) 1D kernel.
+    #' @param kernel_y Numeric vector. Vertical (row-direction) 1D kernel.
+    #' @param ddepth Character or \code{NULL}. Output depth. One of
+    #'   \code{"CV_8U"}, \code{"CV_16U"}, \code{"CV_16S"}, \code{"CV_32F"},
+    #'   \code{"CV_64F"}. When \code{NULL} (default), the output depth matches
+    #'   the input depth.
+    #' @param anchor \code{NULL} (default, kernel centres) or a length-2 integer
+    #'   vector \code{c(pos_in_kernel_x, pos_in_kernel_y)} (0-based).
+    #' @param delta Single numeric. Constant added to every output pixel. Default
+    #'   \code{0}.
+    #' @param border_type Character. Border handling mode. Default
+    #'   \code{"reflect_101"}.
+    #' @return A new \code{Image}.
+    #' @examples
+    #' \donttest{
+    #' img_path <- system.file("img", "flower.jpg", package = "Retina")
+    #' img <- Image$new(img_path)
+    #' blurred <- img$sep_filter2D(rep(1/3, 3), rep(1/3, 3))
+    #' blurred$plot()
+    #' }
+    sep_filter2D = function(kernel_x, kernel_y, ddepth = NULL, anchor = NULL,
+                            delta = 0, border_type = "reflect_101") {
+      .valid_border <- c("reflect", "reflect_101", "replicate", "constant", "wrap")
+      .valid_depths <- c("CV_8U", "CV_16U", "CV_16S", "CV_32F", "CV_64F")
+      if (!is.numeric(kernel_x) || length(kernel_x) < 1L || any(!is.finite(kernel_x)))
+        stop("kernel_x must be a non-empty numeric vector with finite values",
+             call. = FALSE)
+      if (!is.numeric(kernel_y) || length(kernel_y) < 1L || any(!is.finite(kernel_y)))
+        stop("kernel_y must be a non-empty numeric vector with finite values",
+             call. = FALSE)
+      if (!is.null(ddepth)) {
+        if (!is.character(ddepth) || length(ddepth) != 1L ||
+            !ddepth %in% .valid_depths)
+          stop("ddepth must be NULL or one of: CV_8U, CV_16U, CV_16S, CV_32F, CV_64F",
+               call. = FALSE)
+      }
+      if (!is.null(anchor)) {
+        anchor <- as.integer(anchor)
+        if (length(anchor) != 2L || any(is.na(anchor)))
+          stop("anchor must be NULL or a length-2 integer vector", call. = FALSE)
+        if (anchor[1L] < 0L || anchor[1L] >= length(kernel_x) ||
+            anchor[2L] < 0L || anchor[2L] >= length(kernel_y))
+          stop("anchor values are out of kernel bounds (0-based)", call. = FALSE)
+      }
+      if (!is.numeric(delta) || length(delta) != 1L || !is.finite(delta))
+        stop("delta must be a single finite numeric", call. = FALSE)
+      if (!is.character(border_type) || length(border_type) != 1L ||
+          !border_type %in% .valid_border)
+        stop("border_type must be one of: reflect, reflect_101, replicate, constant, wrap",
+             call. = FALSE)
+      .ddepth_int <- if (is.null(ddepth)) -1L else {
+        c(CV_8U = 0L, CV_16U = 2L, CV_16S = 3L, CV_32F = 5L, CV_64F = 6L)[[ddepth]]
+      }
+      .anchor_x <- if (is.null(anchor)) -1L else anchor[1L]
+      .anchor_y <- if (is.null(anchor)) -1L else anchor[2L]
+      Image$new(rt_image_sep_filter2d(private$.ptr,
+                                      as.double(kernel_x), as.double(kernel_y),
+                                      .ddepth_int, .anchor_x, .anchor_y,
+                                      as.double(delta), border_type))
+    },
+
+    #' @description Separable filter in place.
+    #' @param kernel_x Numeric vector. Horizontal 1D kernel.
+    #' @param kernel_y Numeric vector. Vertical 1D kernel.
+    #' @param ddepth Character or \code{NULL}. Output depth. Default \code{NULL}.
+    #' @param anchor \code{NULL} or \code{c(pos_x, pos_y)} (0-based). Default
+    #'   \code{NULL} (kernel centres).
+    #' @param delta Single numeric. Default \code{0}.
+    #' @param border_type Character. Default \code{"reflect_101"}.
+    #' @return \code{self} invisibly.
+    #' @examples
+    #' \donttest{
+    #' img_path <- system.file("img", "flower.jpg", package = "Retina")
+    #' img <- Image$new(img_path)
+    #' img$sep_filter2D_(rep(1/3, 3), rep(1/3, 3))
+    #' img$plot()
+    #' }
+    sep_filter2D_ = function(kernel_x, kernel_y, ddepth = NULL, anchor = NULL,
+                             delta = 0, border_type = "reflect_101") {
+      .valid_border <- c("reflect", "reflect_101", "replicate", "constant", "wrap")
+      .valid_depths <- c("CV_8U", "CV_16U", "CV_16S", "CV_32F", "CV_64F")
+      if (!is.numeric(kernel_x) || length(kernel_x) < 1L || any(!is.finite(kernel_x)))
+        stop("kernel_x must be a non-empty numeric vector with finite values",
+             call. = FALSE)
+      if (!is.numeric(kernel_y) || length(kernel_y) < 1L || any(!is.finite(kernel_y)))
+        stop("kernel_y must be a non-empty numeric vector with finite values",
+             call. = FALSE)
+      if (!is.null(ddepth)) {
+        if (!is.character(ddepth) || length(ddepth) != 1L ||
+            !ddepth %in% .valid_depths)
+          stop("ddepth must be NULL or one of: CV_8U, CV_16U, CV_16S, CV_32F, CV_64F",
+               call. = FALSE)
+      }
+      if (!is.null(anchor)) {
+        anchor <- as.integer(anchor)
+        if (length(anchor) != 2L || any(is.na(anchor)))
+          stop("anchor must be NULL or a length-2 integer vector", call. = FALSE)
+        if (anchor[1L] < 0L || anchor[1L] >= length(kernel_x) ||
+            anchor[2L] < 0L || anchor[2L] >= length(kernel_y))
+          stop("anchor values are out of kernel bounds (0-based)", call. = FALSE)
+      }
+      if (!is.numeric(delta) || length(delta) != 1L || !is.finite(delta))
+        stop("delta must be a single finite numeric", call. = FALSE)
+      if (!is.character(border_type) || length(border_type) != 1L ||
+          !border_type %in% .valid_border)
+        stop("border_type must be one of: reflect, reflect_101, replicate, constant, wrap",
+             call. = FALSE)
+      .ddepth_int <- if (is.null(ddepth)) -1L else {
+        c(CV_8U = 0L, CV_16U = 2L, CV_16S = 3L, CV_32F = 5L, CV_64F = 6L)[[ddepth]]
+      }
+      .anchor_x <- if (is.null(anchor)) -1L else anchor[1L]
+      .anchor_y <- if (is.null(anchor)) -1L else anchor[2L]
+      private$.ptr <- rt_image_sep_filter2d(private$.ptr,
+                                            as.double(kernel_x), as.double(kernel_y),
+                                            .ddepth_int, .anchor_x, .anchor_y,
+                                            as.double(delta), border_type)
+      invisible(self)
+    },
+
     #' @description Apply a morphological operation. Returns a new Image.
     #' @param operation Character. One of \code{"erode"} (shrinks bright
     #'   regions), \code{"dilate"} (expands bright regions), \code{"open"}

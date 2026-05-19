@@ -81,6 +81,74 @@ img$plot()
 }
 
 ## ------------------------------------------------
+## Method `Image$scharr`
+## ------------------------------------------------
+
+\donttest{
+img_path <- system.file("img", "brick_wall.jpg", package = "Retina")
+img <- Image$new(img_path)
+grad_x <- img$scharr(1, 0)
+grad_x$plot()
+}
+
+## ------------------------------------------------
+## Method `Image$scharr_`
+## ------------------------------------------------
+
+\donttest{
+img_path <- system.file("img", "brick_wall.jpg", package = "Retina")
+img <- Image$new(img_path)
+img$scharr_(1, 0)
+img$plot()
+}
+
+## ------------------------------------------------
+## Method `Image$filter2D`
+## ------------------------------------------------
+
+\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)
+sharpen <- matrix(c(0,-1,0,-1,5,-1,0,-1,0), nrow = 3)
+sharpened <- img$filter2D(sharpen)
+sharpened$plot()
+}
+
+## ------------------------------------------------
+## Method `Image$filter2D_`
+## ------------------------------------------------
+
+\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)
+sharpen <- matrix(c(0,-1,0,-1,5,-1,0,-1,0), nrow = 3)
+img$filter2D_(sharpen)
+img$plot()
+}
+
+## ------------------------------------------------
+## Method `Image$sep_filter2D`
+## ------------------------------------------------
+
+\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)
+blurred <- img$sep_filter2D(rep(1/3, 3), rep(1/3, 3))
+blurred$plot()
+}
+
+## ------------------------------------------------
+## Method `Image$sep_filter2D_`
+## ------------------------------------------------
+
+\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)
+img$sep_filter2D_(rep(1/3, 3), rep(1/3, 3))
+img$plot()
+}
+
+## ------------------------------------------------
 ## Method `Image$morph`
 ## ------------------------------------------------
 
@@ -415,6 +483,12 @@ img$draw_text("Hello", 10, 50, font = "duplex", font_size = 1.5,
 \item \href{#method-Image-laplacian_}{\code{Image$laplacian_()}}
 \item \href{#method-Image-canny}{\code{Image$canny()}}
 \item \href{#method-Image-canny_}{\code{Image$canny_()}}
+\item \href{#method-Image-scharr}{\code{Image$scharr()}}
+\item \href{#method-Image-scharr_}{\code{Image$scharr_()}}
+\item \href{#method-Image-filter2D}{\code{Image$filter2D()}}
+\item \href{#method-Image-filter2D_}{\code{Image$filter2D_()}}
+\item \href{#method-Image-sep_filter2D}{\code{Image$sep_filter2D()}}
+\item \href{#method-Image-sep_filter2D_}{\code{Image$sep_filter2D_()}}
 \item \href{#method-Image-morph}{\code{Image$morph()}}
 \item \href{#method-Image-morph_}{\code{Image$morph_()}}
 \item \href{#method-Image-resize}{\code{Image$resize()}}
@@ -1503,7 +1577,7 @@ Apply the Sobel operator to compute image gradients. Returns
   dx,
   dy,
   ksize = 3,
-  ddepth = "CV_32F",
+  ddepth = NULL,
   scale = 1,
   delta = 0,
   border_type = "reflect_101"
@@ -1522,7 +1596,7 @@ Apply the Sobel operator to compute image gradients. Returns
 The limit of 7 is an OpenCV requirement.}
 
 \item{\code{ddepth}}{Character. Output depth: \code{"CV_16S"}, \code{"CV_32F"},
-or \code{"CV_64F"}. Default \code{"CV_32F"}.}
+or \code{"CV_64F"}. Default \code{NULL} (depth inferred from input; a message is emitted).}
 
 \item{\code{scale}}{Single positive numeric. Optional scale factor for the
 computed derivatives. Must be positive (use \code{convert_depth} +
@@ -1568,7 +1642,7 @@ Sobel operator in place.
   dx,
   dy,
   ksize = 3,
-  ddepth = "CV_32F",
+  ddepth = NULL,
   scale = 1,
   delta = 0,
   border_type = "reflect_101"
@@ -1586,7 +1660,7 @@ Sobel operator in place.
 \item{\code{ksize}}{Integer. Sobel kernel aperture size: 1, 3, 5, or 7.}
 
 \item{\code{ddepth}}{Character. Output depth: \code{"CV_16S"}, \code{"CV_32F"},
-or \code{"CV_64F"}. Default \code{"CV_32F"}.}
+or \code{"CV_64F"}. Default \code{NULL} (depth inferred from input; a message is emitted).}
 
 \item{\code{scale}}{Single positive numeric. Optional scale factor for the
 computed derivatives. Must be positive (use \code{convert_depth} +
@@ -1630,7 +1704,7 @@ Apply the Laplacian operator to detect edges. Returns a new
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Image$laplacian(
   ksize = 1,
-  ddepth = "CV_32F",
+  ddepth = NULL,
   scale = 1,
   delta = 0,
   border_type = "reflect_101"
@@ -1645,7 +1719,7 @@ or 7. \code{ksize = 1} uses the 3-point central-difference stencil.
 Default 1.}
 
 \item{\code{ddepth}}{Character. Output depth: \code{"CV_16S"}, \code{"CV_32F"},
-or \code{"CV_64F"}. Default \code{"CV_32F"}.}
+or \code{"CV_64F"}. Default \code{NULL} (depth inferred from input; a message is emitted).}
 
 \item{\code{scale}}{Single positive numeric. Optional scale factor. Must be
 positive. Default 1.}
@@ -1687,7 +1761,7 @@ Laplacian operator in place.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Image$laplacian_(
   ksize = 1,
-  ddepth = "CV_32F",
+  ddepth = NULL,
   scale = 1,
   delta = 0,
   border_type = "reflect_101"
@@ -1700,7 +1774,7 @@ Laplacian operator in place.
 \item{\code{ksize}}{Integer. Aperture size: 1, 3, 5, or 7. Default 1.}
 
 \item{\code{ddepth}}{Character. Output depth: \code{"CV_16S"}, \code{"CV_32F"},
-or \code{"CV_64F"}. Default \code{"CV_32F"}.}
+or \code{"CV_64F"}. Default \code{NULL} (depth inferred from input; a message is emitted).}
 
 \item{\code{scale}}{Single positive numeric. Optional scale factor. Must be
 positive. Default 1.}
@@ -1822,6 +1896,343 @@ Default \code{FALSE}.}
 img_path <- system.file("img", "staircase.jpg", package = "Retina")
 img <- Image$new(img_path)$convert_color("GRAY")
 img$canny_(50, 150)
+img$plot()
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-scharr"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-scharr}{}}}
+\subsection{Method \code{scharr()}}{
+Apply the Scharr operator to compute image gradients. Returns
+  a new Image. Scharr uses a fixed 3x3 kernel with better rotational
+  symmetry than Sobel. Exactly one of \code{dx} or \code{dy} must be 1.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$scharr(
+  dx,
+  dy,
+  ddepth = NULL,
+  scale = 1,
+  delta = 0,
+  border_type = "reflect_101"
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{dx}}{Integer. Order of x derivative: \code{0} or \code{1}.}
+
+\item{\code{dy}}{Integer. Order of y derivative: \code{0} or \code{1}.
+Exactly one of \code{dx}, \code{dy} must be \code{1}.}
+
+\item{\code{ddepth}}{Character or \code{NULL}. Output depth: \code{"CV_16S"},
+\code{"CV_32F"}, or \code{"CV_64F"}. When \code{NULL} (default), the
+output depth is inferred from the input depth and a message is emitted.}
+
+\item{\code{scale}}{Single positive numeric. Scale factor for computed
+derivatives. Default \code{1}.}
+
+\item{\code{delta}}{Single numeric. Constant added to output pixels. Default
+\code{0}.}
+
+\item{\code{border_type}}{Character. How to fill pixels outside the image
+boundary. \code{"reflect_101"} (default) mirrors the image excluding
+the edge pixel (e.g. dcb|abcde|dcb); \code{"reflect"} mirrors
+including the edge pixel (e.g. edcb|abcde|edcb); \code{"replicate"}
+repeats the nearest edge pixel; \code{"constant"} fills with a fixed
+value (0, i.e. black). \code{"wrap"} is not supported by OpenCV for
+Scharr.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A new \code{Image}.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img_path <- system.file("img", "brick_wall.jpg", package = "Retina")
+img <- Image$new(img_path)
+grad_x <- img$scharr(1, 0)
+grad_x$plot()
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-scharr_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-scharr_}{}}}
+\subsection{Method \code{scharr_()}}{
+Scharr operator in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$scharr_(
+  dx,
+  dy,
+  ddepth = NULL,
+  scale = 1,
+  delta = 0,
+  border_type = "reflect_101"
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{dx}}{Integer. Order of x derivative: \code{0} or \code{1}.}
+
+\item{\code{dy}}{Integer. Order of y derivative: \code{0} or \code{1}.
+Exactly one of \code{dx}, \code{dy} must be \code{1}.}
+
+\item{\code{ddepth}}{Character or \code{NULL}. Output depth: \code{"CV_16S"},
+\code{"CV_32F"}, or \code{"CV_64F"}. Default \code{NULL} (depth
+inferred from input; a message is emitted).}
+
+\item{\code{scale}}{Single positive numeric. Default \code{1}.}
+
+\item{\code{delta}}{Single numeric. Default \code{0}.}
+
+\item{\code{border_type}}{Character. Border handling mode. \code{"wrap"} is not
+supported. Default \code{"reflect_101"}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{self} invisibly.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img_path <- system.file("img", "brick_wall.jpg", package = "Retina")
+img <- Image$new(img_path)
+img$scharr_(1, 0)
+img$plot()
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-filter2D"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-filter2D}{}}}
+\subsection{Method \code{filter2D()}}{
+Apply an arbitrary 2D convolution kernel. Returns a new Image.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$filter2D(
+  kernel,
+  ddepth = NULL,
+  anchor = NULL,
+  delta = 0,
+  border_type = "reflect_101"
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{kernel}}{Numeric matrix. The convolution kernel. Values are coerced
+to double.}
+
+\item{\code{ddepth}}{Character or \code{NULL}. Output depth. One of
+\code{"CV_8U"}, \code{"CV_16U"}, \code{"CV_16S"}, \code{"CV_32F"},
+\code{"CV_64F"}. When \code{NULL} (default), the output depth matches
+the input depth (OpenCV \code{-1}).}
+
+\item{\code{anchor}}{\code{NULL} (default, kernel centre) or a length-2 integer
+vector \code{c(col, row)} specifying the anchor pixel within the kernel
+(0-based).}
+
+\item{\code{delta}}{Single numeric. Constant added to every output pixel after
+convolution. Default \code{0}.}
+
+\item{\code{border_type}}{Character. How to fill pixels outside the image
+boundary. \code{"reflect_101"} (default) mirrors the image excluding
+the edge pixel (e.g. dcb|abcde|dcb); \code{"reflect"} mirrors
+including the edge pixel (e.g. edcb|abcde|edcb); \code{"replicate"}
+repeats the nearest edge pixel; \code{"constant"} fills with a fixed
+value (0, i.e. black); \code{"wrap"} tiles the image at the boundary.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A new \code{Image}.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)
+sharpen <- matrix(c(0,-1,0,-1,5,-1,0,-1,0), nrow = 3)
+sharpened <- img$filter2D(sharpen)
+sharpened$plot()
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-filter2D_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-filter2D_}{}}}
+\subsection{Method \code{filter2D_()}}{
+Apply an arbitrary 2D convolution kernel in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$filter2D_(
+  kernel,
+  ddepth = NULL,
+  anchor = NULL,
+  delta = 0,
+  border_type = "reflect_101"
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{kernel}}{Numeric matrix. The convolution kernel.}
+
+\item{\code{ddepth}}{Character or \code{NULL}. Output depth. Default \code{NULL}
+(preserves input depth).}
+
+\item{\code{anchor}}{\code{NULL} (kernel centre) or \code{c(col, row)} (0-based).}
+
+\item{\code{delta}}{Single numeric. Additive offset. Default \code{0}.}
+
+\item{\code{border_type}}{Character. Border handling mode. Default
+\code{"reflect_101"}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{self} invisibly.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)
+sharpen <- matrix(c(0,-1,0,-1,5,-1,0,-1,0), nrow = 3)
+img$filter2D_(sharpen)
+img$plot()
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-sep_filter2D"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-sep_filter2D}{}}}
+\subsection{Method \code{sep_filter2D()}}{
+Apply a separable filter using two 1D kernels (one horizontal,
+  one vertical). Returns a new Image. Equivalent to applying
+  \code{kernel_x} along columns then \code{kernel_y} along rows, but
+  computed more efficiently.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$sep_filter2D(
+  kernel_x,
+  kernel_y,
+  ddepth = NULL,
+  anchor = NULL,
+  delta = 0,
+  border_type = "reflect_101"
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{kernel_x}}{Numeric vector. Horizontal (column-direction) 1D kernel.}
+
+\item{\code{kernel_y}}{Numeric vector. Vertical (row-direction) 1D kernel.}
+
+\item{\code{ddepth}}{Character or \code{NULL}. Output depth. One of
+\code{"CV_8U"}, \code{"CV_16U"}, \code{"CV_16S"}, \code{"CV_32F"},
+\code{"CV_64F"}. When \code{NULL} (default), the output depth matches
+the input depth.}
+
+\item{\code{anchor}}{\code{NULL} (default, kernel centres) or a length-2 integer
+vector \code{c(pos_in_kernel_x, pos_in_kernel_y)} (0-based).}
+
+\item{\code{delta}}{Single numeric. Constant added to every output pixel. Default
+\code{0}.}
+
+\item{\code{border_type}}{Character. Border handling mode. Default
+\code{"reflect_101"}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A new \code{Image}.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)
+blurred <- img$sep_filter2D(rep(1/3, 3), rep(1/3, 3))
+blurred$plot()
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-sep_filter2D_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-sep_filter2D_}{}}}
+\subsection{Method \code{sep_filter2D_()}}{
+Separable filter in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$sep_filter2D_(
+  kernel_x,
+  kernel_y,
+  ddepth = NULL,
+  anchor = NULL,
+  delta = 0,
+  border_type = "reflect_101"
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{kernel_x}}{Numeric vector. Horizontal 1D kernel.}
+
+\item{\code{kernel_y}}{Numeric vector. Vertical 1D kernel.}
+
+\item{\code{ddepth}}{Character or \code{NULL}. Output depth. Default \code{NULL}.}
+
+\item{\code{anchor}}{\code{NULL} or \code{c(pos_x, pos_y)} (0-based). Default
+\code{NULL} (kernel centres).}
+
+\item{\code{delta}}{Single numeric. Default \code{0}.}
+
+\item{\code{border_type}}{Character. Default \code{"reflect_101"}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{self} invisibly.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)
+img$sep_filter2D_(rep(1/3, 3), rep(1/3, 3))
 img$plot()
 }
 }

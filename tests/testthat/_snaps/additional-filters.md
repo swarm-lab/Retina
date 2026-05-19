@@ -38,3 +38,27 @@
       Error:
       ! ddepth must be NULL or one of: CV_8U, CV_16U, CV_16S, CV_32F, CV_64F
 
+# sep_filter2D() throws for non-numeric kernel_x
+
+    Code
+      img_uniform()$sep_filter2D("a", rep(1 / 3, 3))
+    Condition
+      Error:
+      ! kernel_x must be a non-empty numeric vector with finite values
+
+# sep_filter2D() throws for kernel_y with NA
+
+    Code
+      img_uniform()$sep_filter2D(rep(1 / 3, 3), c(1 / 3, NA_real_, 1 / 3))
+    Condition
+      Error:
+      ! kernel_y must be a non-empty numeric vector with finite values
+
+# sep_filter2D() throws for out-of-bounds anchor
+
+    Code
+      img_uniform()$sep_filter2D(rep(1 / 3, 3), rep(1 / 3, 3), anchor = c(5L, 1L))
+    Condition
+      Error:
+      ! anchor values are out of kernel bounds (0-based)
+
