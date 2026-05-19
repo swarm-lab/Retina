@@ -3186,6 +3186,29 @@ Image <- R6::R6Class("Image",
       invisible(self)
     },
 
+    #' @description Find the minimum and maximum pixel values and their
+    #'   locations in a single-channel image.
+    #' @return A named list with six elements: \code{min_val} (double),
+    #'   \code{min_row} (integer), \code{min_col} (integer), \code{max_val}
+    #'   (double), \code{max_row} (integer), \code{max_col} (integer).
+    #'   All coordinates are 1-based. When multiple pixels share the minimum or
+    #'   maximum value, the first occurrence in row-major order is returned.
+    #'   For multi-channel images, use \code{split_channels()} first.
+    #' @examples
+    #' \donttest{
+    #' img_path <- system.file("img", "brick_wall.jpg", package = "Retina")
+    #' img <- Image$new(img_path)$to_gray()
+    #' loc <- img$minmax_loc()
+    #' cat("Max pixel:", loc$max_val, "at row", loc$max_row, "col", loc$max_col)
+    #' }
+    minmax_loc = function() {
+      if (self$nchan != 1L)
+        stop("minmax_loc() requires a single-channel image; ",
+             "use split_channels() for multi-channel images",
+             call. = FALSE)
+      rt_minmax_loc(private$.ptr)
+    },
+
     #' @description Print a summary of the image.
     #' @param ... Ignored.
     #' @return \code{self} invisibly.

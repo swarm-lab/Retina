@@ -110,3 +110,11 @@
       Error:
       ! tile_grid_size must be a length-1 or length-2 positive integer vector
 
+# minmax_loc() throws for multi-channel image
+
+    Code
+      img_bgr_flat()$minmax_loc()
+    Condition
+      Error:
+      ! minmax_loc() requires a single-channel image; use split_channels() for multi-channel images
+

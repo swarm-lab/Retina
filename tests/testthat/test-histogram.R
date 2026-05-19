@@ -232,3 +232,33 @@ test_that("CLAHE() throws for non-positive clip_limit", {
 test_that("CLAHE() throws for invalid tile_grid_size", {
   expect_snapshot(error = TRUE, img_gray_flat()$CLAHE(tile_grid_size = 0L))
 })
+
+# ── $minmax_loc() ─────────────────────────────────────────────────────────────
+
+test_that("minmax_loc() returns correct names and types", {
+  loc <- img_gray_flat()$minmax_loc()
+  expect_named(loc, c("min_val", "min_row", "min_col",
+                       "max_val", "max_row", "max_col"))
+  expect_type(loc$min_val, "double")
+  expect_type(loc$min_row, "integer")
+  expect_type(loc$min_col, "integer")
+})
+
+test_that("minmax_loc() returns correct values and 1-based coords", {
+  # Place a max at row=2, col=3 (1-based) in a 5x5 zero image
+  arr <- array(0L, dim = c(5L, 5L, 1L))
+  arr[2, 3, 1] <- 200L
+  img <- Image$new(arr, colorspace = "GRAY", depth = "CV_8U")
+  loc <- img$minmax_loc()
+  expect_equal(loc$min_val, 0)
+  expect_equal(loc$max_val, 200)
+  # min is at first zero pixel: row=1, col=1
+  expect_equal(loc$min_row, 1L)
+  expect_equal(loc$min_col, 1L)
+  expect_equal(loc$max_row, 2L)
+  expect_equal(loc$max_col, 3L)
+})
+
+test_that("minmax_loc() throws for multi-channel image", {
+  expect_snapshot(error = TRUE, img_bgr_flat()$minmax_loc())
+})
