@@ -2996,6 +2996,48 @@ Image <- R6::R6Class("Image",
       do.call(rbind, dfs)
     },
 
+    #' @description Apply global histogram equalization. Returns a new Image.
+    #'   Requires a single-channel \code{CV_8U} image. For multi-channel images,
+    #'   use \code{split_channels()} then apply per channel.
+    #' @return A new \code{CV_8U} single-channel \code{Image}.
+    #' @examples
+    #' \donttest{
+    #' img_path <- system.file("img", "brick_wall.jpg", package = "Retina")
+    #' img <- Image$new(img_path)$to_gray()
+    #' eq  <- img$hist_eq()
+    #' eq$plot()
+    #' }
+    hist_eq = function() {
+      if (self$nchan != 1L)
+        stop("hist_eq() requires a single-channel image; ",
+             "use split_channels() + lapply() for multi-channel images",
+             call. = FALSE)
+      if (self$depth_name != "CV_8U")
+        stop("hist_eq() requires a CV_8U image", call. = FALSE)
+      Image$new(rt_hist_eq(private$.ptr))
+    },
+
+    #' @description Apply global histogram equalization in place.
+    #'   Requires a single-channel \code{CV_8U} image.
+    #' @return \code{self} invisibly.
+    #' @examples
+    #' \donttest{
+    #' img_path <- system.file("img", "brick_wall.jpg", package = "Retina")
+    #' img <- Image$new(img_path)$to_gray()
+    #' img$hist_eq_()
+    #' img$plot()
+    #' }
+    hist_eq_ = function() {
+      if (self$nchan != 1L)
+        stop("hist_eq_() requires a single-channel image; ",
+             "use split_channels() + lapply() for multi-channel images",
+             call. = FALSE)
+      if (self$depth_name != "CV_8U")
+        stop("hist_eq_() requires a CV_8U image", call. = FALSE)
+      private$.ptr <- rt_hist_eq(private$.ptr)
+      invisible(self)
+    },
+
     #' @description Print a summary of the image.
     #' @param ... Ignored.
     #' @return \code{self} invisibly.

@@ -76,3 +76,39 @@ test_that("hist() throws for invalid range", {
 test_that("hist() throws for non-logical freq", {
   expect_snapshot(error = TRUE, img_gray_flat()$hist(bins = 8L, range = c(0, 255), freq = "yes"))
 })
+
+# ── $hist_eq() / $hist_eq_() ──────────────────────────────────────────────────
+
+test_that("hist_eq() returns a CV_8U single-channel Image", {
+  img <- img_gray_flat(128L)
+  out <- img$hist_eq()
+  expect_s3_class(out, "Image")
+  expect_equal(out$depth_name, "CV_8U")
+  expect_equal(out$nchan, 1L)
+  expect_equal(out$colorspace, img$colorspace)
+  expect_equal(out$nrow, img$nrow)
+  expect_equal(out$ncol, img$ncol)
+})
+
+test_that("hist_eq() does not modify self", {
+  img  <- img_gray_flat(128L)
+  orig <- img$to_array()
+  img$hist_eq()
+  expect_equal(img$to_array(), orig)
+})
+
+test_that("hist_eq_() modifies self and returns self", {
+  img    <- img_gray_flat(50L)
+  result <- img$hist_eq_()
+  expect_identical(result, img)
+})
+
+test_that("hist_eq() throws for multi-channel image", {
+  expect_snapshot(error = TRUE, img_bgr_flat()$hist_eq())
+})
+
+test_that("hist_eq() throws for non-CV_8U depth", {
+  img <- Image$new(array(100L, dim = c(10L, 10L, 1L)),
+                   colorspace = "GRAY", depth = "CV_16U")
+  expect_snapshot(error = TRUE, img$hist_eq())
+})

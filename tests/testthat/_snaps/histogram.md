@@ -22,3 +22,19 @@
       Error:
       ! freq must be a single logical value
 
+# hist_eq() throws for multi-channel image
+
+    Code
+      img_bgr_flat()$hist_eq()
+    Condition
+      Error:
+      ! hist_eq() requires a single-channel image; use split_channels() + lapply() for multi-channel images
+
+# hist_eq() throws for non-CV_8U depth
+
+    Code
+      img$hist_eq()
+    Condition
+      Error:
+      ! hist_eq() requires a CV_8U image
+
