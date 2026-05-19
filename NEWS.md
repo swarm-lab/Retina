@@ -1,5 +1,3 @@
-# Retina (development version)
-
 # Retina 0.1.0
 
 ## Core Infrastructure
