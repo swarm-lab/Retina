@@ -404,6 +404,55 @@ extern "C" SEXP _Retina_rt_image_crop(SEXP img, SEXP x1, SEXP y1, SEXP x2, SEXP 
     return cpp11::as_sexp(rt_image_crop(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<int>>(x1), cpp11::as_cpp<cpp11::decay_t<int>>(y1), cpp11::as_cpp<cpp11::decay_t<int>>(x2), cpp11::as_cpp<cpp11::decay_t<int>>(y2)));
   END_CPP11
 }
+// histogram.cpp
+list rt_hist(external_pointer<RtImage> img, int bins, double range_lo, double range_hi);
+extern "C" SEXP _Retina_rt_hist(SEXP img, SEXP bins, SEXP range_lo, SEXP range_hi) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_hist(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<int>>(bins), cpp11::as_cpp<cpp11::decay_t<double>>(range_lo), cpp11::as_cpp<cpp11::decay_t<double>>(range_hi)));
+  END_CPP11
+}
+// histogram.cpp
+external_pointer<RtImage> rt_hist_eq(external_pointer<RtImage> img);
+extern "C" SEXP _Retina_rt_hist_eq(SEXP img) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_hist_eq(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img)));
+  END_CPP11
+}
+// histogram.cpp
+external_pointer<RtImage> rt_lut(external_pointer<RtImage> img, integers lut_vals);
+extern "C" SEXP _Retina_rt_lut(SEXP img, SEXP lut_vals) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_lut(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<integers>>(lut_vals)));
+  END_CPP11
+}
+// histogram.cpp
+external_pointer<RtImage> rt_clahe(external_pointer<RtImage> img, double clip_limit, int tile_w, int tile_h);
+extern "C" SEXP _Retina_rt_clahe(SEXP img, SEXP clip_limit, SEXP tile_w, SEXP tile_h) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_clahe(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<double>>(clip_limit), cpp11::as_cpp<cpp11::decay_t<int>>(tile_w), cpp11::as_cpp<cpp11::decay_t<int>>(tile_h)));
+  END_CPP11
+}
+// histogram.cpp
+list rt_minmax_loc(external_pointer<RtImage> img);
+extern "C" SEXP _Retina_rt_minmax_loc(SEXP img) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_minmax_loc(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img)));
+  END_CPP11
+}
+// histogram.cpp
+int rt_count_nonzero(external_pointer<RtImage> img);
+extern "C" SEXP _Retina_rt_count_nonzero(SEXP img) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_count_nonzero(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img)));
+  END_CPP11
+}
+// histogram.cpp
+list rt_find_nonzero(external_pointer<RtImage> img);
+extern "C" SEXP _Retina_rt_find_nonzero(SEXP img) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_find_nonzero(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img)));
+  END_CPP11
+}
 // image.cpp
 bool rt_build_ok();
 extern "C" SEXP _Retina_rt_build_ok() {
@@ -704,7 +753,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_Retina_rt_affine_rotate",            (DL_FUNC) &_Retina_rt_affine_rotate,             4},
     {"_Retina_rt_autothreshold_value",      (DL_FUNC) &_Retina_rt_autothreshold_value,       3},
     {"_Retina_rt_build_ok",                 (DL_FUNC) &_Retina_rt_build_ok,                  0},
+    {"_Retina_rt_clahe",                    (DL_FUNC) &_Retina_rt_clahe,                     4},
     {"_Retina_rt_concatenate",              (DL_FUNC) &_Retina_rt_concatenate,               2},
+    {"_Retina_rt_count_nonzero",            (DL_FUNC) &_Retina_rt_count_nonzero,             1},
     {"_Retina_rt_draw_arc",                 (DL_FUNC) &_Retina_rt_draw_arc,                 11},
     {"_Retina_rt_draw_arrow",               (DL_FUNC) &_Retina_rt_draw_arrow,                9},
     {"_Retina_rt_draw_circle",              (DL_FUNC) &_Retina_rt_draw_circle,               7},
@@ -715,11 +766,14 @@ static const R_CallMethodDef CallEntries[] = {
     {"_Retina_rt_draw_text",                (DL_FUNC) &_Retina_rt_draw_text,                10},
     {"_Retina_rt_fill",                     (DL_FUNC) &_Retina_rt_fill,                      6},
     {"_Retina_rt_fill_poly",                (DL_FUNC) &_Retina_rt_fill_poly,                 5},
+    {"_Retina_rt_find_nonzero",             (DL_FUNC) &_Retina_rt_find_nonzero,              1},
     {"_Retina_rt_get_gabor_kernel",         (DL_FUNC) &_Retina_rt_get_gabor_kernel,          8},
     {"_Retina_rt_get_structuring_element",  (DL_FUNC) &_Retina_rt_get_structuring_element,   3},
     {"_Retina_rt_get_text_size",            (DL_FUNC) &_Retina_rt_get_text_size,             5},
     {"_Retina_rt_has_cuda",                 (DL_FUNC) &_Retina_rt_has_cuda,                  0},
     {"_Retina_rt_has_module",               (DL_FUNC) &_Retina_rt_has_module,                1},
+    {"_Retina_rt_hist",                     (DL_FUNC) &_Retina_rt_hist,                      4},
+    {"_Retina_rt_hist_eq",                  (DL_FUNC) &_Retina_rt_hist_eq,                   1},
     {"_Retina_rt_image_absdiff_image",      (DL_FUNC) &_Retina_rt_image_absdiff_image,       2},
     {"_Retina_rt_image_absdiff_scalar",     (DL_FUNC) &_Retina_rt_image_absdiff_scalar,      2},
     {"_Retina_rt_image_adaptive_threshold", (DL_FUNC) &_Retina_rt_image_adaptive_threshold,  6},
@@ -795,6 +849,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_Retina_rt_image_warp_affine",        (DL_FUNC) &_Retina_rt_image_warp_affine,         6},
     {"_Retina_rt_image_warp_perspective",   (DL_FUNC) &_Retina_rt_image_warp_perspective,    6},
     {"_Retina_rt_image_write",              (DL_FUNC) &_Retina_rt_image_write,               2},
+    {"_Retina_rt_lut",                      (DL_FUNC) &_Retina_rt_lut,                       2},
+    {"_Retina_rt_minmax_loc",               (DL_FUNC) &_Retina_rt_minmax_loc,                1},
     {"_Retina_rt_perspective_from_points",  (DL_FUNC) &_Retina_rt_perspective_from_points,   2},
     {"_Retina_rt_randn",                    (DL_FUNC) &_Retina_rt_randn,                     7},
     {"_Retina_rt_randu",                    (DL_FUNC) &_Retina_rt_randu,                     7},
