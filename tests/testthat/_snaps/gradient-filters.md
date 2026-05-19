@@ -26,8 +26,6 @@
 
     Code
       img_uniform()$sobel(1, 0, scale = -1)
-    Message
-      ddepth not specified; using "CV_16S" for a CV_8U image.
     Condition
       Error:
       ! scale must be a single positive numeric value
@@ -36,8 +34,6 @@
 
     Code
       img_uniform()$sobel(1, 0, border_type = "foo")
-    Message
-      ddepth not specified; using "CV_16S" for a CV_8U image.
     Condition
       Error:
       ! border_type must be one of: reflect, reflect_101, replicate, constant

@@ -693,13 +693,6 @@ Image <- R6::R6Class("Image",
              call. = FALSE)
       if (!ksize %in% c(1L, 3L, 5L, 7L))
         stop("ksize must be 1, 3, 5, or 7", call. = FALSE)
-      if (is.null(ddepth)) {
-        ddepth <- .rt_infer_ddepth(self$depth_name)
-        message('ddepth not specified; using "', ddepth,
-                '" for a ', self$depth_name, ' image.')
-      } else if (!ddepth %in% c("CV_16S", "CV_32F", "CV_64F")) {
-        stop("ddepth must be one of: CV_16S, CV_32F, CV_64F", call. = FALSE)
-      }
       if (!is.numeric(scale) || length(scale) != 1L || scale <= 0)
         stop("scale must be a single positive numeric value", call. = FALSE)
       if (!is.numeric(delta) || length(delta) != 1L)
@@ -707,6 +700,13 @@ Image <- R6::R6Class("Image",
       if (!border_type %in% .valid_border)
         stop("border_type must be one of: reflect, reflect_101, replicate, constant",
              call. = FALSE)
+      if (is.null(ddepth)) {
+        ddepth <- .rt_infer_ddepth(self$depth_name)
+        message('ddepth not specified; using "', ddepth,
+                '" for a ', self$depth_name, ' image.')
+      } else if (!ddepth %in% c("CV_16S", "CV_32F", "CV_64F")) {
+        stop("ddepth must be one of: CV_16S, CV_32F, CV_64F", call. = FALSE)
+      }
       Image$new(rt_image_sobel(private$.ptr, as.integer(dx), as.integer(dy),
                                as.integer(ksize), ddepth, as.double(scale),
                                as.double(delta), border_type))
@@ -718,7 +718,7 @@ Image <- R6::R6Class("Image",
     #'   \code{dx + dy} must be >= 1.
     #' @param ksize Integer. Sobel kernel aperture size: 1, 3, 5, or 7.
     #' @param ddepth Character. Output depth: \code{"CV_16S"}, \code{"CV_32F"},
-    #'   or \code{"CV_64F"}. Default \code{NULL} (inferred from input depth).
+    #'   or \code{"CV_64F"}. Default \code{NULL} (depth inferred from input; a message is emitted).
     #' @param scale Single positive numeric. Optional scale factor for the
     #'   computed derivatives. Must be positive (use \code{convert_depth} +
     #'   arithmetic to invert gradient sign). Default 1.
@@ -749,13 +749,6 @@ Image <- R6::R6Class("Image",
              call. = FALSE)
       if (!ksize %in% c(1L, 3L, 5L, 7L))
         stop("ksize must be 1, 3, 5, or 7", call. = FALSE)
-      if (is.null(ddepth)) {
-        ddepth <- .rt_infer_ddepth(self$depth_name)
-        message('ddepth not specified; using "', ddepth,
-                '" for a ', self$depth_name, ' image.')
-      } else if (!ddepth %in% c("CV_16S", "CV_32F", "CV_64F")) {
-        stop("ddepth must be one of: CV_16S, CV_32F, CV_64F", call. = FALSE)
-      }
       if (!is.numeric(scale) || length(scale) != 1L || scale <= 0)
         stop("scale must be a single positive numeric value", call. = FALSE)
       if (!is.numeric(delta) || length(delta) != 1L)
@@ -763,6 +756,13 @@ Image <- R6::R6Class("Image",
       if (!border_type %in% .valid_border)
         stop("border_type must be one of: reflect, reflect_101, replicate, constant",
              call. = FALSE)
+      if (is.null(ddepth)) {
+        ddepth <- .rt_infer_ddepth(self$depth_name)
+        message('ddepth not specified; using "', ddepth,
+                '" for a ', self$depth_name, ' image.')
+      } else if (!ddepth %in% c("CV_16S", "CV_32F", "CV_64F")) {
+        stop("ddepth must be one of: CV_16S, CV_32F, CV_64F", call. = FALSE)
+      }
       private$.ptr <- rt_image_sobel(private$.ptr, as.integer(dx), as.integer(dy),
                                      as.integer(ksize), ddepth, as.double(scale),
                                      as.double(delta), border_type)
@@ -775,7 +775,7 @@ Image <- R6::R6Class("Image",
     #'   or 7. \code{ksize = 1} uses the 3-point central-difference stencil.
     #'   Default 1.
     #' @param ddepth Character. Output depth: \code{"CV_16S"}, \code{"CV_32F"},
-    #'   or \code{"CV_64F"}. Default \code{NULL} (inferred from input depth).
+    #'   or \code{"CV_64F"}. Default \code{NULL} (depth inferred from input; a message is emitted).
     #' @param scale Single positive numeric. Optional scale factor. Must be
     #'   positive. Default 1.
     #' @param delta Single numeric. Optional delta added to results. Default 0.
@@ -800,13 +800,6 @@ Image <- R6::R6Class("Image",
                          "replicate", "constant")
       if (!ksize %in% c(1L, 3L, 5L, 7L))
         stop("ksize must be 1, 3, 5, or 7", call. = FALSE)
-      if (is.null(ddepth)) {
-        ddepth <- .rt_infer_ddepth(self$depth_name)
-        message('ddepth not specified; using "', ddepth,
-                '" for a ', self$depth_name, ' image.')
-      } else if (!ddepth %in% c("CV_16S", "CV_32F", "CV_64F")) {
-        stop("ddepth must be one of: CV_16S, CV_32F, CV_64F", call. = FALSE)
-      }
       if (!is.numeric(scale) || length(scale) != 1L || scale <= 0)
         stop("scale must be a single positive numeric value", call. = FALSE)
       if (!is.numeric(delta) || length(delta) != 1L)
@@ -814,6 +807,13 @@ Image <- R6::R6Class("Image",
       if (!border_type %in% .valid_border)
         stop("border_type must be one of: reflect, reflect_101, replicate, constant",
              call. = FALSE)
+      if (is.null(ddepth)) {
+        ddepth <- .rt_infer_ddepth(self$depth_name)
+        message('ddepth not specified; using "', ddepth,
+                '" for a ', self$depth_name, ' image.')
+      } else if (!ddepth %in% c("CV_16S", "CV_32F", "CV_64F")) {
+        stop("ddepth must be one of: CV_16S, CV_32F, CV_64F", call. = FALSE)
+      }
       Image$new(rt_image_laplacian(private$.ptr, as.integer(ksize), ddepth,
                                    as.double(scale), as.double(delta),
                                    border_type))
@@ -822,7 +822,7 @@ Image <- R6::R6Class("Image",
     #' @description Laplacian operator in place.
     #' @param ksize Integer. Aperture size: 1, 3, 5, or 7. Default 1.
     #' @param ddepth Character. Output depth: \code{"CV_16S"}, \code{"CV_32F"},
-    #'   or \code{"CV_64F"}. Default \code{NULL} (inferred from input depth).
+    #'   or \code{"CV_64F"}. Default \code{NULL} (depth inferred from input; a message is emitted).
     #' @param scale Single positive numeric. Optional scale factor. Must be
     #'   positive. Default 1.
     #' @param delta Single numeric. Delta added to results. Default 0.
@@ -847,13 +847,6 @@ Image <- R6::R6Class("Image",
                          "replicate", "constant")
       if (!ksize %in% c(1L, 3L, 5L, 7L))
         stop("ksize must be 1, 3, 5, or 7", call. = FALSE)
-      if (is.null(ddepth)) {
-        ddepth <- .rt_infer_ddepth(self$depth_name)
-        message('ddepth not specified; using "', ddepth,
-                '" for a ', self$depth_name, ' image.')
-      } else if (!ddepth %in% c("CV_16S", "CV_32F", "CV_64F")) {
-        stop("ddepth must be one of: CV_16S, CV_32F, CV_64F", call. = FALSE)
-      }
       if (!is.numeric(scale) || length(scale) != 1L || scale <= 0)
         stop("scale must be a single positive numeric value", call. = FALSE)
       if (!is.numeric(delta) || length(delta) != 1L)
@@ -861,6 +854,13 @@ Image <- R6::R6Class("Image",
       if (!border_type %in% .valid_border)
         stop("border_type must be one of: reflect, reflect_101, replicate, constant",
              call. = FALSE)
+      if (is.null(ddepth)) {
+        ddepth <- .rt_infer_ddepth(self$depth_name)
+        message('ddepth not specified; using "', ddepth,
+                '" for a ', self$depth_name, ' image.')
+      } else if (!ddepth %in% c("CV_16S", "CV_32F", "CV_64F")) {
+        stop("ddepth must be one of: CV_16S, CV_32F, CV_64F", call. = FALSE)
+      }
       private$.ptr <- rt_image_laplacian(private$.ptr, as.integer(ksize),
                                          ddepth, as.double(scale),
                                          as.double(delta), border_type)

@@ -52,6 +52,7 @@ test_that("sobel_() modifies in place and returns self", {
   img <- img_uniform()
   result <- img$sobel_(1, 0, ddepth = "CV_16S")
   expect_identical(result, img)
+  expect_equal(img$depth_name, "CV_16S")
 })
 
 test_that("sobel() throws for dx = 0 and dy = 0", {
@@ -127,6 +128,7 @@ test_that("laplacian_() modifies in place and returns self", {
   img <- img_uniform()
   result <- img$laplacian_(ddepth = "CV_16S")
   expect_identical(result, img)
+  expect_equal(img$depth_name, "CV_16S")
 })
 
 test_that("laplacian() throws for even ksize", {
