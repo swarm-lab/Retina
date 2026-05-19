@@ -3144,11 +3144,11 @@ Image <- R6::R6Class("Image",
       if (!is.numeric(clip_limit) || length(clip_limit) != 1L ||
           !is.finite(clip_limit) || clip_limit <= 0)
         stop("clip_limit must be a single positive finite numeric", call. = FALSE)
-      tgs <- as.integer(tile_grid_size)
       if (!is.numeric(tile_grid_size) || !length(tile_grid_size) %in% 1:2 ||
-          any(is.na(tgs)) || any(tgs < 1L))
+          any(is.na(tile_grid_size)) || any(tile_grid_size < 1))
         stop("tile_grid_size must be a length-1 or length-2 positive integer vector",
              call. = FALSE)
+      tgs <- as.integer(tile_grid_size)
       if (length(tgs) == 1L) tgs <- c(tgs, tgs)
       Image$new(rt_clahe(private$.ptr, as.double(clip_limit),
                          as.integer(tgs[1]), as.integer(tgs[2])))
@@ -3175,11 +3175,11 @@ Image <- R6::R6Class("Image",
       if (!is.numeric(clip_limit) || length(clip_limit) != 1L ||
           !is.finite(clip_limit) || clip_limit <= 0)
         stop("clip_limit must be a single positive finite numeric", call. = FALSE)
-      tgs <- as.integer(tile_grid_size)
       if (!is.numeric(tile_grid_size) || !length(tile_grid_size) %in% 1:2 ||
-          any(is.na(tgs)) || any(tgs < 1L))
+          any(is.na(tile_grid_size)) || any(tile_grid_size < 1))
         stop("tile_grid_size must be a length-1 or length-2 positive integer vector",
              call. = FALSE)
+      tgs <- as.integer(tile_grid_size)
       if (length(tgs) == 1L) tgs <- c(tgs, tgs)
       private$.ptr <- rt_clahe(private$.ptr, as.double(clip_limit),
                                as.integer(tgs[1]), as.integer(tgs[2]))
