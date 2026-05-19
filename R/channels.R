@@ -27,7 +27,7 @@ split_channels <- function(img) {
   if (!inherits(img, "Image"))
     stop("img must be an Image object", call. = FALSE)
   raw <- rt_image_split_channels(.rt_ptr(img))
-  channels <- lapply(raw, function(ptr) Image$new(ptr))
+  channels <- lapply(raw, \(ptr) Image$new(ptr))
   nms <- .channel_names[[img$colorspace]]
   if (is.null(nms))
     nms <- paste0("ch", seq_along(channels))
@@ -52,14 +52,14 @@ split_channels <- function(img) {
 merge_channels <- function(channels) {
   if (!is.list(channels) || length(channels) == 0L ||
       !all(vapply(channels, inherits, logical(1L), "Image")) ||
-      !all(vapply(channels, function(x) x$nchan == 1L, logical(1L))))
+      !all(vapply(channels, \(x) x$nchan == 1L, logical(1L))))
     stop("channels must be a non-empty list of single-channel Image objects",
          call. = FALSE)
-  nrows <- vapply(channels, function(x) x$nrow, integer(1L))
-  ncols <- vapply(channels, function(x) x$ncol, integer(1L))
+  nrows <- vapply(channels, \(x) x$nrow, integer(1L))
+  ncols <- vapply(channels, \(x) x$ncol, integer(1L))
   if (length(unique(nrows)) > 1L || length(unique(ncols)) > 1L)
     stop("all channels must have the same dimensions", call. = FALSE)
-  depths <- vapply(channels, function(x) x$depth, integer(1L))
+  depths <- vapply(channels, \(x) x$depth, integer(1L))
   if (length(unique(depths)) > 1L)
     stop("all channels must have the same depth", call. = FALSE)
   nms <- names(channels)
