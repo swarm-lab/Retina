@@ -118,3 +118,19 @@
       Error:
       ! minmax_loc() requires a single-channel image; use split_channels() for multi-channel images
 
+# count_nonzero() throws for multi-channel image
+
+    Code
+      img_bgr_flat()$count_nonzero()
+    Condition
+      Error:
+      ! count_nonzero() requires a single-channel image; use split_channels() + lapply() for multi-channel images
+
+# find_nonzero() throws for multi-channel image
+
+    Code
+      img_bgr_flat()$find_nonzero()
+    Condition
+      Error:
+      ! find_nonzero() requires a single-channel image; use split_channels() + lapply() for multi-channel images
+

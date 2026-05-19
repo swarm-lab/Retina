@@ -262,3 +262,80 @@ test_that("minmax_loc() returns correct values and 1-based coords", {
 test_that("minmax_loc() throws for multi-channel image", {
   expect_snapshot(error = TRUE, img_bgr_flat()$minmax_loc())
 })
+
+# ── $count_nonzero() ──────────────────────────────────────────────────────────
+
+test_that("count_nonzero() returns correct count", {
+  arr <- array(0L, dim = c(5L, 5L, 1L))
+  arr[2, 3, 1] <- 100L
+  arr[4, 1, 1] <- 200L
+  img <- Image$new(arr, colorspace = "GRAY", depth = "CV_8U")
+  expect_equal(img$count_nonzero(), 2L)
+})
+
+test_that("count_nonzero() returns 0 for all-zero image", {
+  img <- Image$new(array(0L, dim = c(5L, 5L, 1L)),
+                   colorspace = "GRAY", depth = "CV_8U")
+  expect_equal(img$count_nonzero(), 0L)
+})
+
+test_that("count_nonzero() multi-channel: split then apply", {
+  # 3-channel image; only channel 2 has nonzero pixels
+  arr <- array(0L, dim = c(5L, 5L, 3L))
+  arr[1, 1, 2] <- 50L
+  img <- Image$new(arr, depth = "CV_8U")
+  chans <- split_channels(img)
+  counts <- vapply(chans, \(ch) ch$count_nonzero(), integer(1L))
+  expect_equal(unname(counts), c(0L, 1L, 0L))
+})
+
+test_that("count_nonzero() throws for multi-channel image", {
+  expect_snapshot(error = TRUE, img_bgr_flat()$count_nonzero())
+})
+
+# ── $find_nonzero() ───────────────────────────────────────────────────────────
+
+test_that("find_nonzero() returns a data frame with row and col columns", {
+  img <- img_gray_flat()
+  out <- img$find_nonzero()
+  expect_s3_class(out, "data.frame")
+  expect_named(out, c("row", "col"))
+  expect_type(out$row, "integer")
+  expect_type(out$col, "integer")
+})
+
+test_that("find_nonzero() returns correct 1-based coordinates", {
+  arr <- array(0L, dim = c(5L, 5L, 1L))
+  arr[2, 3, 1] <- 100L
+  arr[4, 1, 1] <- 200L
+  img <- Image$new(arr, colorspace = "GRAY", depth = "CV_8U")
+  out <- img$find_nonzero()
+  expect_equal(nrow(out), 2L)
+  # Results in row-major order: (2,3) comes before (4,1)
+  expect_equal(out$row, c(2L, 4L))
+  expect_equal(out$col, c(3L, 1L))
+})
+
+test_that("find_nonzero() returns zero-row data frame for all-zero image", {
+  img <- Image$new(array(0L, dim = c(5L, 5L, 1L)),
+                   colorspace = "GRAY", depth = "CV_8U")
+  out <- img$find_nonzero()
+  expect_s3_class(out, "data.frame")
+  expect_equal(nrow(out), 0L)
+  expect_named(out, c("row", "col"))
+})
+
+test_that("find_nonzero() multi-channel: split then apply", {
+  arr <- array(0L, dim = c(5L, 5L, 3L))
+  arr[1, 1, 1] <- 50L
+  img <- Image$new(arr, depth = "CV_8U")
+  chans <- split_channels(img)
+  coords <- lapply(chans, \(ch) ch$find_nonzero())
+  expect_equal(nrow(coords[[1]]), 1L)
+  expect_equal(nrow(coords[[2]]), 0L)
+  expect_equal(nrow(coords[[3]]), 0L)
+})
+
+test_that("find_nonzero() throws for multi-channel image", {
+  expect_snapshot(error = TRUE, img_bgr_flat()$find_nonzero())
+})

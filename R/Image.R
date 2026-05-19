@@ -3209,6 +3209,48 @@ Image <- R6::R6Class("Image",
       rt_minmax_loc(private$.ptr)
     },
 
+    #' @description Count non-zero pixels in a single-channel image.
+    #' @return A single integer.
+    #' @examples
+    #' \donttest{
+    #' img_path <- system.file("img", "brick_wall.jpg", package = "Retina")
+    #' img <- Image$new(img_path)$to_gray()$threshold(128)
+    #' n <- img$count_nonzero()
+    #' # Multi-channel: split then apply
+    #' color_img <- Image$new(img_path)
+    #' counts <- lapply(split_channels(color_img), \(ch) ch$count_nonzero())
+    #' }
+    count_nonzero = function() {
+      if (self$nchan != 1L)
+        stop("count_nonzero() requires a single-channel image; ",
+             "use split_channels() + lapply() for multi-channel images",
+             call. = FALSE)
+      rt_count_nonzero(private$.ptr)
+    },
+
+    #' @description Find the coordinates of all non-zero pixels in a
+    #'   single-channel image.
+    #' @return A data frame with integer columns \code{row} and \code{col}
+    #'   (1-based, R matrix convention), ordered in row-major order.
+    #'   Returns a zero-row data frame when no non-zero pixels exist.
+    #' @examples
+    #' \donttest{
+    #' img_path <- system.file("img", "brick_wall.jpg", package = "Retina")
+    #' img <- Image$new(img_path)$to_gray()$threshold(128)
+    #' coords <- img$find_nonzero()
+    #' head(coords)
+    #' # Multi-channel: split then apply
+    #' color_img <- Image$new(img_path)
+    #' all_coords <- lapply(split_channels(color_img), \(ch) ch$find_nonzero())
+    #' }
+    find_nonzero = function() {
+      if (self$nchan != 1L)
+        stop("find_nonzero() requires a single-channel image; ",
+             "use split_channels() + lapply() for multi-channel images",
+             call. = FALSE)
+      rt_find_nonzero(private$.ptr)
+    },
+
     #' @description Print a summary of the image.
     #' @param ... Ignored.
     #' @return \code{self} invisibly.
