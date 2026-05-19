@@ -62,3 +62,60 @@
       Error:
       ! anchor values are out of kernel bounds (0-based)
 
+# get_structuring_element() throws for invalid shape
+
+    Code
+      get_structuring_element("circle", 3L)
+    Condition
+      Error:
+      ! shape must be one of: rect, cross, ellipse
+
+# get_structuring_element() throws for even size
+
+    Code
+      get_structuring_element("rect", 4L)
+    Condition
+      Error:
+      ! size must be a single positive odd integer or c(width, height) of positive odd integers
+
+# get_structuring_element() throws for non-square with even dimension
+
+    Code
+      get_structuring_element("rect", c(4L, 3L))
+    Condition
+      Error:
+      ! size must be a single positive odd integer or c(width, height) of positive odd integers
+
+# get_gabor_kernel() throws for even ksize width
+
+    Code
+      get_gabor_kernel(c(8L, 9L), sigma = 2, theta = 0, lambda = 5, gamma = 0.5)
+    Condition
+      Error:
+      ! ksize must be c(width, height) of positive odd integers
+
+# get_gabor_kernel() throws for non-positive sigma
+
+    Code
+      get_gabor_kernel(c(9L, 9L), sigma = -1, theta = 0, lambda = 5, gamma = 0.5)
+    Condition
+      Error:
+      ! sigma must be a single positive finite numeric
+
+# get_gabor_kernel() throws for non-positive lambda
+
+    Code
+      get_gabor_kernel(c(9L, 9L), sigma = 2, theta = 0, lambda = -5, gamma = 0.5)
+    Condition
+      Error:
+      ! lambda must be a single positive finite numeric
+
+# get_gabor_kernel() throws for invalid kdepth
+
+    Code
+      get_gabor_kernel(c(9L, 9L), sigma = 2, theta = 0, lambda = 5, gamma = 0.5,
+      kdepth = "CV_8U")
+    Condition
+      Error:
+      ! kdepth must be one of: CV_32F, CV_64F
+

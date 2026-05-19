@@ -164,3 +164,44 @@ external_pointer<RtImage> rt_image_sep_filter2d(
                   cv_border_type(border_type));
   return {new RtImage(std::move(dst), img->colorspace)};
 }
+
+// ── get_structuring_element ───────────────────────────────────────────────────
+
+[[cpp11::register]]
+cpp11::writable::integers rt_get_structuring_element(
+    std::string shape, int width, int height) {
+  int cv_shape;
+  if      (shape == "rect")    cv_shape = cv::MORPH_RECT;
+  else if (shape == "cross")   cv_shape = cv::MORPH_CROSS;
+  else if (shape == "ellipse") cv_shape = cv::MORPH_ELLIPSE;
+  else stop("shape must be one of: rect, cross, ellipse");
+
+  cv::Mat k = cv::getStructuringElement(cv_shape, cv::Size(width, height));
+  cpp11::writable::integers result(height * width);
+  for (int j = 0; j < width; j++)
+    for (int i = 0; i < height; i++)
+      result[i + j * height] = static_cast<int>(k.at<uchar>(i, j));
+  result.attr("dim") = cpp11::writable::integers({height, width});
+  return result;
+}
+
+// ── get_gabor_kernel ──────────────────────────────────────────────────────────
+
+[[cpp11::register]]
+cpp11::writable::doubles rt_get_gabor_kernel(
+    int ksize_w, int ksize_h,
+    double sigma, double theta_rad,
+    double lambda, double gamma_val,
+    double psi, int ktype) {
+  cv::Mat k = cv::getGaborKernel(
+    cv::Size(ksize_w, ksize_h), sigma, theta_rad, lambda, gamma_val, psi, ktype);
+  cpp11::writable::doubles result(ksize_h * ksize_w);
+  for (int j = 0; j < ksize_w; j++)
+    for (int i = 0; i < ksize_h; i++) {
+      result[i + j * ksize_h] = (ktype == CV_32F)
+        ? static_cast<double>(k.at<float>(i, j))
+        : k.at<double>(i, j);
+    }
+  result.attr("dim") = cpp11::writable::integers({ksize_h, ksize_w});
+  return result;
+}
