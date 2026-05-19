@@ -398,6 +398,129 @@ img <- Image$new(img_path)
 img$draw_text("Hello", 10, 50, font = "duplex", font_size = 1.5,
               color = "white")$plot()
 }
+
+## ------------------------------------------------
+## Method `Image$hist`
+## ------------------------------------------------
+
+\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)$to_gray()
+h <- img$hist(bins = 256L, range = c(0, 256))
+# plot with ggplot2:
+# ggplot2::ggplot(h, ggplot2::aes(x = bin_center, y = count)) +
+#   ggplot2::geom_col()
+}
+
+## ------------------------------------------------
+## Method `Image$hist_eq`
+## ------------------------------------------------
+
+\donttest{
+img_path <- system.file("img", "brick_wall.jpg", package = "Retina")
+img <- Image$new(img_path)$to_gray()
+eq  <- img$hist_eq()
+eq$plot()
+}
+
+## ------------------------------------------------
+## Method `Image$hist_eq_`
+## ------------------------------------------------
+
+\donttest{
+img_path <- system.file("img", "brick_wall.jpg", package = "Retina")
+img <- Image$new(img_path)$to_gray()
+img$hist_eq_()
+img$plot()
+}
+
+## ------------------------------------------------
+## Method `Image$hist_match`
+## ------------------------------------------------
+
+\donttest{
+img_path <- system.file("img", "brick_wall.jpg", package = "Retina")
+ref_path <- system.file("img", "flower.jpg",     package = "Retina")
+src <- Image$new(img_path)$to_gray()
+ref <- Image$new(ref_path)$to_gray()
+ref_hist <- ref$hist(bins = 256L, range = c(0, 255))
+out <- src$hist_match(ref_hist)
+out$plot()
+}
+
+## ------------------------------------------------
+## Method `Image$hist_match_`
+## ------------------------------------------------
+
+\donttest{
+img_path <- system.file("img", "brick_wall.jpg", package = "Retina")
+ref_path <- system.file("img", "flower.jpg",     package = "Retina")
+src <- Image$new(img_path)$to_gray()
+ref <- Image$new(ref_path)$to_gray()
+ref_hist <- ref$hist(bins = 256L, range = c(0, 256))
+src$hist_match_(ref_hist)
+src$plot()
+}
+
+## ------------------------------------------------
+## Method `Image$CLAHE`
+## ------------------------------------------------
+
+\donttest{
+img_path <- system.file("img", "brick_wall.jpg", package = "Retina")
+img <- Image$new(img_path)$to_gray()
+out <- img$CLAHE(clip_limit = 2.0, tile_grid_size = c(8L, 8L))
+out$plot()
+}
+
+## ------------------------------------------------
+## Method `Image$CLAHE_`
+## ------------------------------------------------
+
+\donttest{
+img_path <- system.file("img", "brick_wall.jpg", package = "Retina")
+img <- Image$new(img_path)$to_gray()
+img$CLAHE_(clip_limit = 2.0, tile_grid_size = c(8L, 8L))
+img$plot()
+}
+
+## ------------------------------------------------
+## Method `Image$minmax_loc`
+## ------------------------------------------------
+
+\donttest{
+img_path <- system.file("img", "brick_wall.jpg", package = "Retina")
+img <- Image$new(img_path)$to_gray()
+loc <- img$minmax_loc()
+cat("Max pixel:", loc$max_val, "at row", loc$max_row, "col", loc$max_col)
+}
+
+## ------------------------------------------------
+## Method `Image$count_nonzero`
+## ------------------------------------------------
+
+\donttest{
+img_path <- system.file("img", "brick_wall.jpg", package = "Retina")
+img <- Image$new(img_path)$to_gray()$threshold(128)
+n <- img$count_nonzero()
+# Multi-channel: split then apply
+color_img <- Image$new(img_path)
+counts <- lapply(split_channels(color_img), \(ch) ch$count_nonzero())
+}
+
+## ------------------------------------------------
+## Method `Image$find_nonzero`
+## ------------------------------------------------
+
+\donttest{
+img_path <- system.file("img", "brick_wall.jpg", package = "Retina")
+img <- Image$new(img_path)$to_gray()$threshold(128)
+coords <- img$find_nonzero()
+head(coords)
+# Multi-channel: split then apply
+color_img <- Image$new(img_path)
+all_coords <- lapply(split_channels(color_img), \(ch) ch$find_nonzero())
+}
 }
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
@@ -533,6 +656,16 @@ img$draw_text("Hello", 10, 50, font = "duplex", font_size = 1.5,
 \item \href{#method-Image-fill_poly_}{\code{Image$fill_poly_()}}
 \item \href{#method-Image-draw_text}{\code{Image$draw_text()}}
 \item \href{#method-Image-draw_text_}{\code{Image$draw_text_()}}
+\item \href{#method-Image-hist}{\code{Image$hist()}}
+\item \href{#method-Image-hist_eq}{\code{Image$hist_eq()}}
+\item \href{#method-Image-hist_eq_}{\code{Image$hist_eq_()}}
+\item \href{#method-Image-hist_match}{\code{Image$hist_match()}}
+\item \href{#method-Image-hist_match_}{\code{Image$hist_match_()}}
+\item \href{#method-Image-CLAHE}{\code{Image$CLAHE()}}
+\item \href{#method-Image-CLAHE_}{\code{Image$CLAHE_()}}
+\item \href{#method-Image-minmax_loc}{\code{Image$minmax_loc()}}
+\item \href{#method-Image-count_nonzero}{\code{Image$count_nonzero()}}
+\item \href{#method-Image-find_nonzero}{\code{Image$find_nonzero()}}
 \item \href{#method-Image-print}{\code{Image$print()}}
 }
 }
@@ -4260,6 +4393,352 @@ Default \code{1}.}
 \subsection{Returns}{
 \code{self} invisibly.
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-hist"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-hist}{}}}
+\subsection{Method \code{hist()}}{
+Compute a per-channel histogram of pixel values.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$hist(bins = 256L, range = NULL, freq = TRUE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{bins}}{Single positive integer. Number of histogram bins. Default
+\code{256}.}
+
+\item{\code{range}}{Length-2 numeric vector \code{c(lo, hi)} giving the
+pixel-value range to histogram. \code{NULL} (default) applies a
+depth-appropriate default and emits a message.}
+
+\item{\code{freq}}{Logical. \code{TRUE} (default): \code{count} column contains
+raw pixel counts (consistent with base R \code{hist(freq = TRUE)}).
+\code{FALSE}: \code{count} column contains probability densities
+(counts / (total_pixels * bin_width)).}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A tidy data frame with columns \code{bin_center} (double),
+  \code{channel} (character), and \code{count} (double). One row per
+  bin per channel, ordered by channel then ascending \code{bin_center}.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img_path <- system.file("img", "flower.jpg", package = "Retina")
+img <- Image$new(img_path)$to_gray()
+h <- img$hist(bins = 256L, range = c(0, 256))
+# plot with ggplot2:
+# ggplot2::ggplot(h, ggplot2::aes(x = bin_center, y = count)) +
+#   ggplot2::geom_col()
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-hist_eq"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-hist_eq}{}}}
+\subsection{Method \code{hist_eq()}}{
+Apply global histogram equalization. Returns a new Image.
+  Requires a single-channel \code{CV_8U} image. For multi-channel images,
+  use \code{split_channels()} then apply per channel.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$hist_eq()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+A new \code{CV_8U} single-channel \code{Image}.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img_path <- system.file("img", "brick_wall.jpg", package = "Retina")
+img <- Image$new(img_path)$to_gray()
+eq  <- img$hist_eq()
+eq$plot()
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-hist_eq_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-hist_eq_}{}}}
+\subsection{Method \code{hist_eq_()}}{
+Apply global histogram equalization in place.
+  Requires a single-channel \code{CV_8U} image.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$hist_eq_()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+\code{self} invisibly.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img_path <- system.file("img", "brick_wall.jpg", package = "Retina")
+img <- Image$new(img_path)$to_gray()
+img$hist_eq_()
+img$plot()
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-hist_match"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-hist_match}{}}}
+\subsection{Method \code{hist_match()}}{
+Match the histogram of this image to a reference histogram.
+  Returns a new Image. Requires a single-channel \code{CV_8U} image.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$hist_match(ref)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{ref}}{A data frame as produced by \code{$hist(bins = 256L)} with
+columns \code{bin_center}, \code{channel}, and \code{count}. Must have
+exactly 256 rows (one per 8-bit value).}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A new \code{CV_8U} single-channel \code{Image}.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img_path <- system.file("img", "brick_wall.jpg", package = "Retina")
+ref_path <- system.file("img", "flower.jpg",     package = "Retina")
+src <- Image$new(img_path)$to_gray()
+ref <- Image$new(ref_path)$to_gray()
+ref_hist <- ref$hist(bins = 256L, range = c(0, 255))
+out <- src$hist_match(ref_hist)
+out$plot()
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-hist_match_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-hist_match_}{}}}
+\subsection{Method \code{hist_match_()}}{
+Match the histogram of this image to a reference, in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$hist_match_(ref)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{ref}}{See \code{$hist_match()}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{self} invisibly.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img_path <- system.file("img", "brick_wall.jpg", package = "Retina")
+ref_path <- system.file("img", "flower.jpg",     package = "Retina")
+src <- Image$new(img_path)$to_gray()
+ref <- Image$new(ref_path)$to_gray()
+ref_hist <- ref$hist(bins = 256L, range = c(0, 256))
+src$hist_match_(ref_hist)
+src$plot()
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-CLAHE"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-CLAHE}{}}}
+\subsection{Method \code{CLAHE()}}{
+Apply Contrast Limited Adaptive Histogram Equalization
+  (CLAHE). Returns a new Image. Requires a single-channel \code{CV_8U}
+  or \code{CV_16U} image.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$CLAHE(clip_limit = 40, tile_grid_size = c(8L, 8L))}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{clip_limit}}{Single positive numeric. Threshold for contrast
+limiting — higher values allow more contrast enhancement, lower values
+reduce noise amplification. Default \code{40.0}.}
+
+\item{\code{tile_grid_size}}{Length-1 or length-2 positive integer vector
+\code{c(width, height)}. Number of tiles in each direction. A scalar
+\code{n} is recycled to \code{c(n, n)} for square tiles. Default
+\code{c(8L, 8L)}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A new \code{Image} of the same depth as the input.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img_path <- system.file("img", "brick_wall.jpg", package = "Retina")
+img <- Image$new(img_path)$to_gray()
+out <- img$CLAHE(clip_limit = 2.0, tile_grid_size = c(8L, 8L))
+out$plot()
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-CLAHE_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-CLAHE_}{}}}
+\subsection{Method \code{CLAHE_()}}{
+Apply CLAHE in place. See \code{$CLAHE()} for details.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$CLAHE_(clip_limit = 40, tile_grid_size = c(8L, 8L))}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{clip_limit}}{See \code{$CLAHE()}.}
+
+\item{\code{tile_grid_size}}{See \code{$CLAHE()}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{self} invisibly.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img_path <- system.file("img", "brick_wall.jpg", package = "Retina")
+img <- Image$new(img_path)$to_gray()
+img$CLAHE_(clip_limit = 2.0, tile_grid_size = c(8L, 8L))
+img$plot()
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-minmax_loc"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-minmax_loc}{}}}
+\subsection{Method \code{minmax_loc()}}{
+Find the minimum and maximum pixel values and their
+  locations in a single-channel image.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$minmax_loc()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+A named list with six elements: \code{min_val} (double),
+  \code{min_row} (integer), \code{min_col} (integer), \code{max_val}
+  (double), \code{max_row} (integer), \code{max_col} (integer).
+  All coordinates are 1-based. When multiple pixels share the minimum or
+  maximum value, the first occurrence in row-major order is returned.
+  For multi-channel images, use \code{split_channels()} first.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img_path <- system.file("img", "brick_wall.jpg", package = "Retina")
+img <- Image$new(img_path)$to_gray()
+loc <- img$minmax_loc()
+cat("Max pixel:", loc$max_val, "at row", loc$max_row, "col", loc$max_col)
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-count_nonzero"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-count_nonzero}{}}}
+\subsection{Method \code{count_nonzero()}}{
+Count non-zero pixels in a single-channel image.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$count_nonzero()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+A single integer.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img_path <- system.file("img", "brick_wall.jpg", package = "Retina")
+img <- Image$new(img_path)$to_gray()$threshold(128)
+n <- img$count_nonzero()
+# Multi-channel: split then apply
+color_img <- Image$new(img_path)
+counts <- lapply(split_channels(color_img), \(ch) ch$count_nonzero())
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-find_nonzero"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-find_nonzero}{}}}
+\subsection{Method \code{find_nonzero()}}{
+Find the coordinates of all non-zero pixels in a
+  single-channel image.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$find_nonzero()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+A data frame with integer columns \code{row} and \code{col}
+  (1-based, R matrix convention), ordered in row-major order.
+  Returns a zero-row data frame when no non-zero pixels exist.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img_path <- system.file("img", "brick_wall.jpg", package = "Retina")
+img <- Image$new(img_path)$to_gray()$threshold(128)
+coords <- img$find_nonzero()
+head(coords)
+# Multi-channel: split then apply
+color_img <- Image$new(img_path)
+all_coords <- lapply(split_channels(color_img), \(ch) ch$find_nonzero())
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Image-print"></a>}}
