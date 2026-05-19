@@ -11,8 +11,9 @@ merge_channels(channels)
 equal dimensions and depth. Names are used to infer the output colorspace.}
 }
 \value{
-A new \code{Image}. Colorspace is inferred from \code{names(channels)};
-  if unrecognised, colorspace is set to \code{"UNKNOWN"} with a warning.
+A new \code{Image}. Colorspace is inferred from
+  \code{names(channels)}; if unrecognised, colorspace is set to
+  \code{"UNKNOWN"} with a warning.
 }
 \description{
 Merge a list of single-channel images into a multi-channel image

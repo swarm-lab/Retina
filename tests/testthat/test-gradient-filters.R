@@ -39,28 +39,23 @@ test_that("sobel_() modifies in place and returns self", {
 })
 
 test_that("sobel() throws for dx = 0 and dy = 0", {
-  expect_error(img_uniform()$sobel(0, 0),
-               "dx and dy must be non-negative integers")
+  expect_snapshot(error = TRUE, img_uniform()$sobel(0, 0))
 })
 
 test_that("sobel() throws for even ksize", {
-  expect_error(img_uniform()$sobel(1, 0, ksize = 4),
-               "ksize must be 1, 3, 5, or 7")
+  expect_snapshot(error = TRUE, img_uniform()$sobel(1, 0, ksize = 4))
 })
 
 test_that("sobel() throws for unsupported ddepth", {
-  expect_error(img_uniform()$sobel(1, 0, ddepth = "CV_8U"),
-               "ddepth must be one of")
+  expect_snapshot(error = TRUE, img_uniform()$sobel(1, 0, ddepth = "CV_8U"))
 })
 
 test_that("sobel() throws for non-positive scale", {
-  expect_error(img_uniform()$sobel(1, 0, scale = -1),
-               "scale must be a single positive numeric value")
+  expect_snapshot(error = TRUE, img_uniform()$sobel(1, 0, scale = -1))
 })
 
 test_that("sobel() throws for invalid border_type", {
-  expect_error(img_uniform()$sobel(1, 0, border_type = "foo"),
-               "border_type must be one of")
+  expect_snapshot(error = TRUE, img_uniform()$sobel(1, 0, border_type = "foo"))
 })
 
 test_that("sobel() with border_type = 'replicate' runs without error", {
@@ -103,13 +98,11 @@ test_that("laplacian_() modifies in place and returns self", {
 })
 
 test_that("laplacian() throws for even ksize", {
-  expect_error(img_uniform()$laplacian(ksize = 4),
-               "ksize must be 1, 3, 5, or 7")
+  expect_snapshot(error = TRUE, img_uniform()$laplacian(ksize = 4))
 })
 
 test_that("laplacian() throws for unsupported ddepth", {
-  expect_error(img_uniform()$laplacian(ddepth = "CV_8U"),
-               "ddepth must be one of")
+  expect_snapshot(error = TRUE, img_uniform()$laplacian(ddepth = "CV_8U"))
 })
 
 test_that("laplacian() with border_type = 'reflect' runs without error", {

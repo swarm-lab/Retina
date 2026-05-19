@@ -1,7 +1,8 @@
 #' Build an affine translation matrix
 #'
 #' Returns a 2x3 affine transformation matrix that translates by \code{(dx, dy)}
-#' pixels. To compose transforms, embed into a 3x3 matrix with \code{rbind(m, c(0, 0, 1))}
+#' pixels. To compose transforms, embed into a 3x3 matrix with
+#' \code{rbind(m, c(0, 0, 1))}
 #' before multiplying with \code{\%*\%}.
 #'
 #' @param dx Numeric. Horizontal shift in pixels (positive = rightward).

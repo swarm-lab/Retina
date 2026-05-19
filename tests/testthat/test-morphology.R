@@ -39,8 +39,7 @@ test_that("morph() with border_type = 'constant' runs without error", {
 })
 
 test_that("morph() rejects 'wrap' border_type (unsupported by OpenCV)", {
-  expect_error(img_gray()$morph("erode", border_type = "wrap"),
-               "border_type must be one of")
+  expect_snapshot(error = TRUE, img_gray()$morph("erode", border_type = "wrap"))
 })
 
 # ── semantic checks ───────────────────────────────────────────────────────────
@@ -92,28 +91,23 @@ test_that("morph_() in-place gives same result as morph()", {
 # ── validation errors ─────────────────────────────────────────────────────────
 
 test_that("invalid operation errors", {
-  expect_error(img_gray()$morph("blur"),
-               "operation must be one of")
+  expect_snapshot(error = TRUE, img_gray()$morph("blur"))
 })
 
 test_that("invalid shape errors", {
-  expect_error(img_gray()$morph("erode", shape = "diamond"),
-               "shape must be one of")
+  expect_snapshot(error = TRUE, img_gray()$morph("erode", shape = "diamond"))
 })
 
 test_that("even size errors", {
-  expect_error(img_gray()$morph("erode", size = 4L),
-               "size must be a single positive odd integer")
+  expect_snapshot(error = TRUE, img_gray()$morph("erode", size = 4L))
 })
 
 test_that("non-matrix kernel errors", {
-  expect_error(img_gray()$morph("erode", kernel = c(1, 0, 1)),
-               "kernel must be a numeric matrix")
+  expect_snapshot(error = TRUE, img_gray()$morph("erode", kernel = c(1, 0, 1)))
 })
 
 test_that("invalid border_type errors", {
-  expect_error(img_gray()$morph("erode", border_type = "padded"),
-               "border_type must be one of")
+  expect_snapshot(error = TRUE, img_gray()$morph("erode", border_type = "padded"))
 })
 
 test_that("morph() with kernel skips shape validation", {

@@ -36,11 +36,11 @@ test_that("col2bgr numeric length-4 accepted regardless of alpha flag", {
 })
 
 test_that("col2bgr numeric wrong length errors", {
-  expect_error(col2bgr(c(0, 0)), "must be a numeric vector of length")
+  expect_snapshot(error = TRUE, col2bgr(c(0, 0)))
 })
 
 test_that("col2bgr numeric out-of-range errors", {
-  expect_error(col2bgr(c(0, 0, 300)), "must be in \\[0, 255\\]")
+  expect_snapshot(error = TRUE, col2bgr(c(0, 0, 300)))
 })
 
 # ── draw_line ─────────────────────────────────────────────────────────────────
@@ -74,13 +74,15 @@ test_that("draw_line_() modifies in place and returns self", {
 })
 
 test_that("draw_line() errors on invalid thickness", {
-  expect_error(img_black()$draw_line(1, 1, 10, 10, color = "red", thickness = 0L),
-               "thickness must be a single positive integer")
+  expect_snapshot(error = TRUE, {
+    img_black()$draw_line(1, 1, 10, 10, color = "red", thickness = 0L)
+  })
 })
 
 test_that("draw_line() errors on invalid line_type", {
-  expect_error(img_black()$draw_line(1, 1, 10, 10, color = "red", line_type = "solid"),
-               "line_type must be one of")
+  expect_snapshot(error = TRUE, {
+    img_black()$draw_line(1, 1, 10, 10, color = "red", line_type = "solid")
+  })
 })
 
 # ── draw_arrow ────────────────────────────────────────────────────────────────
@@ -138,10 +140,9 @@ test_that("draw_rectangle_() modifies in place and returns self", {
 })
 
 test_that("draw_rectangle() errors on negative thickness", {
-  expect_error(
-    img_black()$draw_rectangle(10, 10, 90, 90, color = "red", thickness = -1L),
-    "thickness must be a single positive integer"
-  )
+  expect_snapshot(error = TRUE, {
+    img_black()$draw_rectangle(10, 10, 90, 90, color = "red", thickness = -1L)
+  })
 })
 
 # ── draw_circle ───────────────────────────────────────────────────────────────
@@ -174,8 +175,9 @@ test_that("draw_circle_() modifies in place and returns self", {
 })
 
 test_that("draw_circle() errors on negative radius", {
-  expect_error(img_black()$draw_circle(50, 50, -1L, color = "red"),
-               "radius must be a single non-negative integer")
+  expect_snapshot(error = TRUE, {
+    img_black()$draw_circle(50, 50, -1L, color = "red")
+  })
 })
 
 # ── draw_ellipse ──────────────────────────────────────────────────────────────
@@ -206,8 +208,9 @@ test_that("draw_ellipse_() modifies in place and returns self", {
 })
 
 test_that("draw_ellipse() errors on rx < 1", {
-  expect_error(img_black()$draw_ellipse(50, 50, 0L, 20L, color = "red"),
-               "rx and ry must be single positive integers")
+  expect_snapshot(error = TRUE, {
+    img_black()$draw_ellipse(50, 50, 0L, 20L, color = "red")
+  })
 })
 
 # ── draw_arc ──────────────────────────────────────────────────────────────────
@@ -268,19 +271,22 @@ test_that("draw_polyline_() modifies in place and returns self", {
 })
 
 test_that("draw_polyline() errors on non-matrix pts", {
-  expect_error(img_black()$draw_polyline(c(1, 2, 3, 4), color = "red"),
-               "pts must be a numeric matrix")
+  expect_snapshot(error = TRUE, {
+    img_black()$draw_polyline(c(1, 2, 3, 4), color = "red")
+  })
 })
 
 test_that("draw_polyline() errors on pts with wrong ncol", {
-  expect_error(img_black()$draw_polyline(matrix(1:9, nrow = 3, ncol = 3), color = "red"),
-               "pts must have exactly 2 columns")
+  expect_snapshot(error = TRUE, {
+    img_black()$draw_polyline(matrix(1:9, nrow = 3, ncol = 3), color = "red")
+  })
 })
 
 test_that("draw_polyline() errors on pts with fewer than 2 rows", {
   pts <- matrix(c(10, 50), nrow = 1L, ncol = 2L)
-  expect_error(img_black()$draw_polyline(pts, color = "red"),
-               "pts must have at least 2 rows")
+  expect_snapshot(error = TRUE, {
+    img_black()$draw_polyline(pts, color = "red")
+  })
 })
 
 # ── fill_poly ─────────────────────────────────────────────────────────────────
@@ -306,8 +312,9 @@ test_that("fill_poly_() modifies in place and returns self", {
 
 test_that("fill_poly() errors on pts with fewer than 3 rows", {
   pts <- matrix(c(10, 10, 90, 10), nrow = 2L, ncol = 2L)
-  expect_error(img_black()$fill_poly(pts, color = "red"),
-               "pts must have at least 3 rows")
+  expect_snapshot(error = TRUE, {
+    img_black()$fill_poly(pts, color = "red")
+  })
 })
 
 # ── draw_text ─────────────────────────────────────────────────────────────────
@@ -336,15 +343,15 @@ test_that("draw_text_() modifies in place and returns self", {
 })
 
 test_that("draw_text() errors on invalid font", {
-  expect_error(img_black()$draw_text("x", 10, 50, color = "red",
-                                     font = "arial"),
-               "font must be one of")
+  expect_snapshot(error = TRUE, {
+    img_black()$draw_text("x", 10, 50, color = "red", font = "arial")
+  })
 })
 
 test_that("draw_text() errors on invalid line_type", {
-  expect_error(img_black()$draw_text("x", 10, 50, color = "red",
-                                     line_type = "dashed"),
-               "line_type must be one of")
+  expect_snapshot(error = TRUE, {
+    img_black()$draw_text("x", 10, 50, color = "red", line_type = "dashed")
+  })
 })
 
 # ── get_text_size ─────────────────────────────────────────────────────────────
@@ -369,11 +376,9 @@ test_that("get_text_size() larger font_size gives larger width", {
 })
 
 test_that("get_text_size() errors on invalid font", {
-  expect_error(get_text_size("x", font = "times"),
-               "font must be one of")
+  expect_snapshot(error = TRUE, get_text_size("x", font = "times"))
 })
 
 test_that("get_text_size() errors on invalid thickness", {
-  expect_error(get_text_size("x", thickness = 0L),
-               "thickness must be a single positive integer")
+  expect_snapshot(error = TRUE, get_text_size("x", thickness = 0L))
 })

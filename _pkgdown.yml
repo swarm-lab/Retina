@@ -2,3 +2,51 @@ url: https://swarm-lab.github.io/Retina/
 template:
   bootstrap: 5
 
+reference:
+  - title: Image class
+    desc: The core R6 class for image data.
+    contents:
+      - Image
+
+  - title: Color utilities
+    desc: Convert R color specifications to OpenCV BGR(A) format.
+    contents:
+      - col2bgr
+
+  - title: Channel operations
+    desc: Split and merge image channels.
+    contents:
+      - split_channels
+      - merge_channels
+
+  - title: Image construction
+    desc: Standalone functions for creating and combining images.
+    contents:
+      - concatenate
+
+  - title: Geometric transform helpers
+    desc: >
+      Construct affine and perspective transformation matrices for use with
+      `Image$warp_affine()` and `Image$warp_perspective()`.
+    contents:
+      - affine_translate
+      - affine_scale
+      - affine_shear
+      - affine_rotate
+      - affine_from_points
+      - perspective_from_points
+
+  - title: Thresholding utilities
+    desc: Compute threshold values without modifying the image.
+    contents:
+      - autothreshold_value
+
+  - title: Drawing utilities
+    desc: Measure text extents before drawing.
+    contents:
+      - get_text_size
+
+  - title: Display
+    desc: Open an interactive display window.
+    contents:
+      - display

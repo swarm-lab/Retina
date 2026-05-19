@@ -56,27 +56,27 @@ test_that("Image$randn() produces a roughly normal distribution", {
 })
 
 test_that("Image$zeros() errors on nrow < 1", {
-  expect_error(Image$zeros(0L, 4L), "nrow must be a single positive integer")
+  expect_snapshot(error = TRUE, Image$zeros(0L, 4L))
 })
 
 test_that("Image$zeros() errors on nchan > 4", {
-  expect_error(Image$zeros(3L, 4L, nchan = 5L), "nchan must be a single positive integer <= 4")
+  expect_snapshot(error = TRUE, Image$zeros(3L, 4L, nchan = 5L))
 })
 
 test_that("Image$zeros() errors on invalid depth", {
-  expect_error(Image$zeros(3L, 4L, depth = "CV_128U"), "depth must be one of")
+  expect_snapshot(error = TRUE, Image$zeros(3L, 4L, depth = "CV_128U"))
 })
 
 test_that("Image$randu() errors when low >= high", {
-  expect_error(Image$randu(3L, 3L, low = 5, high = 5), "low must be strictly less than high")
+  expect_snapshot(error = TRUE, Image$randu(3L, 3L, low = 5, high = 5))
 })
 
 test_that("Image$randn() errors when sd <= 0", {
-  expect_error(Image$randn(3L, 3L, sd = -1), "sd must be a single positive finite numeric")
+  expect_snapshot(error = TRUE, Image$randn(3L, 3L, sd = -1))
 })
 
 test_that("Image$ones() errors on invalid ncol", {
-  expect_error(Image$ones(3L, 0L), "ncol must be a single positive integer")
+  expect_snapshot(error = TRUE, Image$ones(3L, 0L))
 })
 
 test_that("Image$zeros() returns an Image object", {
@@ -142,30 +142,27 @@ test_that("border_() modifies in place and returns self invisibly", {
 
 test_that("border() errors on invalid type", {
   img <- Image$zeros(3L, 3L)
-  expect_error(img$border(1L, type = "invalid"),
-               "type must be one of")
+  expect_snapshot(error = TRUE, img$border(1L, type = "invalid"))
 })
 
 test_that("border() errors on negative width", {
   img <- Image$zeros(3L, 3L)
-  expect_error(img$border(-1L), "top must be a single non-negative integer")
+  expect_snapshot(error = TRUE, img$border(-1L))
 })
 
 test_that("border() errors on empty value vector", {
   img <- Image$zeros(3L, 3L)
-  expect_error(img$border(1L, value = numeric(0)),
-               "value must be a non-empty numeric vector with no NAs")
+  expect_snapshot(error = TRUE, img$border(1L, value = numeric(0)))
 })
 
 test_that("border_() errors on invalid type", {
   img <- Image$zeros(3L, 3L)
-  expect_error(img$border_(1L, type = "bad"),
-               "type must be one of")
+  expect_snapshot(error = TRUE, img$border_(1L, type = "bad"))
 })
 
 test_that("border() rejects 'default' as a type", {
   img <- Image$zeros(3L, 3L, 1L, "CV_8U", "GRAY")
-  expect_error(img$border(1L, type = "default"), "type must be one of")
+  expect_snapshot(error = TRUE, img$border(1L, type = "default"))
 })
 
 # ── Image$fill() ──────────────────────────────────────────────────────────────
@@ -208,22 +205,21 @@ test_that("Image$ones() delegates to Image$fill()", {
 })
 
 test_that("Image$fill() errors on mismatched value length", {
-  expect_error(
-    Image$fill(c(1, 2), 3L, 3L, 3L),
-    "value length.*must equal nchan"
-  )
+  expect_snapshot(error = TRUE, {
+    Image$fill(c(1, 2), 3L, 3L, 3L)
+  })
 })
 
 test_that("Image$fill() errors on NA value", {
-  expect_error(Image$fill(NA_real_, 3L, 3L), "value must be")
+  expect_snapshot(error = TRUE, Image$fill(NA_real_, 3L, 3L))
 })
 
 test_that("Image$fill() errors on empty value", {
-  expect_error(Image$fill(numeric(0), 3L, 3L), "value must be")
+  expect_snapshot(error = TRUE, Image$fill(numeric(0), 3L, 3L))
 })
 
 test_that("Image$fill() errors on non-finite value (Inf)", {
-  expect_error(Image$fill(Inf, 3L, 3L), "value must be")
+  expect_snapshot(error = TRUE, Image$fill(Inf, 3L, 3L))
 })
 
 test_that("Image$fill() works with 4-channel BGRA image", {
@@ -309,41 +305,46 @@ test_that("border() 2-arg form: first=vertical (top+bottom), second=horizontal (
 
 test_that("border_() rejects 'default' as a type", {
   img <- Image$zeros(3L, 3L)
-  expect_error(img$border_(1L, type = "default"), "type must be one of")
+  expect_snapshot(error = TRUE, img$border_(1L, type = "default"))
 })
 
 # ── "default" border_type rejected in all methods ─────────────────────────────
 
 test_that("$sobel() rejects 'default' as border_type", {
   img <- Image$zeros(5L, 5L, 1L, "CV_32F", "GRAY")
-  expect_error(img$sobel(1L, 0L, border_type = "default"),
-               "border_type must be one of")
+  expect_snapshot(error = TRUE, {
+    img$sobel(1L, 0L, border_type = "default")
+  })
 })
 
 test_that("$laplacian() rejects 'default' as border_type", {
   img <- Image$zeros(5L, 5L, 1L, "CV_32F", "GRAY")
-  expect_error(img$laplacian(border_type = "default"),
-               "border_type must be one of")
+  expect_snapshot(error = TRUE, {
+    img$laplacian(border_type = "default")
+  })
 })
 
 test_that("$morph() rejects 'default' as border_type", {
   img <- Image$zeros(5L, 5L, 1L, "CV_8U", "GRAY")
-  expect_error(img$morph("erode", border_type = "default"),
-               "border_type must be one of")
+  expect_snapshot(error = TRUE, {
+    img$morph("erode", border_type = "default")
+  })
 })
 
 test_that("$warp_affine() rejects 'default' as border_type", {
   img <- Image$zeros(10L, 10L, 1L, "CV_8U", "GRAY")
   m <- matrix(c(1, 0, 0, 0, 1, 0), nrow = 2, byrow = TRUE)
-  expect_error(img$warp_affine(m, border_type = "default"),
-               "border_type must be one of")
+  expect_snapshot(error = TRUE, {
+    img$warp_affine(m, border_type = "default")
+  })
 })
 
 test_that("$warp_perspective() rejects 'default' as border_type", {
   img <- Image$zeros(10L, 10L, 1L, "CV_8U", "GRAY")
   m <- diag(3)
-  expect_error(img$warp_perspective(m, border_type = "default"),
-               "border_type must be one of")
+  expect_snapshot(error = TRUE, {
+    img$warp_perspective(m, border_type = "default")
+  })
 })
 
 # ── $tile() / $tile_() ────────────────────────────────────────────────────────
@@ -387,42 +388,42 @@ test_that("$tile_() modifies in place and returns self invisibly", {
 
 test_that("$tile() errors on nrow < 1", {
   img <- Image$zeros(2L, 2L)
-  expect_error(img$tile(0L), "nrow must be a single positive integer")
+  expect_snapshot(error = TRUE, img$tile(0L))
 })
 
 test_that("$tile() errors on ncol < 1", {
   img <- Image$zeros(2L, 2L)
-  expect_error(img$tile(2L, 0L), "ncol must be a single positive integer")
+  expect_snapshot(error = TRUE, img$tile(2L, 0L))
 })
 
 test_that("$tile() errors on non-integer nrow (e.g., 1.5)", {
   img <- Image$zeros(2L, 2L)
-  expect_error(img$tile(1.5), "nrow must be a single positive integer")
+  expect_snapshot(error = TRUE, img$tile(1.5))
 })
 
 test_that("$tile() errors on NA nrow", {
   img <- Image$zeros(2L, 2L)
-  expect_error(img$tile(NA_integer_), "nrow must be a single positive integer")
+  expect_snapshot(error = TRUE, img$tile(NA_integer_))
 })
 
 test_that("$tile() errors on Inf nrow", {
   img <- Image$zeros(2L, 2L)
-  expect_error(img$tile(Inf), "nrow must be a single positive integer")
+  expect_snapshot(error = TRUE, img$tile(Inf))
 })
 
 test_that("$tile() errors on non-integer ncol (e.g., 2.7)", {
   img <- Image$zeros(2L, 2L)
-  expect_error(img$tile(2L, 2.7), "ncol must be a single positive integer")
+  expect_snapshot(error = TRUE, img$tile(2L, 2.7))
 })
 
 test_that("$tile() errors on NA ncol", {
   img <- Image$zeros(2L, 2L)
-  expect_error(img$tile(2L, NA_integer_), "ncol must be a single positive integer")
+  expect_snapshot(error = TRUE, img$tile(2L, NA_integer_))
 })
 
 test_that("$tile() errors on Inf ncol", {
   img <- Image$zeros(2L, 2L)
-  expect_error(img$tile(2L, Inf), "ncol must be a single positive integer")
+  expect_snapshot(error = TRUE, img$tile(2L, Inf))
 })
 
 # ── $set_to() / $set_to_() ────────────────────────────────────────────────────
@@ -477,46 +478,46 @@ test_that("$set_to_() with mask only modifies masked pixels in place", {
 
 test_that("$set_to() errors on NA value", {
   img <- Image$zeros(2L, 2L)
-  expect_error(img$set_to(NA_real_), "value must be")
+  expect_snapshot(error = TRUE, img$set_to(NA_real_))
 })
 
 test_that("$set_to() errors when mask has wrong depth", {
   img      <- Image$zeros(3L, 3L, 1L, "CV_8U",  "GRAY")
   bad_mask <- Image$zeros(3L, 3L, 1L, "CV_32F", "GRAY")
-  expect_error(img$set_to(255, mask = bad_mask), "mask must be CV_8U depth")
+  expect_snapshot(error = TRUE, img$set_to(255, mask = bad_mask))
 })
 
 test_that("$set_to() errors when mask has wrong dimensions", {
   img      <- Image$zeros(3L, 3L, 1L, "CV_8U", "GRAY")
   bad_mask <- Image$zeros(2L, 3L, 1L, "CV_8U", "GRAY")
-  expect_error(img$set_to(255, mask = bad_mask), "mask dimensions must match")
+  expect_snapshot(error = TRUE, img$set_to(255, mask = bad_mask))
 })
 
 test_that("$set_to() errors when mask has more than 1 channel", {
   img      <- Image$zeros(3L, 3L, 3L, "CV_8U", "BGR")
   bad_mask <- Image$zeros(3L, 3L, 3L, "CV_8U", "BGR")
-  expect_error(img$set_to(255, mask = bad_mask), "mask must be a single-channel")
+  expect_snapshot(error = TRUE, img$set_to(255, mask = bad_mask))
 })
 
 test_that("$set_to_() errors on NA value", {
   img <- Image$zeros(2L, 2L)
-  expect_error(img$set_to_(NA_real_), "value must be")
+  expect_snapshot(error = TRUE, img$set_to_(NA_real_))
 })
 
 test_that("$set_to_() errors when mask has wrong depth", {
   img      <- Image$zeros(3L, 3L, 1L, "CV_8U",  "GRAY")
   bad_mask <- Image$zeros(3L, 3L, 1L, "CV_32F", "GRAY")
-  expect_error(img$set_to_(255, mask = bad_mask), "mask must be CV_8U depth")
+  expect_snapshot(error = TRUE, img$set_to_(255, mask = bad_mask))
 })
 
 test_that("$set_to() errors on Inf value", {
   img <- Image$zeros(2L, 2L)
-  expect_error(img$set_to(Inf), "value must be")
+  expect_snapshot(error = TRUE, img$set_to(Inf))
 })
 
 test_that("$set_to_() errors on Inf value", {
   img <- Image$zeros(2L, 2L)
-  expect_error(img$set_to_(-Inf), "value must be")
+  expect_snapshot(error = TRUE, img$set_to_(-Inf))
 })
 
 # ── concatenate() ─────────────────────────────────────────────────────────────
@@ -559,35 +560,35 @@ test_that("concatenate() preserves colorspace and depth", {
 
 test_that("concatenate() errors on fewer than 2 images", {
   a <- Image$zeros(2L, 2L)
-  expect_error(concatenate(list(a), "h"), "at least 2")
+  expect_snapshot(error = TRUE, concatenate(list(a), "h"))
 })
 
 test_that("concatenate() errors on mismatched depth", {
   a <- Image$zeros(2L, 2L, 1L, "CV_8U",  "GRAY")
   b <- Image$zeros(2L, 2L, 1L, "CV_32F", "GRAY")
-  expect_error(concatenate(list(a, b), "h"), "same depth")
+  expect_snapshot(error = TRUE, concatenate(list(a, b), "h"))
 })
 
 test_that("concatenate() horizontal errors on mismatched nrow", {
   a <- Image$zeros(2L, 2L, 1L, "CV_8U", "GRAY")
   b <- Image$zeros(3L, 2L, 1L, "CV_8U", "GRAY")
-  expect_error(concatenate(list(a, b), "h"), "same nrow")
+  expect_snapshot(error = TRUE, concatenate(list(a, b), "h"))
 })
 
 test_that("concatenate() vertical errors on mismatched ncol", {
   a <- Image$zeros(2L, 2L, 1L, "CV_8U", "GRAY")
   b <- Image$zeros(2L, 3L, 1L, "CV_8U", "GRAY")
-  expect_error(concatenate(list(a, b), "v"), "same ncol")
+  expect_snapshot(error = TRUE, concatenate(list(a, b), "v"))
 })
 
 test_that("concatenate() errors on invalid axis", {
   a <- Image$zeros(2L, 2L)
   b <- Image$zeros(2L, 2L)
-  expect_error(concatenate(list(a, b), "diagonal"), "axis must be")
+  expect_snapshot(error = TRUE, concatenate(list(a, b), "diagonal"))
 })
 
 test_that("concatenate() errors on mismatched nchan", {
   a <- Image$zeros(2L, 2L, 1L, "CV_8U", "GRAY")
   b <- Image$zeros(2L, 2L, 3L, "CV_8U", "BGR")
-  expect_error(concatenate(list(a, b), "h"), "same nchan")
+  expect_snapshot(error = TRUE, concatenate(list(a, b), "h"))
 })

@@ -16,7 +16,8 @@ A 2x3 numeric matrix.
 }
 \description{
 Returns a 2x3 affine transformation matrix that translates by \code{(dx, dy)}
-pixels. To compose transforms, embed into a 3x3 matrix with \code{rbind(m, c(0, 0, 1))}
+pixels. To compose transforms, embed into a 3x3 matrix with
+\code{rbind(m, c(0, 0, 1))}
 before multiplying with \code{\%*\%}.
 }
 \seealso{

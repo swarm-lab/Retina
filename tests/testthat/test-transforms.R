@@ -50,7 +50,7 @@ test_that("affine_shear with zero shear returns identity-like matrix", {
 test_that("affine_rotate returns a 2x3 numeric matrix", {
   m <- affine_rotate(45, cx = 5, cy = 5)
   expect_true(is.matrix(m))
-  expect_true(is.numeric(m))
+  expect_type(m, "double")
   expect_equal(dim(m), c(2L, 3L))
 })
 
@@ -103,7 +103,7 @@ test_that("affine_from_points identity mapping returns identity-like matrix", {
 test_that("affine_from_points errors on wrong src shape", {
   src <- matrix(1:8, nrow = 4, ncol = 2)
   dst <- matrix(c(1, 1,  10, 1,  1, 10), nrow = 3, ncol = 2, byrow = TRUE)
-  expect_error(affine_from_points(src, dst), "src must be a 3x2 numeric matrix")
+  expect_snapshot(error = TRUE, affine_from_points(src, dst))
 })
 
 # ── perspective_from_points ───────────────────────────────────────────────────
@@ -135,7 +135,7 @@ test_that("perspective_from_points identity mapping returns identity-like matrix
 test_that("perspective_from_points errors on wrong src shape", {
   src <- matrix(1:6, nrow = 3, ncol = 2)
   dst <- matrix(c(1, 1,  10, 1,  10, 10,  1, 10), nrow = 4, ncol = 2, byrow = TRUE)
-  expect_error(perspective_from_points(src, dst), "src must be a 4x2 numeric matrix")
+  expect_snapshot(error = TRUE, perspective_from_points(src, dst))
 })
 
 # ── warp_affine ───────────────────────────────────────────────────────────────
@@ -161,13 +161,11 @@ test_that("warp_affine with explicit width/height produces correct output size",
 })
 
 test_that("warp_affine errors on wrong matrix shape (3x3)", {
-  expect_error(img_10x10()$warp_affine(diag(3)),
-               "m must be a 2x3 numeric matrix")
+  expect_snapshot(error = TRUE, img_10x10()$warp_affine(diag(3)))
 })
 
 test_that("warp_affine errors on non-matrix input", {
-  expect_error(img_10x10()$warp_affine(1:6),
-               "m must be a 2x3 numeric matrix")
+  expect_snapshot(error = TRUE, img_10x10()$warp_affine(1:6))
 })
 
 test_that("warp_affine preserves colorspace", {
@@ -222,13 +220,11 @@ test_that("warp_perspective with explicit width/height produces correct output s
 
 test_that("warp_perspective errors on wrong matrix shape (2x3)", {
   m <- cbind(diag(2), c(0, 0))
-  expect_error(img_10x10()$warp_perspective(m),
-               "m must be a 3x3 numeric matrix")
+  expect_snapshot(error = TRUE, img_10x10()$warp_perspective(m))
 })
 
 test_that("warp_perspective errors on non-matrix input", {
-  expect_error(img_10x10()$warp_perspective(1:9),
-               "m must be a 3x3 numeric matrix")
+  expect_snapshot(error = TRUE, img_10x10()$warp_perspective(1:9))
 })
 
 test_that("warp_perspective preserves colorspace", {

@@ -29,9 +29,9 @@ concatenate <- function(imgs, axis = "h") {
   if (length(axis) != 1L || !is.character(axis) || !axis %in% valid_axes)
     stop("axis must be one of: h, horizontal, v, vertical", call. = FALSE)
 
-  depth_names <- vapply(imgs, function(x) x$depth_name, character(1L))
-  nchans      <- vapply(imgs, function(x) x$nchan,      integer(1L))
-  colorspaces <- vapply(imgs, function(x) x$colorspace, character(1L))
+  depth_names <- vapply(imgs, \(x) x$depth_name, character(1L))
+  nchans      <- vapply(imgs, \(x) x$nchan,      integer(1L))
+  colorspaces <- vapply(imgs, \(x) x$colorspace, character(1L))
 
   if (length(unique(depth_names)) > 1L)
     stop("all images must have the same depth", call. = FALSE)
@@ -41,12 +41,12 @@ concatenate <- function(imgs, axis = "h") {
     stop("all images must have the same colorspace", call. = FALSE)
 
   if (axis %in% c("h", "horizontal")) {
-    nrows <- vapply(imgs, function(x) x$nrow, integer(1L))
+    nrows <- vapply(imgs, \(x) x$nrow, integer(1L))
     if (length(unique(nrows)) > 1L)
       stop("for horizontal concatenation all images must have the same nrow",
            call. = FALSE)
   } else {
-    ncols <- vapply(imgs, function(x) x$ncol, integer(1L))
+    ncols <- vapply(imgs, \(x) x$ncol, integer(1L))
     if (length(unique(ncols)) > 1L)
       stop("for vertical concatenation all images must have the same ncol",
            call. = FALSE)
