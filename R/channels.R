@@ -39,8 +39,9 @@ split_channels <- function(img) {
 #'
 #' @param channels A named list of single-channel \code{Image} objects with
 #'   equal dimensions and depth. Names are used to infer the output colorspace.
-#' @return A new \code{Image}. Colorspace is inferred from \code{names(channels)};
-#'   if unrecognised, colorspace is set to \code{"UNKNOWN"} with a warning.
+#' @return A new \code{Image}. Colorspace is inferred from
+#'   \code{names(channels)}; if unrecognised, colorspace is set to
+#'   \code{"UNKNOWN"} with a warning.
 #' @examples
 #' \donttest{
 #' img <- Image$new(system.file("img", "flower.jpg", package = "Retina"))
