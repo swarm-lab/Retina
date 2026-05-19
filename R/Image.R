@@ -944,6 +944,107 @@ Image <- R6::R6Class("Image",
       invisible(self)
     },
 
+    #' @description Apply the Scharr operator to compute image gradients. Returns
+    #'   a new Image. Scharr uses a fixed 3x3 kernel with better rotational
+    #'   symmetry than Sobel. Exactly one of \code{dx} or \code{dy} must be 1.
+    #' @param dx Integer. Order of x derivative: \code{0} or \code{1}.
+    #' @param dy Integer. Order of y derivative: \code{0} or \code{1}.
+    #'   Exactly one of \code{dx}, \code{dy} must be \code{1}.
+    #' @param ddepth Character or \code{NULL}. Output depth: \code{"CV_16S"},
+    #'   \code{"CV_32F"}, or \code{"CV_64F"}. When \code{NULL} (default), the
+    #'   output depth is inferred from the input depth and a message is emitted.
+    #' @param scale Single positive numeric. Scale factor for computed
+    #'   derivatives. Default \code{1}.
+    #' @param delta Single numeric. Constant added to output pixels. Default
+    #'   \code{0}.
+    #' @param border_type Character. How to fill pixels outside the image
+    #'   boundary. \code{"reflect_101"} (default) mirrors the image excluding
+    #'   the edge pixel (e.g. dcb|abcde|dcb); \code{"reflect"} mirrors
+    #'   including the edge pixel (e.g. edcb|abcde|edcb); \code{"replicate"}
+    #'   repeats the nearest edge pixel; \code{"constant"} fills with a fixed
+    #'   value (0, i.e. black). \code{"wrap"} is not supported by OpenCV for
+    #'   Scharr.
+    #' @return A new \code{Image}.
+    #' @examples
+    #' \donttest{
+    #' img_path <- system.file("img", "brick_wall.jpg", package = "Retina")
+    #' img <- Image$new(img_path)
+    #' grad_x <- img$scharr(1, 0)
+    #' grad_x$plot()
+    #' }
+    scharr = function(dx, dy, ddepth = NULL, scale = 1, delta = 0,
+                      border_type = "reflect_101") {
+      .valid_border <- c("reflect", "reflect_101", "replicate", "constant")
+      dx <- as.integer(dx); dy <- as.integer(dy)
+      if (!is.numeric(scale) || length(scale) != 1L || scale <= 0)
+        stop("scale must be a single positive numeric value", call. = FALSE)
+      if (!is.numeric(delta) || length(delta) != 1L)
+        stop("delta must be a single numeric value", call. = FALSE)
+      if (!border_type %in% .valid_border)
+        stop("border_type must be one of: reflect, reflect_101, replicate, constant",
+             call. = FALSE)
+      if (length(dx) != 1L || length(dy) != 1L ||
+          !dx %in% c(0L, 1L) || !dy %in% c(0L, 1L) || (dx + dy) != 1L)
+        stop("dx and dy must each be 0 or 1, and exactly one must be 1",
+             call. = FALSE)
+      if (is.null(ddepth)) {
+        ddepth <- .rt_infer_ddepth(self$depth_name)
+        message('ddepth not specified; using "', ddepth,
+                '" for a ', self$depth_name, ' image.')
+      } else if (!ddepth %in% c("CV_16S", "CV_32F", "CV_64F")) {
+        stop("ddepth must be one of: CV_16S, CV_32F, CV_64F", call. = FALSE)
+      }
+      Image$new(rt_image_scharr(private$.ptr, dx, dy, ddepth,
+                                as.double(scale), as.double(delta), border_type))
+    },
+
+    #' @description Scharr operator in place.
+    #' @param dx Integer. Order of x derivative: \code{0} or \code{1}.
+    #' @param dy Integer. Order of y derivative: \code{0} or \code{1}.
+    #'   Exactly one of \code{dx}, \code{dy} must be \code{1}.
+    #' @param ddepth Character or \code{NULL}. Output depth: \code{"CV_16S"},
+    #'   \code{"CV_32F"}, or \code{"CV_64F"}. Default \code{NULL} (depth
+    #'   inferred from input; a message is emitted).
+    #' @param scale Single positive numeric. Default \code{1}.
+    #' @param delta Single numeric. Default \code{0}.
+    #' @param border_type Character. Border handling mode. \code{"wrap"} is not
+    #'   supported. Default \code{"reflect_101"}.
+    #' @return \code{self} invisibly.
+    #' @examples
+    #' \donttest{
+    #' img_path <- system.file("img", "brick_wall.jpg", package = "Retina")
+    #' img <- Image$new(img_path)
+    #' img$scharr_(1, 0)
+    #' img$plot()
+    #' }
+    scharr_ = function(dx, dy, ddepth = NULL, scale = 1, delta = 0,
+                       border_type = "reflect_101") {
+      .valid_border <- c("reflect", "reflect_101", "replicate", "constant")
+      dx <- as.integer(dx); dy <- as.integer(dy)
+      if (!is.numeric(scale) || length(scale) != 1L || scale <= 0)
+        stop("scale must be a single positive numeric value", call. = FALSE)
+      if (!is.numeric(delta) || length(delta) != 1L)
+        stop("delta must be a single numeric value", call. = FALSE)
+      if (!border_type %in% .valid_border)
+        stop("border_type must be one of: reflect, reflect_101, replicate, constant",
+             call. = FALSE)
+      if (length(dx) != 1L || length(dy) != 1L ||
+          !dx %in% c(0L, 1L) || !dy %in% c(0L, 1L) || (dx + dy) != 1L)
+        stop("dx and dy must each be 0 or 1, and exactly one must be 1",
+             call. = FALSE)
+      if (is.null(ddepth)) {
+        ddepth <- .rt_infer_ddepth(self$depth_name)
+        message('ddepth not specified; using "', ddepth,
+                '" for a ', self$depth_name, ' image.')
+      } else if (!ddepth %in% c("CV_16S", "CV_32F", "CV_64F")) {
+        stop("ddepth must be one of: CV_16S, CV_32F, CV_64F", call. = FALSE)
+      }
+      private$.ptr <- rt_image_scharr(private$.ptr, dx, dy, ddepth,
+                                      as.double(scale), as.double(delta),
+                                      border_type)
+      invisible(self)
+    },
+
     #' @description Apply a morphological operation. Returns a new Image.
     #' @param operation Character. One of \code{"erode"} (shrinks bright
     #'   regions), \code{"dilate"} (expands bright regions), \code{"open"}

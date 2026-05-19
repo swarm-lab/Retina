@@ -54,3 +54,35 @@
       Error:
       ! ddepth must be one of: CV_16S, CV_32F, CV_64F
 
+# scharr() throws when dx = dy = 0
+
+    Code
+      img_uniform()$scharr(0L, 0L, ddepth = "CV_16S")
+    Condition
+      Error:
+      ! dx and dy must each be 0 or 1, and exactly one must be 1
+
+# scharr() throws when dx = dy = 1
+
+    Code
+      img_uniform()$scharr(1L, 1L, ddepth = "CV_16S")
+    Condition
+      Error:
+      ! dx and dy must each be 0 or 1, and exactly one must be 1
+
+# scharr() throws for wrap border_type
+
+    Code
+      img_uniform()$scharr(1L, 0L, ddepth = "CV_16S", border_type = "wrap")
+    Condition
+      Error:
+      ! border_type must be one of: reflect, reflect_101, replicate, constant
+
+# scharr() throws for invalid ddepth
+
+    Code
+      img_uniform()$scharr(1L, 0L, ddepth = "CV_8U")
+    Condition
+      Error:
+      ! ddepth must be one of: CV_16S, CV_32F, CV_64F
+

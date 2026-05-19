@@ -112,3 +112,16 @@ external_pointer<RtImage> rt_image_canny(
             aperture_size, L2_gradient);
   return {new RtImage(std::move(dst), std::string("GRAY"))};
 }
+
+// ── scharr ────────────────────────────────────────────────────────────────────
+
+[[cpp11::register]]
+external_pointer<RtImage> rt_image_scharr(
+    external_pointer<RtImage> img,
+    int dx, int dy, std::string ddepth,
+    double scale, double delta, std::string border_type) {
+  cv::Mat dst;
+  cv::Scharr(get_cpu_mat(img), dst, cv_ddepth(ddepth), dx, dy,
+             scale, delta, cv_border_type(border_type));
+  return {new RtImage(std::move(dst), img->colorspace)};
+}

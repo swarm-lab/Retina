@@ -142,3 +142,56 @@ test_that("laplacian() throws for unsupported ddepth", {
 test_that("laplacian() with border_type = 'reflect' runs without error", {
   expect_no_error(img_uniform()$laplacian(border_type = "reflect"))
 })
+
+# ── scharr ────────────────────────────────────────────────────────────────────
+
+test_that("scharr() with NULL ddepth on CV_8U produces CV_16S with message", {
+  expect_message(
+    result <- img_uniform()$scharr(1L, 0L),
+    'ddepth not specified; using "CV_16S" for a CV_8U image.'
+  )
+  expect_equal(result$depth_name, "CV_16S")
+})
+
+test_that("scharr() detects horizontal gradient edge with dx = 1", {
+  arr <- array(0L, dim = c(10L, 10L, 1L))
+  arr[, 6:10, ] <- 200L
+  img <- Image$new(arr, depth = "CV_8U")
+  result <- img$scharr(1L, 0L, ddepth = "CV_32F")
+  arr_r <- result$to_array()
+  expect_gt(abs(arr_r[5, 6, 1]), 0)
+})
+
+test_that("scharr() returns Image with same dimensions and colorspace", {
+  img <- img_uniform()
+  result <- img$scharr(1L, 0L, ddepth = "CV_16S")
+  expect_s3_class(result, "Image")
+  expect_equal(result$nrow, img$nrow)
+  expect_equal(result$ncol, img$ncol)
+  expect_equal(result$nchan, img$nchan)
+  expect_equal(result$colorspace, img$colorspace)
+})
+
+test_that("scharr_() modifies in place and returns self", {
+  img <- img_uniform()
+  result <- img$scharr_(1L, 0L, ddepth = "CV_16S")
+  expect_identical(result, img)
+  expect_equal(img$depth_name, "CV_16S")
+})
+
+test_that("scharr() throws when dx = dy = 0", {
+  expect_snapshot(error = TRUE, img_uniform()$scharr(0L, 0L, ddepth = "CV_16S"))
+})
+
+test_that("scharr() throws when dx = dy = 1", {
+  expect_snapshot(error = TRUE, img_uniform()$scharr(1L, 1L, ddepth = "CV_16S"))
+})
+
+test_that("scharr() throws for wrap border_type", {
+  expect_snapshot(error = TRUE,
+    img_uniform()$scharr(1L, 0L, ddepth = "CV_16S", border_type = "wrap"))
+})
+
+test_that("scharr() throws for invalid ddepth", {
+  expect_snapshot(error = TRUE, img_uniform()$scharr(1L, 0L, ddepth = "CV_8U"))
+})
