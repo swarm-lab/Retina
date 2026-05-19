@@ -61,19 +61,19 @@ test_that("rt_image_copy_roi pastes src into dst", {
 
 test_that("rt_image_get_pixel errors on out-of-bounds row", {
   ptr <- img_3x4()$.__enclos_env__$private$.ptr
-  expect_error(Retina:::rt_image_get_pixel(ptr, 0L, 1L), "out of bounds")
-  expect_error(Retina:::rt_image_get_pixel(ptr, 4L, 1L), "out of bounds")
+  expect_snapshot(error = TRUE, Retina:::rt_image_get_pixel(ptr, 0L, 1L))
+  expect_snapshot(error = TRUE, Retina:::rt_image_get_pixel(ptr, 4L, 1L))
 })
 
 test_that("rt_image_get_pixel errors on out-of-bounds col", {
   ptr <- img_3x4()$.__enclos_env__$private$.ptr
-  expect_error(Retina:::rt_image_get_pixel(ptr, 1L, 0L), "out of bounds")
-  expect_error(Retina:::rt_image_get_pixel(ptr, 1L, 5L), "out of bounds")
+  expect_snapshot(error = TRUE, Retina:::rt_image_get_pixel(ptr, 1L, 0L))
+  expect_snapshot(error = TRUE, Retina:::rt_image_get_pixel(ptr, 1L, 5L))
 })
 
 test_that("rt_image_set_pixel errors when values length < nchan", {
   ptr <- img_3x4()$.__enclos_env__$private$.ptr
-  expect_error(Retina:::rt_image_set_pixel(ptr, 1L, 1L, c(1, 2)), "channel")
+  expect_snapshot(error = TRUE, Retina:::rt_image_set_pixel(ptr, 1L, 1L, c(1, 2)))
 })
 
 # ── [.Image read operator ─────────────────────────────────────────────────────
@@ -124,27 +124,27 @@ test_that("[.Image missing j returns full-row strip", {
 })
 
 test_that("[.Image errors when both i and j are missing", {
-  expect_error(img_3x4()[], "at least one index")
+  expect_snapshot(error = TRUE, img_3x4()[])
 })
 
 test_that("[.Image errors on row index out of bounds (low)", {
-  expect_error(img_3x4()[0L, 1L], "row index out of bounds")
+  expect_snapshot(error = TRUE, img_3x4()[0L, 1L])
 })
 
 test_that("[.Image errors on row index out of bounds (high)", {
-  expect_error(img_3x4()[4L, 1L], "row index out of bounds")
+  expect_snapshot(error = TRUE, img_3x4()[4L, 1L])
 })
 
 test_that("[.Image errors on column index out of bounds (high)", {
-  expect_error(img_3x4()[1L, 5L], "column index out of bounds")
+  expect_snapshot(error = TRUE, img_3x4()[1L, 5L])
 })
 
 test_that("[.Image errors on non-contiguous row index", {
-  expect_error(img_3x4()[c(1L, 3L), 1L], "contiguous")
+  expect_snapshot(error = TRUE, img_3x4()[c(1L, 3L), 1L])
 })
 
 test_that("[.Image errors on channel index out of bounds", {
-  expect_error(img_3x4()[1L, 1L, 4L], "channel index out of bounds")
+  expect_snapshot(error = TRUE, img_3x4()[1L, 1L, 4L])
 })
 
 test_that("[.Image channel names for GRAY image use 'Y'", {
@@ -162,19 +162,19 @@ test_that("[.Image channel names for HSV image use H, S, V", {
 })
 
 test_that("[.Image errors on NA row index", {
-  expect_error(img_3x4()[NA_integer_, 1L], "NA")
+  expect_snapshot(error = TRUE, img_3x4()[NA_integer_, 1L])
 })
 
 test_that("[.Image errors on zero-length row index", {
-  expect_error(img_3x4()[integer(0), 1L], "empty")
+  expect_snapshot(error = TRUE, img_3x4()[integer(0), 1L])
 })
 
 test_that("[.Image errors when k is supplied with a range", {
-  expect_error(img_3x4()[1:2, 1:3, 1L], "range")
+  expect_snapshot(error = TRUE, img_3x4()[1:2, 1:3, 1L])
 })
 
 test_that("[.Image errors on column index below 1", {
-  expect_error(img_3x4()[1L, 0L], "column index out of bounds")
+  expect_snapshot(error = TRUE, img_3x4()[1L, 0L])
 })
 
 # ── [<-.Image write operator ──────────────────────────────────────────────────
@@ -225,36 +225,32 @@ test_that("[<-.Image returns the modified image", {
 
 test_that("[<-.Image errors when value length mismatches nchan", {
   img <- img_3x4()
-  expect_error(
-    { img[1L, 1L] <- c(1L, 2L) },
-    "length"
-  )
+  expect_snapshot(error = TRUE, {
+    img[1L, 1L] <- c(1L, 2L)
+  })
 })
 
 test_that("[<-.Image errors when range write value is not an Image", {
   img <- img_3x4()
-  expect_error(
-    { img[1:2, 1:2] <- matrix(42L, 2L, 2L) },
-    "Image"
-  )
+  expect_snapshot(error = TRUE, {
+    img[1:2, 1:2] <- matrix(42L, 2L, 2L)
+  })
 })
 
 test_that("[<-.Image errors when range write dimensions mismatch", {
   dst <- img_3x4()
   src_arr <- array(42L, dim = c(3L, 2L, 3L))  # 3 rows, not 2
   src <- Image$new(src_arr, colorspace = "BGR", depth = "CV_8U")
-  expect_error(
-    { dst[1:2, 1:2] <- src },
-    "dimensions"
-  )
+  expect_snapshot(error = TRUE, {
+    dst[1:2, 1:2] <- src
+  })
 })
 
 test_that("[<-.Image errors when k is supplied with a range", {
   dst <- img_3x4()
   src_arr <- array(42L, dim = c(2L, 2L, 3L))
   src <- Image$new(src_arr, colorspace = "BGR", depth = "CV_8U")
-  expect_error(
-    { dst[1:2, 1:2, 1L] <- src },
-    "range"
-  )
+  expect_snapshot(error = TRUE, {
+    dst[1:2, 1:2, 1L] <- src
+  })
 })

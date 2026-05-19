@@ -148,16 +148,17 @@ test_that("bitwise_not_() modifies in place and returns self", {
 
 test_that("add() throws for non-Image non-numeric other", {
   img <- make_test_image()
-  expect_error(img$add("foo"), "other must be an Image or a numeric vector")
+  expect_snapshot(error = TRUE, img$add("foo"))
 })
 
 test_that("add() throws for wrong-length scalar", {
   img <- make_test_image()  # nchan = 3
-  expect_error(img$add(c(1, 2)), "values must be length 1 or length nchan")
+  expect_snapshot(error = TRUE, img$add(c(1, 2)))
 })
 
 test_that("add_weighted() throws for non-scalar w1", {
   img <- make_test_image()
-  expect_error(img$add_weighted(make_img2(), c(0.5, 0.5), 0.5, 0),
-               "w1, w2, and gamma must each be a single numeric value")
+  expect_snapshot(error = TRUE, {
+    img$add_weighted(make_img2(), c(0.5, 0.5), 0.5, 0)
+  })
 })

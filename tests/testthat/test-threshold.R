@@ -39,21 +39,21 @@ test_that("autothreshold_value() on CV_32F bimodal returns value in [0.2, 0.8]",
 
 test_that("autothreshold_value() errors on multi-channel image", {
   bgr <- make_test_image()
-  expect_error(autothreshold_value(bgr, "otsu"), "single-channel")
+  expect_snapshot(error = TRUE, autothreshold_value(bgr, "otsu"))
 })
 
 test_that("autothreshold_value() errors on unknown method", {
   img <- bimodal_gray_8u()
-  expect_error(autothreshold_value(img, "bogus"), "method must be one of")
+  expect_snapshot(error = TRUE, autothreshold_value(img, "bogus"))
 })
 
 test_that("autothreshold_value() errors on non-Image input", {
-  expect_error(autothreshold_value(matrix(1:9, 3, 3), "otsu"), "Image")
+  expect_snapshot(error = TRUE, autothreshold_value(matrix(1:9, 3, 3), "otsu"))
 })
 
 test_that("autothreshold_value() errors when bins < 2", {
   img <- bimodal_gray_8u()
-  expect_error(autothreshold_value(img, "otsu", bins = 1L), "bins")
+  expect_snapshot(error = TRUE, autothreshold_value(img, "otsu", bins = 1L))
 })
 
 # ── $threshold() ──────────────────────────────────────────────────────────────
@@ -131,24 +131,24 @@ test_that("$threshold_() modifies in place and returns self", {
 
 test_that("$threshold_() errors on non-finite thresh", {
   img <- bimodal_gray_8u()
-  expect_error(img$threshold_(Inf))
-  expect_error(img$threshold_(NA_real_))
+  expect_snapshot(error = TRUE, img$threshold_(Inf))
+  expect_snapshot(error = TRUE, img$threshold_(NA_real_))
 })
 
 test_that("$threshold() errors on auto method with multi-channel image", {
   bgr <- make_test_image()
-  expect_error(bgr$threshold("otsu"), "single-channel")
+  expect_snapshot(error = TRUE, bgr$threshold("otsu"))
 })
 
 test_that("$threshold() errors on unknown type string", {
   img <- bimodal_gray_8u()
-  expect_error(img$threshold(127, type = "bogus"))
+  expect_snapshot(error = TRUE, img$threshold(127, type = "bogus"))
 })
 
 test_that("$threshold() errors on non-finite thresh", {
   img <- bimodal_gray_8u()
-  expect_error(img$threshold(Inf))
-  expect_error(img$threshold(NA_real_))
+  expect_snapshot(error = TRUE, img$threshold(Inf))
+  expect_snapshot(error = TRUE, img$threshold(NA_real_))
 })
 
 # ── $adaptive_threshold() ────────────────────────────────────────────────────
@@ -194,27 +194,27 @@ test_that("$adaptive_threshold_() modifies in place and returns self", {
 
 test_that("$adaptive_threshold() errors on multi-channel image", {
   bgr <- make_test_image()
-  expect_error(bgr$adaptive_threshold(), "single-channel CV_8U")
+  expect_snapshot(error = TRUE, bgr$adaptive_threshold())
 })
 
 test_that("$adaptive_threshold() errors on non-CV_8U image", {
   img <- bimodal_gray_32f()
-  expect_error(img$adaptive_threshold(), "single-channel CV_8U")
+  expect_snapshot(error = TRUE, img$adaptive_threshold())
 })
 
 test_that("$adaptive_threshold() errors when block_size is even", {
   img <- bimodal_gray_8u()
-  expect_error(img$adaptive_threshold(block_size = 10L), "odd")
+  expect_snapshot(error = TRUE, img$adaptive_threshold(block_size = 10L))
 })
 
 test_that("$adaptive_threshold() errors when block_size < 3", {
   img <- bimodal_gray_8u()
-  expect_error(img$adaptive_threshold(block_size = 1L), "block_size")
+  expect_snapshot(error = TRUE, img$adaptive_threshold(block_size = 1L))
 })
 
 test_that("$adaptive_threshold() errors on non-finite offset", {
   img <- bimodal_gray_8u()
-  expect_error(img$adaptive_threshold(offset = Inf), "finite")
+  expect_snapshot(error = TRUE, img$adaptive_threshold(offset = Inf))
 })
 
 # ── $in_range() ───────────────────────────────────────────────────────────────
@@ -267,16 +267,16 @@ test_that("$in_range_() modifies in place and returns self", {
 
 test_that("$in_range() errors when lower > upper for any channel", {
   img <- bimodal_gray_8u()
-  expect_error(img$in_range(200, 100), "lower\\[k\\].*upper\\[k\\]")
+  expect_snapshot(error = TRUE, img$in_range(200, 100))
 })
 
 test_that("$in_range() errors when lower/upper length is not 1 or nchan", {
   bgr <- make_test_image()  # nchan = 3
-  expect_error(bgr$in_range(c(0, 0), c(255, 255, 255)), "length 1 or 3")
+  expect_snapshot(error = TRUE, bgr$in_range(c(0, 0), c(255, 255, 255)))
 })
 
 test_that("$in_range() errors on NA in lower or upper", {
   img <- bimodal_gray_8u()
-  expect_error(img$in_range(NA_real_, 200), "finite")
-  expect_error(img$in_range(0, NA_real_), "finite")
+  expect_snapshot(error = TRUE, img$in_range(NA_real_, 200))
+  expect_snapshot(error = TRUE, img$in_range(0, NA_real_))
 })

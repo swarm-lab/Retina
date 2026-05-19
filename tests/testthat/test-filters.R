@@ -43,13 +43,11 @@ test_that("blur_() modifies in place and returns self", {
 })
 
 test_that("blur() throws for non-length-2 ksize", {
-  expect_error(img_uniform()$blur(5),
-               "ksize must be a length-2 vector of positive integers")
+  expect_snapshot(error = TRUE, img_uniform()$blur(5))
 })
 
 test_that("blur() throws for non-positive ksize", {
-  expect_error(img_uniform()$blur(c(-1, 3)),
-               "ksize must be a length-2 vector of positive integers")
+  expect_snapshot(error = TRUE, img_uniform()$blur(c(-1, 3)))
 })
 
 # ── gaussian_blur ─────────────────────────────────────────────────────────────
@@ -77,18 +75,15 @@ test_that("gaussian_blur_() modifies in place and returns self", {
 })
 
 test_that("gaussian_blur() throws for even ksize element", {
-  expect_error(img_uniform()$gaussian_blur(c(3, 4), 1.5),
-               "ksize elements must each be odd and positive, or 0")
+  expect_snapshot(error = TRUE, img_uniform()$gaussian_blur(c(3, 4), 1.5))
 })
 
 test_that("gaussian_blur() throws for wrong-length sigma", {
-  expect_error(img_uniform()$gaussian_blur(c(3, 3), c(1, 2, 3)),
-               "sigma must be length 1 or 2")
+  expect_snapshot(error = TRUE, img_uniform()$gaussian_blur(c(3, 3), c(1, 2, 3)))
 })
 
 test_that("gaussian_blur() throws for non-positive sigma", {
-  expect_error(img_uniform()$gaussian_blur(c(3, 3), -1),
-               "sigma values must be positive")
+  expect_snapshot(error = TRUE, img_uniform()$gaussian_blur(c(3, 3), -1))
 })
 
 # ── median_blur ───────────────────────────────────────────────────────────────
@@ -122,13 +117,11 @@ test_that("median_blur_() modifies in place and returns self", {
 })
 
 test_that("median_blur() throws for even ksize", {
-  expect_error(img_uniform()$median_blur(4),
-               "ksize must be a single positive odd integer")
+  expect_snapshot(error = TRUE, img_uniform()$median_blur(4))
 })
 
 test_that("median_blur() throws for length-2 ksize", {
-  expect_error(img_uniform()$median_blur(c(3, 3)),
-               "ksize must be a single positive odd integer")
+  expect_snapshot(error = TRUE, img_uniform()$median_blur(c(3, 3)))
 })
 
 # ── bilateral_filter ──────────────────────────────────────────────────────────
@@ -156,11 +149,9 @@ test_that("bilateral_filter_() modifies in place and returns self", {
 })
 
 test_that("bilateral_filter() throws for non-scalar d", {
-  expect_error(img_uniform()$bilateral_filter(c(5, 5), 75, 75),
-               "d must be a single integer")
+  expect_snapshot(error = TRUE, img_uniform()$bilateral_filter(c(5, 5), 75, 75))
 })
 
 test_that("bilateral_filter() throws for non-positive sigma_color", {
-  expect_error(img_uniform()$bilateral_filter(5, -1, 75),
-               "sigma_color and sigma_space must each be a single positive numeric value")
+  expect_snapshot(error = TRUE, img_uniform()$bilateral_filter(5, -1, 75))
 })

@@ -116,10 +116,10 @@ test_that("quantile() rownames are formatted as percentages", {
 
 test_that("quantile() throws for probs > 1", {
   img <- make_test_image()
-  expect_error(img$quantile(1.1), "probs must be between 0 and 1")
+  expect_snapshot(error = TRUE, img$quantile(1.1))
 })
 
 test_that("quantile() throws for probs < 0", {
   img <- make_test_image()
-  expect_error(img$quantile(-0.1), "probs must be between 0 and 1")
+  expect_snapshot(error = TRUE, img$quantile(-0.1))
 })

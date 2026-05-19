@@ -4,10 +4,9 @@ test_that(".rt_caps is populated after package load", {
 })
 
 test_that("require_module() stops with informative error for absent module", {
-  expect_error(
-    Retina:::require_module("__nonexistent_module__"),
-    regexp = "__nonexistent_module__"
-  )
+  expect_snapshot(error = TRUE, {
+    Retina:::require_module("__nonexistent_module__")
+  })
 })
 
 test_that("require_module() is silent for a present module (core)", {

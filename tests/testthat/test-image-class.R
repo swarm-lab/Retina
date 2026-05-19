@@ -112,24 +112,21 @@ test_that("Image$new() with double array and explicit CV_64F gives correct depth
 })
 
 test_that("Image$new() throws for integer array with float depth", {
-  expect_error(
-    Image$new(array(100L, dim = c(5L, 5L, 3L)), depth = "CV_32F"),
-    "use a double array for float depths"
-  )
+  expect_snapshot(error = TRUE, {
+    Image$new(array(100L, dim = c(5L, 5L, 3L)), depth = "CV_32F")
+  })
 })
 
 test_that("Image$new() throws for double array with integer depth", {
-  expect_error(
-    Image$new(array(0.5, dim = c(5L, 5L, 3L)), depth = "CV_8U"),
-    "use an integer array for integer depths"
-  )
+  expect_snapshot(error = TRUE, {
+    Image$new(array(0.5, dim = c(5L, 5L, 3L)), depth = "CV_8U")
+  })
 })
 
 test_that("Image$new() throws for unsupported depth string", {
-  expect_error(
-    Image$new(array(100L, dim = c(5L, 5L, 3L)), depth = "CV_99X"),
-    "depth must be one of"
-  )
+  expect_snapshot(error = TRUE, {
+    Image$new(array(100L, dim = c(5L, 5L, 3L)), depth = "CV_99X")
+  })
 })
 
 test_that("to_array() returns integer array for CV_16S with correct values", {
@@ -175,19 +172,18 @@ test_that("convert_depth_() modifies in place and returns self", {
 
 test_that("convert_depth() throws for unsupported depth", {
   img <- Image$new(array(100L, dim = c(5L, 5L, 3L)), depth = "CV_8U")
-  expect_error(img$convert_depth("CV_99X"), "depth must be one of")
+  expect_snapshot(error = TRUE, img$convert_depth("CV_99X"))
 })
 
 test_that("add() throws for images with different depths", {
   img_8u  <- Image$new(array(100L, dim = c(5L, 5L, 3L)), depth = "CV_8U")
   img_16s <- Image$new(array(100L, dim = c(5L, 5L, 3L)), depth = "CV_16S")
-  expect_error(img_8u$add(img_16s), "images must have the same depth")
+  expect_snapshot(error = TRUE, img_8u$add(img_16s))
 })
 
 test_that("bilateral_filter() throws for non-CV_8U/CV_32F image", {
   img <- Image$new(array(100L, dim = c(10L, 10L, 3L)), depth = "CV_16S")
-  expect_error(img$bilateral_filter(9, 75, 75),
-               "bilateral_filter requires a CV_8U or CV_32F image")
+  expect_snapshot(error = TRUE, img$bilateral_filter(9, 75, 75))
 })
 
 test_that("to_array() round-trips negative values for CV_16S", {

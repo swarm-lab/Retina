@@ -85,5 +85,5 @@ test_that("round-trip BGR->HSV->BGR pixel values within tolerance 2", {
 
 test_that("convert_color with unsupported target throws informative error", {
   img <- make_test_image()
-  expect_error(img$convert_color("XYZ"), "unsupported color space conversion")
+  expect_snapshot(error = TRUE, img$convert_color("XYZ"))
 })

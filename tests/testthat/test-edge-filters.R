@@ -34,13 +34,11 @@ test_that("canny_() modifies in place and returns self", {
 
 test_that("canny() throws for multi-channel image", {
   img <- Image$new(array(100L, dim = c(10L, 10L, 3L)), depth = "CV_8U")
-  expect_error(img$canny(10, 50),
-               "canny requires a single-channel")
+  expect_snapshot(error = TRUE, img$canny(10, 50))
 })
 
 test_that("canny() throws for negative low_threshold", {
-  expect_error(img_gray_uniform()$canny(-1, 50),
-               "low_threshold must be a single non-negative numeric value")
+  expect_snapshot(error = TRUE, img_gray_uniform()$canny(-1, 50))
 })
 
 test_that("canny() accepts zero low_threshold", {
@@ -48,21 +46,17 @@ test_that("canny() accepts zero low_threshold", {
 })
 
 test_that("canny() throws for non-positive high_threshold", {
-  expect_error(img_gray_uniform()$canny(10, -1),
-               "high_threshold must be a single positive numeric value")
+  expect_snapshot(error = TRUE, img_gray_uniform()$canny(10, -1))
 })
 
 test_that("canny() throws when low_threshold > high_threshold", {
-  expect_error(img_gray_uniform()$canny(100, 50),
-               "low_threshold must be <= high_threshold")
+  expect_snapshot(error = TRUE, img_gray_uniform()$canny(100, 50))
 })
 
 test_that("canny() throws for invalid aperture_size", {
-  expect_error(img_gray_uniform()$canny(10, 50, aperture_size = 4),
-               "aperture_size must be 3, 5, or 7")
+  expect_snapshot(error = TRUE, img_gray_uniform()$canny(10, 50, aperture_size = 4))
 })
 
 test_that("canny() throws for non-logical L2_gradient", {
-  expect_error(img_gray_uniform()$canny(10, 50, L2_gradient = "yes"),
-               "L2_gradient must be a single logical value")
+  expect_snapshot(error = TRUE, img_gray_uniform()$canny(10, 50, L2_gradient = "yes"))
 })

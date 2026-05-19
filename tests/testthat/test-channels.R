@@ -67,24 +67,23 @@ test_that("merge_channels() warns and sets 'UNKNOWN' for unrecognised names", {
 test_that("merge_channels() errors on mismatched dimensions", {
   a <- Image$new(array(10L, dim = c(10L, 10L, 1L)), colorspace = "GRAY", depth = "CV_8U")
   b <- Image$new(array(10L, dim = c(5L, 10L, 1L)), colorspace = "GRAY", depth = "CV_8U")
-  expect_error(merge_channels(list(a, b)), "all channels must have the same dimensions")
+  expect_snapshot(error = TRUE, merge_channels(list(a, b)))
 })
 
 test_that("merge_channels() errors on mismatched depth", {
   a <- Image$new(array(10L, dim = c(10L, 10L, 1L)), colorspace = "GRAY", depth = "CV_8U")
   b <- Image$new(array(10L, dim = c(10L, 10L, 1L)), colorspace = "GRAY", depth = "CV_16U")
-  expect_error(merge_channels(list(a, b)), "all channels must have the same depth")
+  expect_snapshot(error = TRUE, merge_channels(list(a, b)))
 })
 
 test_that("merge_channels() errors on multi-channel input element", {
-  expect_error(
-    merge_channels(list(img_bgr())),
-    "channels must be a non-empty list of single-channel Image objects"
-  )
+  expect_snapshot(error = TRUE, {
+    merge_channels(list(img_bgr()))
+  })
 })
 
 test_that("split_channels() errors on non-Image input", {
-  expect_error(split_channels(42), "img must be an Image object")
+  expect_snapshot(error = TRUE, split_channels(42))
 })
 
 test_that("split_channels() B channel contains correct pixel values", {

@@ -18,18 +18,17 @@ test_that("resize(fx=2, fy=0.5) produces 20x5 image", {
 })
 
 test_that("resize errors if both dimensions and scale supplied", {
-  expect_error(img_bgr()$resize(width = 5L, height = 5L, fx = 2, fy = 2),
-               "supply either width/height or fx/fy, not both")
+  expect_snapshot(error = TRUE, {
+    img_bgr()$resize(width = 5L, height = 5L, fx = 2, fy = 2)
+  })
 })
 
 test_that("resize errors if neither supplied", {
-  expect_error(img_bgr()$resize(),
-               "supply either width/height or fx/fy")
+  expect_snapshot(error = TRUE, img_bgr()$resize())
 })
 
 test_that("resize errors on non-positive width", {
-  expect_error(img_bgr()$resize(width = 0L, height = 5L),
-               "width and height must be single positive integers")
+  expect_snapshot(error = TRUE, img_bgr()$resize(width = 0L, height = 5L))
 })
 
 test_that("resize preserves colorspace", {
@@ -102,8 +101,7 @@ test_that("flip(flip_h=TRUE, flip_v=TRUE) reverses both", {
 })
 
 test_that("flip errors when both FALSE", {
-  expect_error(img_bgr()$flip(),
-               "at least one of flip_h or flip_v must be TRUE")
+  expect_snapshot(error = TRUE, img_bgr()$flip())
 })
 
 test_that("flip preserves colorspace", {
@@ -125,13 +123,11 @@ test_that("crop(1,1,10,10) on 10x10 image recovers original", {
 })
 
 test_that("crop errors on out-of-bounds coordinates", {
-  expect_error(img_bgr()$crop(1L, 1L, 11L, 5L),
-               "crop coordinates exceed image dimensions")
+  expect_snapshot(error = TRUE, img_bgr()$crop(1L, 1L, 11L, 5L))
 })
 
 test_that("crop errors when x1 >= x2", {
-  expect_error(img_bgr()$crop(5L, 1L, 5L, 10L),
-               "x1 must be less than x2")
+  expect_snapshot(error = TRUE, img_bgr()$crop(5L, 1L, 5L, 10L))
 })
 
 test_that("crop preserves colorspace", {
@@ -170,8 +166,9 @@ test_that("crop_() modifies image in place", {
 })
 
 test_that("rotate() rejects 'default' as border_type", {
-  expect_error(img_bgr()$rotate(45, border_type = "default"),
-               "border_type must be one of")
+  expect_snapshot(error = TRUE, {
+    img_bgr()$rotate(45, border_type = "default")
+  })
 })
 
 test_that("rotate() accepts 'reflect_101' as border_type", {
