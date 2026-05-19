@@ -3038,6 +3038,80 @@ Image <- R6::R6Class("Image",
       invisible(self)
     },
 
+    #' @description Match the histogram of this image to a reference histogram.
+    #'   Returns a new Image. Requires a single-channel \code{CV_8U} image.
+    #' @param ref A data frame as produced by \code{$hist(bins = 256L)} with
+    #'   columns \code{bin_center}, \code{channel}, and \code{count}. Must have
+    #'   exactly 256 rows (one per 8-bit value).
+    #' @return A new \code{CV_8U} single-channel \code{Image}.
+    #' @examples
+    #' \donttest{
+    #' img_path <- system.file("img", "brick_wall.jpg", package = "Retina")
+    #' ref_path <- system.file("img", "flower.jpg",     package = "Retina")
+    #' src <- Image$new(img_path)$to_gray()
+    #' ref <- Image$new(ref_path)$to_gray()
+    #' ref_hist <- ref$hist(bins = 256L, range = c(0, 255))
+    #' out <- src$hist_match(ref_hist)
+    #' out$plot()
+    #' }
+    hist_match = function(ref) {
+      if (self$nchan != 1L)
+        stop("hist_match() requires a single-channel image", call. = FALSE)
+      if (self$depth_name != "CV_8U")
+        stop("hist_match() requires a CV_8U image", call. = FALSE)
+      if (!is.data.frame(ref) ||
+          !all(c("bin_center", "channel", "count") %in% names(ref)))
+        stop("ref must be a data frame with columns bin_center, channel, count ",
+             "(as produced by $hist())", call. = FALSE)
+      if (nrow(ref) != 256L)
+        stop("ref must have exactly 256 rows; compute with $hist(bins = 256L)",
+             call. = FALSE)
+      if (any(ref$count < 0))
+        stop("ref$count must be non-negative", call. = FALSE)
+
+      src_hist <- self$hist(bins = 256L, range = c(0, 256), freq = TRUE)
+      src_cdf  <- cumsum(src_hist$count) / sum(src_hist$count)
+      ref_cdf  <- cumsum(ref$count) / sum(ref$count)
+      lut <- vapply(src_cdf, \(s) which.min(abs(ref_cdf - s)) - 1L, integer(1L))
+      Image$new(rt_lut(private$.ptr, as.integer(lut)))
+    },
+
+    #' @description Match the histogram of this image to a reference, in place.
+    #' @param ref See \code{$hist_match()}.
+    #' @return \code{self} invisibly.
+    #' @examples
+    #' \donttest{
+    #' img_path <- system.file("img", "brick_wall.jpg", package = "Retina")
+    #' ref_path <- system.file("img", "flower.jpg",     package = "Retina")
+    #' src <- Image$new(img_path)$to_gray()
+    #' ref <- Image$new(ref_path)$to_gray()
+    #' ref_hist <- ref$hist(bins = 256L, range = c(0, 255))
+    #' src$hist_match_(ref_hist)
+    #' src$plot()
+    #' }
+    hist_match_ = function(ref) {
+      if (self$nchan != 1L)
+        stop("hist_match_() requires a single-channel image", call. = FALSE)
+      if (self$depth_name != "CV_8U")
+        stop("hist_match_() requires a CV_8U image", call. = FALSE)
+      if (!is.data.frame(ref) ||
+          !all(c("bin_center", "channel", "count") %in% names(ref)))
+        stop("ref must be a data frame with columns bin_center, channel, count ",
+             "(as produced by $hist())", call. = FALSE)
+      if (nrow(ref) != 256L)
+        stop("ref must have exactly 256 rows; compute with $hist(bins = 256L)",
+             call. = FALSE)
+      if (any(ref$count < 0))
+        stop("ref$count must be non-negative", call. = FALSE)
+
+      src_hist <- self$hist(bins = 256L, range = c(0, 256), freq = TRUE)
+      src_cdf  <- cumsum(src_hist$count) / sum(src_hist$count)
+      ref_cdf  <- cumsum(ref$count) / sum(ref$count)
+      lut <- vapply(src_cdf, \(s) which.min(abs(ref_cdf - s)) - 1L, integer(1L))
+      private$.ptr <- rt_lut(private$.ptr, as.integer(lut))
+      invisible(self)
+    },
+
     #' @description Print a summary of the image.
     #' @param ... Ignored.
     #' @return \code{self} invisibly.

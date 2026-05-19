@@ -112,3 +112,63 @@ test_that("hist_eq() throws for non-CV_8U depth", {
                    colorspace = "GRAY", depth = "CV_16U")
   expect_snapshot(error = TRUE, img$hist_eq())
 })
+
+# ── $hist_match() / $hist_match_() ───────────────────────────────────────────
+
+# Build a known reference histogram: all pixels at value 200
+img_ref_flat <- function() {
+  Image$new(array(200L, dim = c(10L, 10L, 1L)), colorspace = "GRAY", depth = "CV_8U")
+}
+
+test_that("hist_match() output histogram approximates reference", {
+  src <- img_gray_flat(50L)   # all pixels = 50
+  ref <- img_ref_flat()       # all pixels = 200
+  ref_hist <- ref$hist(bins = 256L, range = c(0, 256))
+  out <- src$hist_match(ref_hist)
+  expect_s3_class(out, "Image")
+  # After matching to a histogram concentrated at 200, output should be ~200
+  expect_true(mean(out$to_array()) > 190)
+})
+
+test_that("hist_match() does not modify self", {
+  src      <- img_gray_flat(50L)
+  ref_hist <- img_ref_flat()$hist(bins = 256L, range = c(0, 255))
+  orig     <- src$to_array()
+  src$hist_match(ref_hist)
+  expect_equal(src$to_array(), orig)
+})
+
+test_that("hist_match_() modifies self and returns self", {
+  src      <- img_gray_flat(50L)
+  ref_hist <- img_ref_flat()$hist(bins = 256L, range = c(0, 255))
+  result   <- src$hist_match_(ref_hist)
+  expect_identical(result, src)
+})
+
+test_that("hist_match() throws for multi-channel image", {
+  ref_hist <- img_ref_flat()$hist(bins = 256L, range = c(0, 255))
+  expect_snapshot(error = TRUE, img_bgr_flat()$hist_match(ref_hist))
+})
+
+test_that("hist_match() throws for non-CV_8U image", {
+  img <- Image$new(array(100L, dim = c(10L, 10L, 1L)),
+                   colorspace = "GRAY", depth = "CV_16U")
+  ref_hist <- img_ref_flat()$hist(bins = 256L, range = c(0, 255))
+  expect_snapshot(error = TRUE, img$hist_match(ref_hist))
+})
+
+test_that("hist_match() throws for ref without required columns", {
+  bad_ref <- data.frame(x = 1:256, y = 1:256)
+  expect_snapshot(error = TRUE, img_gray_flat()$hist_match(bad_ref))
+})
+
+test_that("hist_match() throws for ref with wrong number of rows", {
+  bad_ref <- img_ref_flat()$hist(bins = 64L, range = c(0, 255))
+  expect_snapshot(error = TRUE, img_gray_flat()$hist_match(bad_ref))
+})
+
+test_that("hist_match() throws for ref with negative counts", {
+  ref_hist <- img_ref_flat()$hist(bins = 256L, range = c(0, 255))
+  ref_hist$count[1] <- -1
+  expect_snapshot(error = TRUE, img_gray_flat()$hist_match(ref_hist))
+})

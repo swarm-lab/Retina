@@ -38,3 +38,43 @@
       Error:
       ! hist_eq() requires a CV_8U image
 
+# hist_match() throws for multi-channel image
+
+    Code
+      img_bgr_flat()$hist_match(ref_hist)
+    Condition
+      Error:
+      ! hist_match() requires a single-channel image
+
+# hist_match() throws for non-CV_8U image
+
+    Code
+      img$hist_match(ref_hist)
+    Condition
+      Error:
+      ! hist_match() requires a CV_8U image
+
+# hist_match() throws for ref without required columns
+
+    Code
+      img_gray_flat()$hist_match(bad_ref)
+    Condition
+      Error:
+      ! ref must be a data frame with columns bin_center, channel, count (as produced by $hist())
+
+# hist_match() throws for ref with wrong number of rows
+
+    Code
+      img_gray_flat()$hist_match(bad_ref)
+    Condition
+      Error:
+      ! ref must have exactly 256 rows; compute with $hist(bins = 256L)
+
+# hist_match() throws for ref with negative counts
+
+    Code
+      img_gray_flat()$hist_match(ref_hist)
+    Condition
+      Error:
+      ! ref$count must be non-negative
+
