@@ -3258,6 +3258,11 @@ Image <- R6::R6Class("Image",
     #' @param power Single finite numeric. The exponent. Negative, zero, and
     #'   fractional values are accepted.
     #' @return A new \code{Image} with the same depth and colorspace.
+    #' @examples
+    #' \donttest{
+    #' img32 <- Image$new(array(4.0, dim = c(5L, 5L, 1L)), "GRAY", depth = "CV_32F")
+    #' img32$pow(2.0)
+    #' }
     pow = function(power) {
       if (!self$depth_name %in% c("CV_32F", "CV_64F"))
         stop('$pow() requires a float image (CV_32F or CV_64F); use $convert_depth("CV_32F") first',
@@ -3283,6 +3288,11 @@ Image <- R6::R6Class("Image",
     #' @description Apply element-wise natural exponential (\eqn{e^x}) to every pixel.
     #'   The image must be \code{CV_32F} or \code{CV_64F}.
     #' @return A new \code{Image} with the same depth and colorspace.
+    #' @examples
+    #' \donttest{
+    #' img32 <- Image$new(array(1.0, dim = c(5L, 5L, 1L)), "GRAY", depth = "CV_32F")
+    #' img32$exp()
+    #' }
     exp = function() {
       if (!self$depth_name %in% c("CV_32F", "CV_64F"))
         stop('$exp() requires a float image (CV_32F or CV_64F); use $convert_depth("CV_32F") first',
@@ -3304,6 +3314,11 @@ Image <- R6::R6Class("Image",
     #'   The image must be \code{CV_32F} or \code{CV_64F}. Pixels \eqn{\le 0} produce
     #'   \code{-Inf} or \code{NaN} — sanitise the image first if this may occur.
     #' @return A new \code{Image} with the same depth and colorspace.
+    #' @examples
+    #' \donttest{
+    #' img32 <- Image$new(array(exp(1), dim = c(5L, 5L, 1L)), "GRAY", depth = "CV_32F")
+    #' img32$log()
+    #' }
     log = function() {
       if (!self$depth_name %in% c("CV_32F", "CV_64F"))
         stop('$log() requires a float image (CV_32F or CV_64F); use $convert_depth("CV_32F") first',
@@ -3325,6 +3340,11 @@ Image <- R6::R6Class("Image",
     #'   The image must be \code{CV_32F} or \code{CV_64F}. Pixels \code{< 0} produce
     #'   \code{NaN} — sanitise the image first if this may occur.
     #' @return A new \code{Image} with the same depth and colorspace.
+    #' @examples
+    #' \donttest{
+    #' img32 <- Image$new(array(9.0, dim = c(5L, 5L, 1L)), "GRAY", depth = "CV_32F")
+    #' img32$sqrt()
+    #' }
     sqrt = function() {
       if (!self$depth_name %in% c("CV_32F", "CV_64F"))
         stop('$sqrt() requires a float image (CV_32F or CV_64F); use $convert_depth("CV_32F") first',

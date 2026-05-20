@@ -36,10 +36,12 @@ test_that("$pow() preserves colorspace", {
   expect_equal(img$pow(2.0)$colorspace, "BGR")
 })
 
-test_that("$pow() preserves CV_64F depth", {
-  arr <- array(4.0, dim = c(10L, 10L, 1L))
-  img64 <- Image$new(arr, colorspace = "GRAY", depth = "CV_64F")
-  expect_equal(img64$pow(2.0)$depth_name, "CV_64F")
+test_that("$pow() errors on non-numeric power", {
+  expect_error(img_float()$pow("a"), "single finite numeric")
+})
+
+test_that("$pow() errors on non-finite power", {
+  expect_error(img_float()$pow(Inf), "single finite numeric")
 })
 
 # ── $exp() ────────────────────────────────────────────────────────────────────

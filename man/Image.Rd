@@ -521,6 +521,42 @@ head(coords)
 color_img <- Image$new(img_path)
 all_coords <- lapply(split_channels(color_img), \(ch) ch$find_nonzero())
 }
+
+## ------------------------------------------------
+## Method `Image$pow`
+## ------------------------------------------------
+
+\donttest{
+img32 <- Image$new(array(4.0, dim = c(5L, 5L, 1L)), "GRAY", depth = "CV_32F")
+img32$pow(2.0)
+}
+
+## ------------------------------------------------
+## Method `Image$exp`
+## ------------------------------------------------
+
+\donttest{
+img32 <- Image$new(array(1.0, dim = c(5L, 5L, 1L)), "GRAY", depth = "CV_32F")
+img32$exp()
+}
+
+## ------------------------------------------------
+## Method `Image$log`
+## ------------------------------------------------
+
+\donttest{
+img32 <- Image$new(array(exp(1), dim = c(5L, 5L, 1L)), "GRAY", depth = "CV_32F")
+img32$log()
+}
+
+## ------------------------------------------------
+## Method `Image$sqrt`
+## ------------------------------------------------
+
+\donttest{
+img32 <- Image$new(array(9.0, dim = c(5L, 5L, 1L)), "GRAY", depth = "CV_32F")
+img32$sqrt()
+}
 }
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
@@ -4771,6 +4807,17 @@ fractional values are accepted.}
 \subsection{Returns}{
 A new \code{Image} with the same depth and colorspace.
 }
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img32 <- Image$new(array(4.0, dim = c(5L, 5L, 1L)), "GRAY", depth = "CV_32F")
+img32$pow(2.0)
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Image-pow_"></a>}}
@@ -4805,6 +4852,17 @@ Apply element-wise natural exponential (\eqn{e^x}) to every pixel.
 \subsection{Returns}{
 A new \code{Image} with the same depth and colorspace.
 }
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img32 <- Image$new(array(1.0, dim = c(5L, 5L, 1L)), "GRAY", depth = "CV_32F")
+img32$exp()
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Image-exp_"></a>}}
@@ -4833,6 +4891,17 @@ Apply element-wise natural logarithm (\eqn{\ln(x)}) to every pixel.
 \subsection{Returns}{
 A new \code{Image} with the same depth and colorspace.
 }
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img32 <- Image$new(array(exp(1), dim = c(5L, 5L, 1L)), "GRAY", depth = "CV_32F")
+img32$log()
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Image-log_"></a>}}
@@ -4861,6 +4930,17 @@ Apply element-wise square root to every pixel.
 \subsection{Returns}{
 A new \code{Image} with the same depth and colorspace.
 }
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img32 <- Image$new(array(9.0, dim = c(5L, 5L, 1L)), "GRAY", depth = "CV_32F")
+img32$sqrt()
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Image-sqrt_"></a>}}
