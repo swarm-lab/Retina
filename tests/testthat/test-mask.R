@@ -43,7 +43,7 @@ test_that(".rt_valid_mask() errors when mask depth is not CV_8U", {
 test_that(".rt_valid_mask() errors when mask dimensions differ", {
   arr <- array(255L, dim = c(5L, 5L, 1L))
   mask <- Image$new(arr, colorspace = "GRAY", depth = "CV_8U")
-  expect_error(.rt_valid_mask(mask, make_test_image()), "CV_8U")
+  expect_error(.rt_valid_mask(mask, make_test_image()), "dimensions")
 })
 
 # ── $set_to() mask ────────────────────────────────────────────────────────────
