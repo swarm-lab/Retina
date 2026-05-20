@@ -1219,13 +1219,16 @@ A matrix with \code{length(probs)} rows and \code{nchan} columns.
 \subsection{Method \code{add()}}{
 Add another image or a scalar to this image.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Image$add(other)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Image$add(other, mask = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{other}}{An \code{Image} or a numeric vector (length 1 or \code{nchan}).}
+
+\item{\code{mask}}{Optional single-channel CV_8U \code{Image} mask. Only pixels
+where mask is non-zero are updated; others retain \code{self}'s values.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1239,13 +1242,15 @@ A new \code{Image}.
 \subsection{Method \code{add_()}}{
 Add in place.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Image$add_(other)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Image$add_(other, mask = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{other}}{An \code{Image} or a numeric vector (length 1 or \code{nchan}).}
+
+\item{\code{mask}}{Optional single-channel CV_8U \code{Image} mask.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1259,13 +1264,15 @@ Add in place.
 \subsection{Method \code{subtract()}}{
 Subtract another image or a scalar from this image.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Image$subtract(other)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Image$subtract(other, mask = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{other}}{An \code{Image} or a numeric vector (length 1 or \code{nchan}).}
+
+\item{\code{mask}}{Optional single-channel CV_8U \code{Image} mask.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1279,13 +1286,15 @@ A new \code{Image}.
 \subsection{Method \code{subtract_()}}{
 Subtract in place.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Image$subtract_(other)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Image$subtract_(other, mask = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{other}}{An \code{Image} or a numeric vector (length 1 or \code{nchan}).}
+
+\item{\code{mask}}{Optional single-channel CV_8U \code{Image} mask.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1299,13 +1308,15 @@ Subtract in place.
 \subsection{Method \code{multiply()}}{
 Multiply this image element-wise by another image or a scalar.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Image$multiply(other)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Image$multiply(other, mask = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{other}}{An \code{Image} or a numeric vector (length 1 or \code{nchan}).}
+
+\item{\code{mask}}{Optional single-channel CV_8U \code{Image} mask.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1319,13 +1330,15 @@ A new \code{Image}.
 \subsection{Method \code{multiply_()}}{
 Multiply in place.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Image$multiply_(other)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Image$multiply_(other, mask = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{other}}{An \code{Image} or a numeric vector (length 1 or \code{nchan}).}
+
+\item{\code{mask}}{Optional single-channel CV_8U \code{Image} mask.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1339,13 +1352,15 @@ Multiply in place.
 \subsection{Method \code{divide()}}{
 Divide this image element-wise by another image or a scalar.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Image$divide(other)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Image$divide(other, mask = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{other}}{An \code{Image} or a numeric vector (length 1 or \code{nchan}).}
+
+\item{\code{mask}}{Optional single-channel CV_8U \code{Image} mask.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1359,13 +1374,15 @@ A new \code{Image}.
 \subsection{Method \code{divide_()}}{
 Divide in place.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Image$divide_(other)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Image$divide_(other, mask = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{other}}{An \code{Image} or a numeric vector (length 1 or \code{nchan}).}
+
+\item{\code{mask}}{Optional single-channel CV_8U \code{Image} mask.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1379,13 +1396,15 @@ Divide in place.
 \subsection{Method \code{absdiff()}}{
 Compute the absolute difference with another image or a scalar.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Image$absdiff(other)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Image$absdiff(other, mask = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{other}}{An \code{Image} or a numeric vector (length 1 or \code{nchan}).}
+
+\item{\code{mask}}{Optional single-channel CV_8U \code{Image} mask.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1399,13 +1418,15 @@ A new \code{Image}.
 \subsection{Method \code{absdiff_()}}{
 Absolute difference in place.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Image$absdiff_(other)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Image$absdiff_(other, mask = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{other}}{An \code{Image} or a numeric vector (length 1 or \code{nchan}).}
+
+\item{\code{mask}}{Optional single-channel CV_8U \code{Image} mask.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1419,7 +1440,7 @@ Absolute difference in place.
 \subsection{Method \code{add_weighted()}}{
 Weighted addition of two images: \code{w1*self + w2*other + gamma}.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Image$add_weighted(other, w1, w2, gamma = 0)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Image$add_weighted(other, w1, w2, gamma = 0, mask = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -1432,6 +1453,8 @@ Weighted addition of two images: \code{w1*self + w2*other + gamma}.
 \item{\code{w2}}{Numeric scalar. Weight for \code{other}.}
 
 \item{\code{gamma}}{Numeric scalar. Brightness offset added after blending. Default 0.}
+
+\item{\code{mask}}{Optional single-channel CV_8U \code{Image} mask.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1445,7 +1468,7 @@ A new \code{Image}.
 \subsection{Method \code{add_weighted_()}}{
 Weighted addition in place.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Image$add_weighted_(other, w1, w2, gamma = 0)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Image$add_weighted_(other, w1, w2, gamma = 0, mask = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -1458,6 +1481,8 @@ Weighted addition in place.
 \item{\code{w2}}{Numeric scalar. Weight for \code{other}.}
 
 \item{\code{gamma}}{Numeric scalar. Brightness offset. Default 0.}
+
+\item{\code{mask}}{Optional single-channel CV_8U \code{Image} mask.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1471,13 +1496,15 @@ Weighted addition in place.
 \subsection{Method \code{bitwise_and()}}{
 Bitwise AND with another image or a scalar.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Image$bitwise_and(other)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Image$bitwise_and(other, mask = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{other}}{An \code{Image} or a numeric vector (length 1 or \code{nchan}).}
+
+\item{\code{mask}}{Optional single-channel CV_8U \code{Image} mask.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1491,13 +1518,15 @@ A new \code{Image}.
 \subsection{Method \code{bitwise_and_()}}{
 Bitwise AND in place.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Image$bitwise_and_(other)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Image$bitwise_and_(other, mask = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{other}}{An \code{Image} or a numeric vector (length 1 or \code{nchan}).}
+
+\item{\code{mask}}{Optional single-channel CV_8U \code{Image} mask.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1511,13 +1540,15 @@ Bitwise AND in place.
 \subsection{Method \code{bitwise_or()}}{
 Bitwise OR with another image or a scalar.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Image$bitwise_or(other)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Image$bitwise_or(other, mask = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{other}}{An \code{Image} or a numeric vector (length 1 or \code{nchan}).}
+
+\item{\code{mask}}{Optional single-channel CV_8U \code{Image} mask.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1531,13 +1562,15 @@ A new \code{Image}.
 \subsection{Method \code{bitwise_or_()}}{
 Bitwise OR in place.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Image$bitwise_or_(other)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Image$bitwise_or_(other, mask = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{other}}{An \code{Image} or a numeric vector (length 1 or \code{nchan}).}
+
+\item{\code{mask}}{Optional single-channel CV_8U \code{Image} mask.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1551,13 +1584,15 @@ Bitwise OR in place.
 \subsection{Method \code{bitwise_xor()}}{
 Bitwise XOR with another image or a scalar.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Image$bitwise_xor(other)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Image$bitwise_xor(other, mask = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{other}}{An \code{Image} or a numeric vector (length 1 or \code{nchan}).}
+
+\item{\code{mask}}{Optional single-channel CV_8U \code{Image} mask.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1571,13 +1606,15 @@ A new \code{Image}.
 \subsection{Method \code{bitwise_xor_()}}{
 Bitwise XOR in place.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Image$bitwise_xor_(other)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Image$bitwise_xor_(other, mask = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{other}}{An \code{Image} or a numeric vector (length 1 or \code{nchan}).}
+
+\item{\code{mask}}{Optional single-channel CV_8U \code{Image} mask.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1591,9 +1628,16 @@ Bitwise XOR in place.
 \subsection{Method \code{bitwise_not()}}{
 Bitwise NOT (invert all bits).
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Image$bitwise_not()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Image$bitwise_not(mask = NULL)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{mask}}{Optional single-channel CV_8U \code{Image} mask.}
+}
+\if{html}{\out{</div>}}
+}
 \subsection{Returns}{
 A new \code{Image}.
 }
@@ -1604,9 +1648,16 @@ A new \code{Image}.
 \subsection{Method \code{bitwise_not_()}}{
 Bitwise NOT in place.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Image$bitwise_not_()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Image$bitwise_not_(mask = NULL)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{mask}}{Optional single-channel CV_8U \code{Image} mask.}
+}
+\if{html}{\out{</div>}}
+}
 \subsection{Returns}{
 \code{self} invisibly.
 }
