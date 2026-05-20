@@ -666,6 +666,14 @@ all_coords <- lapply(split_channels(color_img), \(ch) ch$find_nonzero())
 \item \href{#method-Image-minmax_loc}{\code{Image$minmax_loc()}}
 \item \href{#method-Image-count_nonzero}{\code{Image$count_nonzero()}}
 \item \href{#method-Image-find_nonzero}{\code{Image$find_nonzero()}}
+\item \href{#method-Image-pow}{\code{Image$pow()}}
+\item \href{#method-Image-pow_}{\code{Image$pow_()}}
+\item \href{#method-Image-exp}{\code{Image$exp()}}
+\item \href{#method-Image-exp_}{\code{Image$exp_()}}
+\item \href{#method-Image-log}{\code{Image$log()}}
+\item \href{#method-Image-log_}{\code{Image$log_()}}
+\item \href{#method-Image-sqrt}{\code{Image$sqrt()}}
+\item \href{#method-Image-sqrt_}{\code{Image$sqrt_()}}
 \item \href{#method-Image-print}{\code{Image$print()}}
 }
 }
@@ -4739,6 +4747,133 @@ all_coords <- lapply(split_channels(color_img), \(ch) ch$find_nonzero())
 
 }
 
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-pow"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-pow}{}}}
+\subsection{Method \code{pow()}}{
+Raise every pixel to a power element-wise.
+  The image must be \code{CV_32F} or \code{CV_64F} — use
+  \code{$convert_depth("CV_32F")} first for integer images.
+  A negative pixel raised to a fractional exponent produces \code{NaN}.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$pow(power)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{power}}{Single finite numeric. The exponent. Negative, zero, and
+fractional values are accepted.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A new \code{Image} with the same depth and colorspace.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-pow_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-pow_}{}}}
+\subsection{Method \code{pow_()}}{
+Raise every pixel to a power, in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$pow_(power)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{power}}{Single finite numeric. The exponent.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{self} invisibly.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-exp"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-exp}{}}}
+\subsection{Method \code{exp()}}{
+Apply element-wise natural exponential (\eqn{e^x}) to every pixel.
+  The image must be \code{CV_32F} or \code{CV_64F}.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$exp()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+A new \code{Image} with the same depth and colorspace.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-exp_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-exp_}{}}}
+\subsection{Method \code{exp_()}}{
+Apply element-wise natural exponential in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$exp_()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+\code{self} invisibly.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-log"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-log}{}}}
+\subsection{Method \code{log()}}{
+Apply element-wise natural logarithm (\eqn{\ln(x)}) to every pixel.
+  The image must be \code{CV_32F} or \code{CV_64F}. Pixels \eqn{\le 0} produce
+  \code{-Inf} or \code{NaN} — sanitise the image first if this may occur.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$log()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+A new \code{Image} with the same depth and colorspace.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-log_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-log_}{}}}
+\subsection{Method \code{log_()}}{
+Apply element-wise natural logarithm in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$log_()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+\code{self} invisibly.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-sqrt"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-sqrt}{}}}
+\subsection{Method \code{sqrt()}}{
+Apply element-wise square root to every pixel.
+  The image must be \code{CV_32F} or \code{CV_64F}. Pixels \code{< 0} produce
+  \code{NaN} — sanitise the image first if this may occur.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$sqrt()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+A new \code{Image} with the same depth and colorspace.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-sqrt_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-sqrt_}{}}}
+\subsection{Method \code{sqrt_()}}{
+Apply element-wise square root in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$sqrt_()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+\code{self} invisibly.
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Image-print"></a>}}

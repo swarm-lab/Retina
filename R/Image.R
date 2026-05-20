@@ -3251,6 +3251,97 @@ Image <- R6::R6Class("Image",
       rt_find_nonzero(private$.ptr)
     },
 
+    #' @description Raise every pixel to a power element-wise.
+    #'   The image must be \code{CV_32F} or \code{CV_64F} — use
+    #'   \code{$convert_depth("CV_32F")} first for integer images.
+    #'   A negative pixel raised to a fractional exponent produces \code{NaN}.
+    #' @param power Single finite numeric. The exponent. Negative, zero, and
+    #'   fractional values are accepted.
+    #' @return A new \code{Image} with the same depth and colorspace.
+    pow = function(power) {
+      if (!self$depth_name %in% c("CV_32F", "CV_64F"))
+        stop('$pow() requires a float image (CV_32F or CV_64F); use $convert_depth("CV_32F") first',
+             call. = FALSE)
+      if (!is.numeric(power) || length(power) != 1L || !is.finite(power))
+        stop("power must be a single finite numeric value", call. = FALSE)
+      Image$new(rt_pow(private$.ptr, as.double(power)))
+    },
+
+    #' @description Raise every pixel to a power, in place.
+    #' @param power Single finite numeric. The exponent.
+    #' @return \code{self} invisibly.
+    pow_ = function(power) {
+      if (!self$depth_name %in% c("CV_32F", "CV_64F"))
+        stop('$pow_() requires a float image (CV_32F or CV_64F); use $convert_depth("CV_32F") first',
+             call. = FALSE)
+      if (!is.numeric(power) || length(power) != 1L || !is.finite(power))
+        stop("power must be a single finite numeric value", call. = FALSE)
+      private$.ptr <- rt_pow(private$.ptr, as.double(power))
+      invisible(self)
+    },
+
+    #' @description Apply element-wise natural exponential (\eqn{e^x}) to every pixel.
+    #'   The image must be \code{CV_32F} or \code{CV_64F}.
+    #' @return A new \code{Image} with the same depth and colorspace.
+    exp = function() {
+      if (!self$depth_name %in% c("CV_32F", "CV_64F"))
+        stop('$exp() requires a float image (CV_32F or CV_64F); use $convert_depth("CV_32F") first',
+             call. = FALSE)
+      Image$new(rt_exp(private$.ptr))
+    },
+
+    #' @description Apply element-wise natural exponential in place.
+    #' @return \code{self} invisibly.
+    exp_ = function() {
+      if (!self$depth_name %in% c("CV_32F", "CV_64F"))
+        stop('$exp_() requires a float image (CV_32F or CV_64F); use $convert_depth("CV_32F") first',
+             call. = FALSE)
+      private$.ptr <- rt_exp(private$.ptr)
+      invisible(self)
+    },
+
+    #' @description Apply element-wise natural logarithm (\eqn{\ln(x)}) to every pixel.
+    #'   The image must be \code{CV_32F} or \code{CV_64F}. Pixels \eqn{\le 0} produce
+    #'   \code{-Inf} or \code{NaN} — sanitise the image first if this may occur.
+    #' @return A new \code{Image} with the same depth and colorspace.
+    log = function() {
+      if (!self$depth_name %in% c("CV_32F", "CV_64F"))
+        stop('$log() requires a float image (CV_32F or CV_64F); use $convert_depth("CV_32F") first',
+             call. = FALSE)
+      Image$new(rt_log(private$.ptr))
+    },
+
+    #' @description Apply element-wise natural logarithm in place.
+    #' @return \code{self} invisibly.
+    log_ = function() {
+      if (!self$depth_name %in% c("CV_32F", "CV_64F"))
+        stop('$log_() requires a float image (CV_32F or CV_64F); use $convert_depth("CV_32F") first',
+             call. = FALSE)
+      private$.ptr <- rt_log(private$.ptr)
+      invisible(self)
+    },
+
+    #' @description Apply element-wise square root to every pixel.
+    #'   The image must be \code{CV_32F} or \code{CV_64F}. Pixels \code{< 0} produce
+    #'   \code{NaN} — sanitise the image first if this may occur.
+    #' @return A new \code{Image} with the same depth and colorspace.
+    sqrt = function() {
+      if (!self$depth_name %in% c("CV_32F", "CV_64F"))
+        stop('$sqrt() requires a float image (CV_32F or CV_64F); use $convert_depth("CV_32F") first',
+             call. = FALSE)
+      Image$new(rt_sqrt(private$.ptr))
+    },
+
+    #' @description Apply element-wise square root in place.
+    #' @return \code{self} invisibly.
+    sqrt_ = function() {
+      if (!self$depth_name %in% c("CV_32F", "CV_64F"))
+        stop('$sqrt_() requires a float image (CV_32F or CV_64F); use $convert_depth("CV_32F") first',
+             call. = FALSE)
+      private$.ptr <- rt_sqrt(private$.ptr)
+      invisible(self)
+    },
+
     #' @description Print a summary of the image.
     #' @param ... Ignored.
     #' @return \code{self} invisibly.

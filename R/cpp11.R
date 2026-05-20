@@ -328,6 +328,22 @@ rt_image_convert_depth <- function(img, depth) {
   .Call(`_Retina_rt_image_convert_depth`, img, depth)
 }
 
+rt_pow <- function(img, power) {
+  .Call(`_Retina_rt_pow`, img, power)
+}
+
+rt_exp <- function(img) {
+  .Call(`_Retina_rt_exp`, img)
+}
+
+rt_log <- function(img) {
+  .Call(`_Retina_rt_log`, img)
+}
+
+rt_sqrt <- function(img) {
+  .Call(`_Retina_rt_sqrt`, img)
+}
+
 rt_image_morph <- function(img, op, shape, size, iterations, border_type) {
   .Call(`_Retina_rt_image_morph`, img, op, shape, size, iterations, border_type)
 }

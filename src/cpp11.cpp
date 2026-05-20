@@ -583,6 +583,34 @@ extern "C" SEXP _Retina_rt_image_convert_depth(SEXP img, SEXP depth) {
     return cpp11::as_sexp(rt_image_convert_depth(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<std::string>>(depth)));
   END_CPP11
 }
+// math.cpp
+external_pointer<RtImage> rt_pow(external_pointer<RtImage> img, double power);
+extern "C" SEXP _Retina_rt_pow(SEXP img, SEXP power) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_pow(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<double>>(power)));
+  END_CPP11
+}
+// math.cpp
+external_pointer<RtImage> rt_exp(external_pointer<RtImage> img);
+extern "C" SEXP _Retina_rt_exp(SEXP img) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_exp(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img)));
+  END_CPP11
+}
+// math.cpp
+external_pointer<RtImage> rt_log(external_pointer<RtImage> img);
+extern "C" SEXP _Retina_rt_log(SEXP img) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_log(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img)));
+  END_CPP11
+}
+// math.cpp
+external_pointer<RtImage> rt_sqrt(external_pointer<RtImage> img);
+extern "C" SEXP _Retina_rt_sqrt(SEXP img) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_sqrt(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img)));
+  END_CPP11
+}
 // morphology.cpp
 external_pointer<RtImage> rt_image_morph(external_pointer<RtImage> img, std::string op, std::string shape, int size, int iterations, std::string border_type);
 extern "C" SEXP _Retina_rt_image_morph(SEXP img, SEXP op, SEXP shape, SEXP size, SEXP iterations, SEXP border_type) {
@@ -764,6 +792,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_Retina_rt_draw_polyline",            (DL_FUNC) &_Retina_rt_draw_polyline,             7},
     {"_Retina_rt_draw_rectangle",           (DL_FUNC) &_Retina_rt_draw_rectangle,            8},
     {"_Retina_rt_draw_text",                (DL_FUNC) &_Retina_rt_draw_text,                10},
+    {"_Retina_rt_exp",                      (DL_FUNC) &_Retina_rt_exp,                       1},
     {"_Retina_rt_fill",                     (DL_FUNC) &_Retina_rt_fill,                      6},
     {"_Retina_rt_fill_poly",                (DL_FUNC) &_Retina_rt_fill_poly,                 5},
     {"_Retina_rt_find_nonzero",             (DL_FUNC) &_Retina_rt_find_nonzero,              1},
@@ -849,11 +878,14 @@ static const R_CallMethodDef CallEntries[] = {
     {"_Retina_rt_image_warp_affine",        (DL_FUNC) &_Retina_rt_image_warp_affine,         6},
     {"_Retina_rt_image_warp_perspective",   (DL_FUNC) &_Retina_rt_image_warp_perspective,    6},
     {"_Retina_rt_image_write",              (DL_FUNC) &_Retina_rt_image_write,               2},
+    {"_Retina_rt_log",                      (DL_FUNC) &_Retina_rt_log,                       1},
     {"_Retina_rt_lut",                      (DL_FUNC) &_Retina_rt_lut,                       2},
     {"_Retina_rt_minmax_loc",               (DL_FUNC) &_Retina_rt_minmax_loc,                1},
     {"_Retina_rt_perspective_from_points",  (DL_FUNC) &_Retina_rt_perspective_from_points,   2},
+    {"_Retina_rt_pow",                      (DL_FUNC) &_Retina_rt_pow,                       2},
     {"_Retina_rt_randn",                    (DL_FUNC) &_Retina_rt_randn,                     7},
     {"_Retina_rt_randu",                    (DL_FUNC) &_Retina_rt_randu,                     7},
+    {"_Retina_rt_sqrt",                     (DL_FUNC) &_Retina_rt_sqrt,                      1},
     {NULL, NULL, 0}
 };
 }
