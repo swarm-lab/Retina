@@ -3387,17 +3387,17 @@ Set all pixels — or only masked pixels — to a constant value.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{value}}{Numeric scalar or vector of length `nchan`. Recycled to
-`nchan` channels. No NAs.}
+\item{\code{value}}{Numeric scalar or vector of length \code{nchan}. Recycled to
+\code{nchan} channels. No \code{NA}s.}
 
-\item{\code{mask}}{`NULL` (apply to all pixels) or a single-channel `CV_8U`
-`Image` with the same `nrow` and `ncol`. Non-zero pixels mark where
-`value` is written.}
+\item{\code{mask}}{\code{NULL} (apply to all pixels) or a single-channel \code{CV_8U}
+\code{Image} with the same \code{nrow} and \code{ncol}. Non-zero pixels
+mark where \code{value} is written.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A new `Image`.
+A new \code{Image}.
 }
 }
 \if{html}{\out{<hr>}}
@@ -3413,15 +3413,16 @@ Set all pixels — or only masked pixels — to a constant
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{value}}{Numeric scalar or vector of length `nchan`. Recycled to
-`nchan` channels. No NAs.}
+\item{\code{value}}{Numeric scalar or vector of length \code{nchan}. Recycled to
+\code{nchan} channels. No \code{NA}s.}
 
-\item{\code{mask}}{`NULL` or a single-channel `CV_8U` `Image` same size as self.}
+\item{\code{mask}}{\code{NULL} or a single-channel \code{CV_8U} \code{Image} same
+size as \code{self}.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-`self` invisibly.
+\code{self} invisibly.
 }
 }
 \if{html}{\out{<hr>}}

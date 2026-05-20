@@ -2107,54 +2107,41 @@ Image <- R6::R6Class("Image",
     },
 
     #' @description Set all pixels — or only masked pixels — to a constant value.
-    #' @param value Numeric scalar or vector of length `nchan`. Recycled to
-    #'   `nchan` channels. No NAs.
-    #' @param mask `NULL` (apply to all pixels) or a single-channel `CV_8U`
-    #'   `Image` with the same `nrow` and `ncol`. Non-zero pixels mark where
-    #'   `value` is written.
-    #' @return A new `Image`.
+    #' @param value Numeric scalar or vector of length \code{nchan}. Recycled to
+    #'   \code{nchan} channels. No \code{NA}s.
+    #' @param mask \code{NULL} (apply to all pixels) or a single-channel \code{CV_8U}
+    #'   \code{Image} with the same \code{nrow} and \code{ncol}. Non-zero pixels
+    #'   mark where \code{value} is written.
+    #' @return A new \code{Image}.
     set_to = function(value, mask = NULL) {
       if (!is.numeric(value) || length(value) < 1L || anyNA(value) ||
           !all(is.finite(value)))
         stop("value must be a non-empty finite numeric vector with no NAs", call. = FALSE)
-      if (!is.null(mask)) {
-        if (!inherits(mask, "Image"))
-          stop("mask must be an Image", call. = FALSE)
-        if (mask$nchan != 1L)
-          stop("mask must be a single-channel image", call. = FALSE)
-        if (mask$depth_name != "CV_8U")
-          stop("mask must be CV_8U depth", call. = FALSE)
-        if (mask$nrow != self$nrow || mask$ncol != self$ncol)
-          stop("mask dimensions must match image dimensions", call. = FALSE)
-      }
-      value_v  <- as.double(rep_len(value, self$nchan))
-      mask_ptr <- if (is.null(mask)) NULL else .rt_ptr(mask)
-      Image$new(rt_image_set_to(private$.ptr, value_v, mask_ptr))
+      .rt_valid_mask(mask, self)
+      value_v <- as.double(rep_len(value, self$nchan))
+      if (is.null(mask))
+        Image$new(rt_image_set_to(private$.ptr, value_v))
+      else
+        Image$new(rt_image_set_to_masked(private$.ptr, value_v, .rt_ptr(mask)))
     },
 
     #' @description Set all pixels — or only masked pixels — to a constant
     #'   value, in place.
-    #' @param value Numeric scalar or vector of length `nchan`. Recycled to
-    #'   `nchan` channels. No NAs.
-    #' @param mask `NULL` or a single-channel `CV_8U` `Image` same size as self.
-    #' @return `self` invisibly.
+    #' @param value Numeric scalar or vector of length \code{nchan}. Recycled to
+    #'   \code{nchan} channels. No \code{NA}s.
+    #' @param mask \code{NULL} or a single-channel \code{CV_8U} \code{Image} same
+    #'   size as \code{self}.
+    #' @return \code{self} invisibly.
     set_to_ = function(value, mask = NULL) {
       if (!is.numeric(value) || length(value) < 1L || anyNA(value) ||
           !all(is.finite(value)))
         stop("value must be a non-empty finite numeric vector with no NAs", call. = FALSE)
-      if (!is.null(mask)) {
-        if (!inherits(mask, "Image"))
-          stop("mask must be an Image", call. = FALSE)
-        if (mask$nchan != 1L)
-          stop("mask must be a single-channel image", call. = FALSE)
-        if (mask$depth_name != "CV_8U")
-          stop("mask must be CV_8U depth", call. = FALSE)
-        if (mask$nrow != self$nrow || mask$ncol != self$ncol)
-          stop("mask dimensions must match image dimensions", call. = FALSE)
-      }
-      value_v  <- as.double(rep_len(value, self$nchan))
-      mask_ptr <- if (is.null(mask)) NULL else .rt_ptr(mask)
-      private$.ptr <- rt_image_set_to(private$.ptr, value_v, mask_ptr)
+      .rt_valid_mask(mask, self)
+      value_v <- as.double(rep_len(value, self$nchan))
+      if (is.null(mask))
+        private$.ptr <- rt_image_set_to(private$.ptr, value_v)
+      else
+        private$.ptr <- rt_image_set_to_masked(private$.ptr, value_v, .rt_ptr(mask))
       invisible(self)
     },
 

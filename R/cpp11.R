@@ -120,8 +120,12 @@ rt_image_tile <- function(img, nrow_rep, ncol_rep) {
   .Call(`_Retina_rt_image_tile`, img, nrow_rep, ncol_rep)
 }
 
-rt_image_set_to <- function(img, value, mask_ptr) {
-  .Call(`_Retina_rt_image_set_to`, img, value, mask_ptr)
+rt_image_set_to <- function(img, value) {
+  .Call(`_Retina_rt_image_set_to`, img, value)
+}
+
+rt_image_set_to_masked <- function(img, value, mask) {
+  .Call(`_Retina_rt_image_set_to_masked`, img, value, mask)
 }
 
 rt_concatenate <- function(img_ptrs, axis) {

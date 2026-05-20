@@ -216,10 +216,17 @@ extern "C" SEXP _Retina_rt_image_tile(SEXP img, SEXP nrow_rep, SEXP ncol_rep) {
   END_CPP11
 }
 // construct.cpp
-external_pointer<RtImage> rt_image_set_to(external_pointer<RtImage> img, doubles value, SEXP mask_ptr);
-extern "C" SEXP _Retina_rt_image_set_to(SEXP img, SEXP value, SEXP mask_ptr) {
+external_pointer<RtImage> rt_image_set_to(external_pointer<RtImage> img, doubles value);
+extern "C" SEXP _Retina_rt_image_set_to(SEXP img, SEXP value) {
   BEGIN_CPP11
-    return cpp11::as_sexp(rt_image_set_to(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<doubles>>(value), cpp11::as_cpp<cpp11::decay_t<SEXP>>(mask_ptr)));
+    return cpp11::as_sexp(rt_image_set_to(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<doubles>>(value)));
+  END_CPP11
+}
+// construct.cpp
+external_pointer<RtImage> rt_image_set_to_masked(external_pointer<RtImage> img, doubles value, external_pointer<RtImage> mask);
+extern "C" SEXP _Retina_rt_image_set_to_masked(SEXP img, SEXP value, SEXP mask) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_image_set_to_masked(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<doubles>>(value), cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(mask)));
   END_CPP11
 }
 // construct.cpp
@@ -876,7 +883,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_Retina_rt_image_sep_filter2d",       (DL_FUNC) &_Retina_rt_image_sep_filter2d,        8},
     {"_Retina_rt_image_set_colorspace",     (DL_FUNC) &_Retina_rt_image_set_colorspace,      2},
     {"_Retina_rt_image_set_pixel",          (DL_FUNC) &_Retina_rt_image_set_pixel,           4},
-    {"_Retina_rt_image_set_to",             (DL_FUNC) &_Retina_rt_image_set_to,              3},
+    {"_Retina_rt_image_set_to",             (DL_FUNC) &_Retina_rt_image_set_to,              2},
+    {"_Retina_rt_image_set_to_masked",      (DL_FUNC) &_Retina_rt_image_set_to_masked,       3},
     {"_Retina_rt_image_sobel",              (DL_FUNC) &_Retina_rt_image_sobel,               8},
     {"_Retina_rt_image_split_channels",     (DL_FUNC) &_Retina_rt_image_split_channels,      1},
     {"_Retina_rt_image_subtract_image",     (DL_FUNC) &_Retina_rt_image_subtract_image,      2},

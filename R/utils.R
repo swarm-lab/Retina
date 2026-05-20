@@ -40,3 +40,14 @@ rt_channel_names <- function(colorspace, nchan) {
     stop("No ddepth inference for depth '", depth_name, "'", call. = FALSE)
   )
 }
+
+.rt_valid_mask <- function(mask, img) {
+  if (is.null(mask)) return(invisible(NULL))
+  if (!inherits(mask, "Image") ||
+      mask$nchan != 1L ||
+      mask$depth_name != "CV_8U" ||
+      mask$nrow != img$nrow ||
+      mask$ncol != img$ncol)
+    stop("mask must be a single-channel CV_8U Image with the same dimensions as self",
+         call. = FALSE)
+}
