@@ -589,6 +589,24 @@ img <- Image$new(array(c(rep(10L, 100L), rep(20L, 100L), rep(30L, 100L)),
 new_ch <- Image$new(array(99L, dim = c(10L, 10L, 1L)), "GRAY")
 img$insert_channel_(new_ch, 2L)
 }
+
+## ------------------------------------------------
+## Method `Image$LUT`
+## ------------------------------------------------
+
+\donttest{
+img <- Image$new(array(100L, dim = c(5L, 5L, 1L)), "GRAY")
+img$LUT(as.integer(255:0))  # invert
+}
+
+## ------------------------------------------------
+## Method `Image$LUT_`
+## ------------------------------------------------
+
+\donttest{
+img <- Image$new(array(100L, dim = c(5L, 5L, 1L)), "GRAY")
+img$LUT_(as.integer(255:0))  # invert in place
+}
 }
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
@@ -745,6 +763,8 @@ img$insert_channel_(new_ch, 2L)
 \item \href{#method-Image-extract_channel}{\code{Image$extract_channel()}}
 \item \href{#method-Image-insert_channel}{\code{Image$insert_channel()}}
 \item \href{#method-Image-insert_channel_}{\code{Image$insert_channel_()}}
+\item \href{#method-Image-LUT}{\code{Image$LUT()}}
+\item \href{#method-Image-LUT_}{\code{Image$LUT_()}}
 \item \href{#method-Image-print}{\code{Image$print()}}
 }
 }
@@ -5089,6 +5109,75 @@ img <- Image$new(array(c(rep(10L, 100L), rep(20L, 100L), rep(30L, 100L)),
                        dim = c(10L, 10L, 3L)), "BGR")
 new_ch <- Image$new(array(99L, dim = c(10L, 10L, 1L)), "GRAY")
 img$insert_channel_(new_ch, 2L)
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-LUT"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-LUT}{}}}
+\subsection{Method \code{LUT()}}{
+Apply a lookup table (LUT) to remap pixel values.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$LUT(lut)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{lut}}{A numeric vector of length 256 (\code{CV_8U}) or 65536
+(\code{CV_16U}/\code{CV_16S}), applied identically to all channels; or
+a numeric matrix with the same row count and \code{nchan} columns —
+one column per channel applied in channel order. Values must be
+non-\code{NA}, finite, and coercible to integer. Only integer-depth images
+are supported (\code{CV_8U}, \code{CV_16U}, \code{CV_16S}).
+For \code{CV_16S} sources the LUT index is \code{pixel + 32768}: pixel
+\code{-32768} maps to row 1 (index 0); pixel \code{0} maps to row 32769.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A new \code{Image}.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img <- Image$new(array(100L, dim = c(5L, 5L, 1L)), "GRAY")
+img$LUT(as.integer(255:0))  # invert
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-LUT_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-LUT_}{}}}
+\subsection{Method \code{LUT_()}}{
+Apply a lookup table in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$LUT_(lut)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{lut}}{See \code{$LUT()}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{self} invisibly.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img <- Image$new(array(100L, dim = c(5L, 5L, 1L)), "GRAY")
+img$LUT_(as.integer(255:0))  # invert in place
 }
 }
 \if{html}{\out{</div>}}

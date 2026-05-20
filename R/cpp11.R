@@ -244,8 +244,8 @@ rt_hist_eq <- function(img) {
   .Call(`_Retina_rt_hist_eq`, img)
 }
 
-rt_lut <- function(img, lut_vals) {
-  .Call(`_Retina_rt_lut`, img, lut_vals)
+rt_lut <- function(img, lut_vals, lut_size, nchan_lut) {
+  .Call(`_Retina_rt_lut`, img, lut_vals, lut_size, nchan_lut)
 }
 
 rt_clahe <- function(img, clip_limit, tile_w, tile_h) {

@@ -3075,7 +3075,7 @@ Image <- R6::R6Class("Image",
       src_cdf  <- cumsum(src_hist$count) / sum(src_hist$count)
       ref_cdf  <- cumsum(ref$count) / sum(ref$count)
       lut <- vapply(src_cdf, \(s) which.min(abs(ref_cdf - s)) - 1L, integer(1L))
-      Image$new(rt_lut(private$.ptr, as.integer(lut)))
+      Image$new(rt_lut(private$.ptr, as.integer(lut), 256L, 1L))
     },
 
     #' @description Match the histogram of this image to a reference, in place.
@@ -3112,7 +3112,7 @@ Image <- R6::R6Class("Image",
       src_cdf  <- cumsum(src_hist$count) / sum(src_hist$count)
       ref_cdf  <- cumsum(ref$count) / sum(ref$count)
       lut <- vapply(src_cdf, \(s) which.min(abs(ref_cdf - s)) - 1L, integer(1L))
-      private$.ptr <- rt_lut(private$.ptr, as.integer(lut))
+      private$.ptr <- rt_lut(private$.ptr, as.integer(lut), 256L, 1L)
       invisible(self)
     },
 
@@ -3432,6 +3432,86 @@ Image <- R6::R6Class("Image",
           k < 1L || k > self$nchan)
         stop("k must be a single integer between 1 and nchan", call. = FALSE)
       private$.ptr <- rt_insert_channel(.rt_ptr(ch), private$.ptr, as.integer(k) - 1L)
+      invisible(self)
+    },
+
+    #' @description Apply a lookup table (LUT) to remap pixel values.
+    #' @param lut A numeric vector of length 256 (\code{CV_8U}) or 65536
+    #'   (\code{CV_16U}/\code{CV_16S}), applied identically to all channels; or
+    #'   a numeric matrix with the same row count and \code{nchan} columns —
+    #'   one column per channel applied in channel order. Values must be
+    #'   non-\code{NA}, finite, and coercible to integer. Only integer-depth images
+    #'   are supported (\code{CV_8U}, \code{CV_16U}, \code{CV_16S}).
+    #'   For \code{CV_16S} sources the LUT index is \code{pixel + 32768}: pixel
+    #'   \code{-32768} maps to row 1 (index 0); pixel \code{0} maps to row 32769.
+    #' @return A new \code{Image}.
+    #' @examples
+    #' \donttest{
+    #' img <- Image$new(array(100L, dim = c(5L, 5L, 1L)), "GRAY")
+    #' img$LUT(as.integer(255:0))  # invert
+    #' }
+    LUT = function(lut) {
+      if (!self$depth_name %in% c("CV_8U", "CV_16U", "CV_16S"))
+        stop("$LUT() requires an integer-depth image (CV_8U, CV_16U, or CV_16S)",
+             call. = FALSE)
+      lut_size <- if (self$depth_name == "CV_8U") 256L else 65536L
+      if (is.matrix(lut)) {
+        if (nrow(lut) != lut_size)
+          stop(paste0("lut matrix must have ", lut_size, " rows for ",
+                      self$depth_name, " images"), call. = FALSE)
+        if (ncol(lut) != self$nchan)
+          stop(paste0("lut matrix must have ncol equal to the number of image ",
+                      "channels (nchan = ", self$nchan, ")"), call. = FALSE)
+        lut_vals  <- as.integer(lut)  # column-major
+        nchan_lut <- self$nchan
+      } else if (is.numeric(lut) || is.integer(lut)) {
+        if (length(lut) != lut_size)
+          stop(paste0("lut vector must have length ", lut_size, " for ",
+                      self$depth_name, " images"), call. = FALSE)
+        lut_vals  <- as.integer(lut)
+        nchan_lut <- 1L
+      } else {
+        stop("lut must be a numeric vector or matrix", call. = FALSE)
+      }
+      if (anyNA(lut_vals))
+        stop("lut values must be non-NA and finite", call. = FALSE)
+      Image$new(rt_lut(private$.ptr, lut_vals, lut_size, nchan_lut))
+    },
+
+    #' @description Apply a lookup table in place.
+    #' @param lut See \code{$LUT()}.
+    #' @return \code{self} invisibly.
+    #' @examples
+    #' \donttest{
+    #' img <- Image$new(array(100L, dim = c(5L, 5L, 1L)), "GRAY")
+    #' img$LUT_(as.integer(255:0))  # invert in place
+    #' }
+    LUT_ = function(lut) {
+      if (!self$depth_name %in% c("CV_8U", "CV_16U", "CV_16S"))
+        stop("$LUT_() requires an integer-depth image (CV_8U, CV_16U, or CV_16S)",
+             call. = FALSE)
+      lut_size <- if (self$depth_name == "CV_8U") 256L else 65536L
+      if (is.matrix(lut)) {
+        if (nrow(lut) != lut_size)
+          stop(paste0("lut matrix must have ", lut_size, " rows for ",
+                      self$depth_name, " images"), call. = FALSE)
+        if (ncol(lut) != self$nchan)
+          stop(paste0("lut matrix must have ncol equal to the number of image ",
+                      "channels (nchan = ", self$nchan, ")"), call. = FALSE)
+        lut_vals  <- as.integer(lut)
+        nchan_lut <- self$nchan
+      } else if (is.numeric(lut) || is.integer(lut)) {
+        if (length(lut) != lut_size)
+          stop(paste0("lut vector must have length ", lut_size, " for ",
+                      self$depth_name, " images"), call. = FALSE)
+        lut_vals  <- as.integer(lut)
+        nchan_lut <- 1L
+      } else {
+        stop("lut must be a numeric vector or matrix", call. = FALSE)
+      }
+      if (anyNA(lut_vals))
+        stop("lut values must be non-NA and finite", call. = FALSE)
+      private$.ptr <- rt_lut(private$.ptr, lut_vals, lut_size, nchan_lut)
       invisible(self)
     },
 

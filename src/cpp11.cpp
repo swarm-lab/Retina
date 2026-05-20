@@ -433,10 +433,10 @@ extern "C" SEXP _Retina_rt_hist_eq(SEXP img) {
   END_CPP11
 }
 // histogram.cpp
-external_pointer<RtImage> rt_lut(external_pointer<RtImage> img, integers lut_vals);
-extern "C" SEXP _Retina_rt_lut(SEXP img, SEXP lut_vals) {
+external_pointer<RtImage> rt_lut(external_pointer<RtImage> img, integers lut_vals, int lut_size, int nchan_lut);
+extern "C" SEXP _Retina_rt_lut(SEXP img, SEXP lut_vals, SEXP lut_size, SEXP nchan_lut) {
   BEGIN_CPP11
-    return cpp11::as_sexp(rt_lut(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<integers>>(lut_vals)));
+    return cpp11::as_sexp(rt_lut(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<integers>>(lut_vals), cpp11::as_cpp<cpp11::decay_t<int>>(lut_size), cpp11::as_cpp<cpp11::decay_t<int>>(nchan_lut)));
   END_CPP11
 }
 // histogram.cpp
@@ -895,7 +895,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_Retina_rt_image_write",              (DL_FUNC) &_Retina_rt_image_write,               2},
     {"_Retina_rt_insert_channel",           (DL_FUNC) &_Retina_rt_insert_channel,            3},
     {"_Retina_rt_log",                      (DL_FUNC) &_Retina_rt_log,                       1},
-    {"_Retina_rt_lut",                      (DL_FUNC) &_Retina_rt_lut,                       2},
+    {"_Retina_rt_lut",                      (DL_FUNC) &_Retina_rt_lut,                       4},
     {"_Retina_rt_minmax_loc",               (DL_FUNC) &_Retina_rt_minmax_loc,                1},
     {"_Retina_rt_perspective_from_points",  (DL_FUNC) &_Retina_rt_perspective_from_points,   2},
     {"_Retina_rt_pow",                      (DL_FUNC) &_Retina_rt_pow,                       2},

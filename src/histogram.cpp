@@ -52,18 +52,99 @@ external_pointer<RtImage> rt_hist_eq(external_pointer<RtImage> img) {
 }
 
 // ── rt_lut ───────────────────────────────────────────────────────────────────
-// Applies a 256-entry lookup table to a CV_8U single-channel image.
-// lut_vals: integer vector of length 256, values 0-255.
+// Applies a lookup table to a CV_8U, CV_16U, or CV_16S image.
+// lut_vals: integer vector, length = lut_size * nchan_lut, column-major
+//           (all values for channel 0, then channel 1, etc.)
+// lut_size: 256 (for CV_8U) or 65536 (for CV_16U / CV_16S)
+// nchan_lut: 1 = broadcast to all source channels; else = source nchan
+//
+// For CV_8U images, cv::LUT is used directly (requires 256-entry table).
+// For CV_16U/CV_16S images, manual per-pixel mapping is used because
+// cv::LUT only accepts 256-entry LUTs in OpenCV < 4.13.
 [[cpp11::register]]
 external_pointer<RtImage> rt_lut(external_pointer<RtImage> img,
-                                  integers lut_vals) {
+                                  integers lut_vals,
+                                  int lut_size,
+                                  int nchan_lut) {
   cv::Mat mat = get_cpu_mat(img);
-  cv::Mat lut(1, 256, CV_8U);
-  for (int i = 0; i < 256; i++)
-    lut.at<uchar>(0, i) = static_cast<uchar>(lut_vals[i]);
-  cv::Mat out;
-  cv::LUT(mat, lut, out);
-  return {new RtImage(std::move(out), img->colorspace)};
+
+  if (lut_size == 256) {
+    // CV_8U path: use cv::LUT (fast).
+    if (nchan_lut == 1) {
+      cv::Mat lut(1, 256, CV_8U);
+      for (int i = 0; i < 256; i++)
+        lut.at<uchar>(0, i) = static_cast<uchar>(lut_vals[i]);
+      cv::Mat out;
+      cv::LUT(mat, lut, out);
+      return {new RtImage(std::move(out), img->colorspace)};
+    } else {
+      // Per-channel: split, apply each channel's LUT, merge.
+      int src_nchan = mat.channels();
+      std::vector<cv::Mat> channels;
+      cv::split(mat, channels);
+      std::vector<cv::Mat> results(src_nchan);
+      for (int c = 0; c < src_nchan; c++) {
+        cv::Mat lut(1, 256, CV_8U);
+        for (int i = 0; i < 256; i++)
+          lut.at<uchar>(0, i) = static_cast<uchar>(lut_vals[c * 256 + i]);
+        cv::LUT(channels[c], lut, results[c]);
+      }
+      cv::Mat out;
+      cv::merge(results, out);
+      return {new RtImage(std::move(out), img->colorspace)};
+    }
+  } else {
+    // CV_16U / CV_16S path: manual per-pixel mapping.
+    // Build a flat C++ lookup table for each channel.
+    int src_nchan = mat.channels();
+    bool is_signed = (mat.depth() == CV_16S);
+
+    // Build per-channel uint16 lookup tables from lut_vals.
+    std::vector<std::vector<uint16_t>> tables(
+      nchan_lut == 1 ? 1 : src_nchan);
+    for (int c = 0; c < (int)tables.size(); c++) {
+      tables[c].resize(65536);
+      for (int i = 0; i < 65536; i++)
+        tables[c][i] = static_cast<uint16_t>(lut_vals[c * 65536 + i]);
+    }
+
+    cv::Mat out(mat.size(), mat.type());
+    int rows = mat.rows;
+    int cols = mat.cols;
+
+    if (!is_signed) {
+      // CV_16U
+      for (int r = 0; r < rows; r++) {
+        const uint16_t* src_row = mat.ptr<uint16_t>(r);
+        uint16_t*       dst_row = out.ptr<uint16_t>(r);
+        for (int col = 0; col < cols; col++) {
+          for (int c = 0; c < src_nchan; c++) {
+            int idx = col * src_nchan + c;
+            uint16_t pix = src_row[idx];
+            int tbl_idx = (nchan_lut == 1) ? 0 : c;
+            dst_row[idx] = tables[tbl_idx][pix];
+          }
+        }
+      }
+    } else {
+      // CV_16S — LUT index = pixel + 32768
+      for (int r = 0; r < rows; r++) {
+        const int16_t* src_row = mat.ptr<int16_t>(r);
+        int16_t*       dst_row = out.ptr<int16_t>(r);
+        for (int col = 0; col < cols; col++) {
+          for (int c = 0; c < src_nchan; c++) {
+            int idx = col * src_nchan + c;
+            int16_t  pix  = src_row[idx];
+            int      lut_i = static_cast<int>(pix) + 32768;
+            int tbl_idx = (nchan_lut == 1) ? 0 : c;
+            dst_row[idx] = static_cast<int16_t>(
+              static_cast<int>(tables[tbl_idx][lut_i]) - 32768);
+          }
+        }
+      }
+    }
+    return {new RtImage(std::move(out), img->colorspace)};
+  }
 }
 
 // ── rt_clahe ─────────────────────────────────────────────────────────────────
