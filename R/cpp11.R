@@ -88,6 +88,14 @@ rt_image_merge_channels <- function(channel_ptrs, colorspace) {
   .Call(`_Retina_rt_image_merge_channels`, channel_ptrs, colorspace)
 }
 
+rt_extract_channel <- function(img, k) {
+  .Call(`_Retina_rt_extract_channel`, img, k)
+}
+
+rt_insert_channel <- function(ch, dst_img, k) {
+  .Call(`_Retina_rt_insert_channel`, ch, dst_img, k)
+}
+
 rt_image_convert_color <- function(img, from_cs, to_cs) {
   .Call(`_Retina_rt_image_convert_color`, img, from_cs, to_cs)
 }

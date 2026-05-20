@@ -3362,6 +3362,79 @@ Image <- R6::R6Class("Image",
       invisible(self)
     },
 
+    #' @description Extract a single channel as a new single-channel \code{Image}.
+    #' @param k Single integer (1-based). Channel index between 1 and \code{nchan}.
+    #' @return A new single-channel \code{Image} with colorspace \code{"GRAY"}.
+    #' @examples
+    #' \donttest{
+    #' img <- Image$new(array(c(rep(10L, 100L), rep(20L, 100L), rep(30L, 100L)),
+    #'                        dim = c(10L, 10L, 3L)), "BGR")
+    #' img$extract_channel(2L)  # green channel
+    #' }
+    extract_channel = function(k) {
+      if (!is.numeric(k) || length(k) != 1L || is.na(k) ||
+          k < 1L || k > self$nchan)
+        stop("k must be a single integer between 1 and nchan", call. = FALSE)
+      Image$new(rt_extract_channel(private$.ptr, as.integer(k) - 1L))
+    },
+
+    #' @description Insert a single-channel \code{Image} into channel \code{k},
+    #'   returning a new \code{Image}.
+    #' @param ch A single-channel \code{Image} with the same depth, \code{nrow},
+    #'   and \code{ncol} as \code{self}.
+    #' @param k Single integer (1-based). Channel index between 1 and \code{nchan}.
+    #' @return A new \code{Image} with the same colorspace as \code{self}.
+    #' @examples
+    #' \donttest{
+    #' img <- Image$new(array(c(rep(10L, 100L), rep(20L, 100L), rep(30L, 100L)),
+    #'                        dim = c(10L, 10L, 3L)), "BGR")
+    #' new_ch <- Image$new(array(99L, dim = c(10L, 10L, 1L)), "GRAY")
+    #' img$insert_channel(new_ch, 2L)
+    #' }
+    insert_channel = function(ch, k) {
+      if (!inherits(ch, "Image"))
+        stop("ch must be an Image", call. = FALSE)
+      if (ch$nchan != 1L)
+        stop("ch must be a single-channel image", call. = FALSE)
+      if (ch$depth_name != self$depth_name)
+        stop("ch must have the same depth as self", call. = FALSE)
+      if (ch$nrow != self$nrow || ch$ncol != self$ncol)
+        stop("ch must have the same dimensions as self", call. = FALSE)
+      if (!is.numeric(k) || length(k) != 1L || is.na(k) ||
+          k < 1L || k > self$nchan)
+        stop("k must be a single integer between 1 and nchan", call. = FALSE)
+      Image$new(rt_insert_channel(.rt_ptr(ch), private$.ptr, as.integer(k) - 1L))
+    },
+
+    #' @description Insert a single-channel \code{Image} into channel \code{k},
+    #'   in place.
+    #' @param ch A single-channel \code{Image} with the same depth, \code{nrow},
+    #'   and \code{ncol} as \code{self}.
+    #' @param k Single integer (1-based). Channel index between 1 and \code{nchan}.
+    #' @return \code{self} invisibly.
+    #' @examples
+    #' \donttest{
+    #' img <- Image$new(array(c(rep(10L, 100L), rep(20L, 100L), rep(30L, 100L)),
+    #'                        dim = c(10L, 10L, 3L)), "BGR")
+    #' new_ch <- Image$new(array(99L, dim = c(10L, 10L, 1L)), "GRAY")
+    #' img$insert_channel_(new_ch, 2L)
+    #' }
+    insert_channel_ = function(ch, k) {
+      if (!inherits(ch, "Image"))
+        stop("ch must be an Image", call. = FALSE)
+      if (ch$nchan != 1L)
+        stop("ch must be a single-channel image", call. = FALSE)
+      if (ch$depth_name != self$depth_name)
+        stop("ch must have the same depth as self", call. = FALSE)
+      if (ch$nrow != self$nrow || ch$ncol != self$ncol)
+        stop("ch must have the same dimensions as self", call. = FALSE)
+      if (!is.numeric(k) || length(k) != 1L || is.na(k) ||
+          k < 1L || k > self$nchan)
+        stop("k must be a single integer between 1 and nchan", call. = FALSE)
+      private$.ptr <- rt_insert_channel(.rt_ptr(ch), private$.ptr, as.integer(k) - 1L)
+      invisible(self)
+    },
+
     #' @description Print a summary of the image.
     #' @param ... Ignored.
     #' @return \code{self} invisibly.

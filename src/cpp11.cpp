@@ -159,6 +159,20 @@ extern "C" SEXP _Retina_rt_image_merge_channels(SEXP channel_ptrs, SEXP colorspa
     return cpp11::as_sexp(rt_image_merge_channels(cpp11::as_cpp<cpp11::decay_t<cpp11::list>>(channel_ptrs), cpp11::as_cpp<cpp11::decay_t<std::string>>(colorspace)));
   END_CPP11
 }
+// channels.cpp
+external_pointer<RtImage> rt_extract_channel(external_pointer<RtImage> img, int k);
+extern "C" SEXP _Retina_rt_extract_channel(SEXP img, SEXP k) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_extract_channel(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<int>>(k)));
+  END_CPP11
+}
+// channels.cpp
+external_pointer<RtImage> rt_insert_channel(external_pointer<RtImage> ch, external_pointer<RtImage> dst_img, int k);
+extern "C" SEXP _Retina_rt_insert_channel(SEXP ch, SEXP dst_img, SEXP k) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_insert_channel(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(ch), cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(dst_img), cpp11::as_cpp<cpp11::decay_t<int>>(k)));
+  END_CPP11
+}
 // colorspace.cpp
 external_pointer<RtImage> rt_image_convert_color(external_pointer<RtImage> img, std::string from_cs, std::string to_cs);
 extern "C" SEXP _Retina_rt_image_convert_color(SEXP img, SEXP from_cs, SEXP to_cs) {
@@ -793,6 +807,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_Retina_rt_draw_rectangle",           (DL_FUNC) &_Retina_rt_draw_rectangle,            8},
     {"_Retina_rt_draw_text",                (DL_FUNC) &_Retina_rt_draw_text,                10},
     {"_Retina_rt_exp",                      (DL_FUNC) &_Retina_rt_exp,                       1},
+    {"_Retina_rt_extract_channel",          (DL_FUNC) &_Retina_rt_extract_channel,           2},
     {"_Retina_rt_fill",                     (DL_FUNC) &_Retina_rt_fill,                      6},
     {"_Retina_rt_fill_poly",                (DL_FUNC) &_Retina_rt_fill_poly,                 5},
     {"_Retina_rt_find_nonzero",             (DL_FUNC) &_Retina_rt_find_nonzero,              1},
@@ -878,6 +893,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_Retina_rt_image_warp_affine",        (DL_FUNC) &_Retina_rt_image_warp_affine,         6},
     {"_Retina_rt_image_warp_perspective",   (DL_FUNC) &_Retina_rt_image_warp_perspective,    6},
     {"_Retina_rt_image_write",              (DL_FUNC) &_Retina_rt_image_write,               2},
+    {"_Retina_rt_insert_channel",           (DL_FUNC) &_Retina_rt_insert_channel,            3},
     {"_Retina_rt_log",                      (DL_FUNC) &_Retina_rt_log,                       1},
     {"_Retina_rt_lut",                      (DL_FUNC) &_Retina_rt_lut,                       2},
     {"_Retina_rt_minmax_loc",               (DL_FUNC) &_Retina_rt_minmax_loc,                1},

@@ -557,6 +557,38 @@ img32$log()
 img32 <- Image$new(array(9.0, dim = c(5L, 5L, 1L)), "GRAY", depth = "CV_32F")
 img32$sqrt()
 }
+
+## ------------------------------------------------
+## Method `Image$extract_channel`
+## ------------------------------------------------
+
+\donttest{
+img <- Image$new(array(c(rep(10L, 100L), rep(20L, 100L), rep(30L, 100L)),
+                       dim = c(10L, 10L, 3L)), "BGR")
+img$extract_channel(2L)  # green channel
+}
+
+## ------------------------------------------------
+## Method `Image$insert_channel`
+## ------------------------------------------------
+
+\donttest{
+img <- Image$new(array(c(rep(10L, 100L), rep(20L, 100L), rep(30L, 100L)),
+                       dim = c(10L, 10L, 3L)), "BGR")
+new_ch <- Image$new(array(99L, dim = c(10L, 10L, 1L)), "GRAY")
+img$insert_channel(new_ch, 2L)
+}
+
+## ------------------------------------------------
+## Method `Image$insert_channel_`
+## ------------------------------------------------
+
+\donttest{
+img <- Image$new(array(c(rep(10L, 100L), rep(20L, 100L), rep(30L, 100L)),
+                       dim = c(10L, 10L, 3L)), "BGR")
+new_ch <- Image$new(array(99L, dim = c(10L, 10L, 1L)), "GRAY")
+img$insert_channel_(new_ch, 2L)
+}
 }
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
@@ -710,6 +742,9 @@ img32$sqrt()
 \item \href{#method-Image-log_}{\code{Image$log_()}}
 \item \href{#method-Image-sqrt}{\code{Image$sqrt()}}
 \item \href{#method-Image-sqrt_}{\code{Image$sqrt_()}}
+\item \href{#method-Image-extract_channel}{\code{Image$extract_channel()}}
+\item \href{#method-Image-insert_channel}{\code{Image$insert_channel()}}
+\item \href{#method-Image-insert_channel_}{\code{Image$insert_channel_()}}
 \item \href{#method-Image-print}{\code{Image$print()}}
 }
 }
@@ -4954,6 +4989,112 @@ Apply element-wise square root in place.
 \subsection{Returns}{
 \code{self} invisibly.
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-extract_channel"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-extract_channel}{}}}
+\subsection{Method \code{extract_channel()}}{
+Extract a single channel as a new single-channel \code{Image}.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$extract_channel(k)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{k}}{Single integer (1-based). Channel index between 1 and \code{nchan}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A new single-channel \code{Image} with colorspace \code{"GRAY"}.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img <- Image$new(array(c(rep(10L, 100L), rep(20L, 100L), rep(30L, 100L)),
+                       dim = c(10L, 10L, 3L)), "BGR")
+img$extract_channel(2L)  # green channel
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-insert_channel"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-insert_channel}{}}}
+\subsection{Method \code{insert_channel()}}{
+Insert a single-channel \code{Image} into channel \code{k},
+  returning a new \code{Image}.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$insert_channel(ch, k)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{ch}}{A single-channel \code{Image} with the same depth, \code{nrow},
+and \code{ncol} as \code{self}.}
+
+\item{\code{k}}{Single integer (1-based). Channel index between 1 and \code{nchan}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A new \code{Image} with the same colorspace as \code{self}.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img <- Image$new(array(c(rep(10L, 100L), rep(20L, 100L), rep(30L, 100L)),
+                       dim = c(10L, 10L, 3L)), "BGR")
+new_ch <- Image$new(array(99L, dim = c(10L, 10L, 1L)), "GRAY")
+img$insert_channel(new_ch, 2L)
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-insert_channel_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-insert_channel_}{}}}
+\subsection{Method \code{insert_channel_()}}{
+Insert a single-channel \code{Image} into channel \code{k},
+  in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$insert_channel_(ch, k)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{ch}}{A single-channel \code{Image} with the same depth, \code{nrow},
+and \code{ncol} as \code{self}.}
+
+\item{\code{k}}{Single integer (1-based). Channel index between 1 and \code{nchan}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{self} invisibly.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img <- Image$new(array(c(rep(10L, 100L), rep(20L, 100L), rep(30L, 100L)),
+                       dim = c(10L, 10L, 3L)), "BGR")
+new_ch <- Image$new(array(99L, dim = c(10L, 10L, 1L)), "GRAY")
+img$insert_channel_(new_ch, 2L)
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Image-print"></a>}}
