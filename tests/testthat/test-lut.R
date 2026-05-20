@@ -83,6 +83,32 @@ test_that("$LUT() preserves colorspace", {
   expect_equal(make_test_image()$LUT(0:255)$colorspace, "BGR")
 })
 
+# ── output depth assertions ───────────────────────────────────────────────────
+
+test_that("$LUT() on CV_8U produces CV_8U output", {
+  expect_equal(make_test_image()$LUT(0:255)$depth_name, "CV_8U")
+})
+
+test_that("$LUT() on CV_16U produces CV_16U output", {
+  arr <- array(1000L, dim = c(5L, 5L, 1L))
+  img <- Image$new(arr, colorspace = "GRAY", depth = "CV_16U")
+  expect_equal(img$LUT(0:65535)$depth_name, "CV_16U")
+})
+
+# ── CV_16S ────────────────────────────────────────────────────────────────────
+
+test_that("$LUT() identity on CV_16S: pixel 0 -> LUT index 32768 -> value 0, output CV_16U", {
+  arr <- array(0L, dim = c(5L, 5L, 1L))
+  img <- Image$new(arr, colorspace = "GRAY", depth = "CV_16S")
+  # Identity-ish: map every index i -> i - 32768 clamped to 0, but simpler:
+  # map index 32768 (= pixel 0) to value 100
+  lut <- integer(65536L)
+  lut[32768 + 1L] <- 100L  # 1-based: index 32768 (0-based) = lut[32769]
+  result <- img$LUT(lut)
+  expect_equal(result$depth_name, "CV_16U")
+  expect_equal(result$to_array()[1, 1, 1], 100L)
+})
+
 # ── $hist_match() regression ──────────────────────────────────────────────────
 
 test_that("$hist_match() still works after rt_lut signature update", {

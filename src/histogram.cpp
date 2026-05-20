@@ -108,7 +108,9 @@ external_pointer<RtImage> rt_lut(external_pointer<RtImage> img,
         tables[c][i] = static_cast<uint16_t>(lut_vals[c * 65536 + i]);
     }
 
-    cv::Mat out(mat.size(), mat.type());
+    // Output is always CV_16U regardless of whether input is CV_16U or CV_16S.
+    int out_type = CV_MAKETYPE(CV_16U, mat.channels());
+    cv::Mat out(mat.size(), out_type);
     int rows = mat.rows;
     int cols = mat.cols;
 
@@ -127,18 +129,17 @@ external_pointer<RtImage> rt_lut(external_pointer<RtImage> img,
         }
       }
     } else {
-      // CV_16S — LUT index = pixel + 32768
+      // CV_16S — LUT index = pixel + 32768; output written as-is (uint16_t).
       for (int r = 0; r < rows; r++) {
         const int16_t* src_row = mat.ptr<int16_t>(r);
-        int16_t*       dst_row = out.ptr<int16_t>(r);
+        uint16_t*      dst_row = out.ptr<uint16_t>(r);
         for (int col = 0; col < cols; col++) {
           for (int c = 0; c < src_nchan; c++) {
             int idx = col * src_nchan + c;
-            int16_t  pix  = src_row[idx];
-            int      lut_i = static_cast<int>(pix) + 32768;
+            int16_t pix   = src_row[idx];
+            int     lut_i = static_cast<int>(pix) + 32768;
             int tbl_idx = (nchan_lut == 1) ? 0 : c;
-            dst_row[idx] = static_cast<int16_t>(
-              static_cast<int>(tables[tbl_idx][lut_i]) - 32768);
+            dst_row[idx] = tables[tbl_idx][lut_i];
           }
         }
       }
