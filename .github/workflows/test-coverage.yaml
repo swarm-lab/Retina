@@ -25,6 +25,9 @@ jobs:
           extra-packages: any::covr, any::xml2
           needs: coverage
 
+      - name: Install OpenCV
+        run: Rscript -e "ROpenCVLite::installOpenCV()"
+
       - name: Test coverage
         run: |
           cov <- covr::package_coverage(
