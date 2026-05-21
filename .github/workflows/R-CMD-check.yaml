@@ -39,6 +39,20 @@ jobs:
           r-version: ${{ matrix.config.r }}
           http-user-agent: ${{ matrix.config.http-user-agent }}
 
+      - name: Install Linux dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt update -y
+          sudo apt install -y libunwind-dev
+          sudo apt install -y cmake make libicu-dev
+          sudo apt install -y libavcodec-dev libavformat-dev libswscale-dev libavfilter-dev
+          sudo apt install -y libgstreamer-plugins-base1.0-dev libgstreamer1.0-dev
+          sudo apt install -y libpng-dev libjpeg-dev libtiff-dev
+
+      - name: Install macOS dependencies
+        if: runner.os == 'macOS'
+        run: brew install ffmpeg
+
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::rcmdcheck
