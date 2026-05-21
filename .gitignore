@@ -6,9 +6,10 @@ src/*.so
 src/*.dll
 src/Makevars
 docs/*
-!docs/superpowers/
-!docs/superpowers/**
+.DS_Store
 .DS_store
+CLAUDE.md
+.agents/
 .claude/
 .mnem/
 ..Rcheck/
