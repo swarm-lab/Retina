@@ -59,7 +59,7 @@ jobs:
           needs: check
 
       - name: Install OpenCV
-        run: Rscript -e "ROpenCVLite::installOpenCV()"
+        run: Rscript -e "ROpenCVLite::installOpenCV(batch = TRUE)"
 
       - uses: r-lib/actions/check-r-package@v2
         with:

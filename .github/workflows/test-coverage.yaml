@@ -35,7 +35,7 @@ jobs:
           needs: coverage
 
       - name: Install OpenCV
-        run: Rscript -e "ROpenCVLite::installOpenCV()"
+        run: Rscript -e "ROpenCVLite::installOpenCV(batch = TRUE)"
 
       - name: Test coverage
         run: |

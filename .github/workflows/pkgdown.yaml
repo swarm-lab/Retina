@@ -44,7 +44,7 @@ jobs:
           needs: website
 
       - name: Install OpenCV
-        run: Rscript -e "ROpenCVLite::installOpenCV()"
+        run: Rscript -e "ROpenCVLite::installOpenCV(batch = TRUE)"
 
       - name: Build site
         run: pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
