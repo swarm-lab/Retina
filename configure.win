@@ -1,8 +1,8 @@
 #!/bin/sh
 echo "Checking for ROpenCVLite..."
 
-CV_CFLAGS=$(${R_HOME}/bin/Rscript -e "cat(ROpenCVLite::opencvConfig(output='cflags'))" 2>/dev/null)
-CV_LIBS=$(${R_HOME}/bin/Rscript -e "cat(ROpenCVLite::opencvConfig(output='libs'))" 2>/dev/null)
+CV_CFLAGS=$(${R_HOME}/bin/Rscript -e "cat(ROpenCVLite::opencvConfig(output='cflags'))" 2>/dev/null | tr '\\' '/')
+CV_LIBS=$(${R_HOME}/bin/Rscript -e "cat(ROpenCVLite::opencvConfig(output='libs'))" 2>/dev/null | tr '\\' '/')
 
 if [ -z "$CV_CFLAGS" ]; then
   echo "ERROR: Could not determine OpenCV CFLAGS. Is ROpenCVLite installed and has installOpenCV() been run successfully?" >&2
