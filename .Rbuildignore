@@ -8,3 +8,4 @@
 ^pkgdown$
 .DS_store
 ^\.mnem$
+CLAUDE.md
