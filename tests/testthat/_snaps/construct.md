@@ -250,7 +250,7 @@
       img$set_to(255, mask = bad_mask)
     Condition
       Error:
-      ! mask must be CV_8U depth
+      ! mask must be a single-channel CV_8U Image with the same dimensions as self
 
 # $set_to() errors when mask has wrong dimensions
 
@@ -258,7 +258,7 @@
       img$set_to(255, mask = bad_mask)
     Condition
       Error:
-      ! mask dimensions must match image dimensions
+      ! mask must be a single-channel CV_8U Image with the same dimensions as self
 
 # $set_to() errors when mask has more than 1 channel
 
@@ -266,7 +266,7 @@
       img$set_to(255, mask = bad_mask)
     Condition
       Error:
-      ! mask must be a single-channel image
+      ! mask must be a single-channel CV_8U Image with the same dimensions as self
 
 # $set_to_() errors on NA value
 
@@ -282,7 +282,7 @@
       img$set_to_(255, mask = bad_mask)
     Condition
       Error:
-      ! mask must be CV_8U depth
+      ! mask must be a single-channel CV_8U Image with the same dimensions as self
 
 # $set_to() errors on Inf value
 

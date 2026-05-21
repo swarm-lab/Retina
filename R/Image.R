@@ -312,86 +312,127 @@ Image <- R6::R6Class("Image",
 
     #' @description Add another image or a scalar to this image.
     #' @param other An \code{Image} or a numeric vector (length 1 or \code{nchan}).
+    #' @param mask Optional single-channel CV_8U \code{Image} mask. Only pixels
+    #'   where mask is non-zero are updated; others retain \code{self}'s values.
     #' @return A new \code{Image}.
-    add = function(other) {
+    add = function(other, mask = NULL) {
+      .rt_valid_mask(mask, self)
       Image$new(.rt_arith(private$.ptr, other, self$nchan, self$depth,
-                          rt_image_add_image, rt_image_add_scalar))
+                          rt_image_add_image, rt_image_add_scalar,
+                          rt_image_add_image_masked, rt_image_add_scalar_masked,
+                          mask))
     },
 
     #' @description Add in place.
     #' @param other An \code{Image} or a numeric vector (length 1 or \code{nchan}).
+    #' @param mask Optional single-channel CV_8U \code{Image} mask.
     #' @return \code{self} invisibly.
-    add_ = function(other) {
+    add_ = function(other, mask = NULL) {
+      .rt_valid_mask(mask, self)
       private$.ptr <- .rt_arith(private$.ptr, other, self$nchan, self$depth,
-                                rt_image_add_image, rt_image_add_scalar)
+                                rt_image_add_image, rt_image_add_scalar,
+                                rt_image_add_image_masked, rt_image_add_scalar_masked,
+                                mask)
       invisible(self)
     },
 
     #' @description Subtract another image or a scalar from this image.
     #' @param other An \code{Image} or a numeric vector (length 1 or \code{nchan}).
+    #' @param mask Optional single-channel CV_8U \code{Image} mask.
     #' @return A new \code{Image}.
-    subtract = function(other) {
+    subtract = function(other, mask = NULL) {
+      .rt_valid_mask(mask, self)
       Image$new(.rt_arith(private$.ptr, other, self$nchan, self$depth,
-                          rt_image_subtract_image, rt_image_subtract_scalar))
+                          rt_image_subtract_image, rt_image_subtract_scalar,
+                          rt_image_subtract_image_masked, rt_image_subtract_scalar_masked,
+                          mask))
     },
 
     #' @description Subtract in place.
     #' @param other An \code{Image} or a numeric vector (length 1 or \code{nchan}).
+    #' @param mask Optional single-channel CV_8U \code{Image} mask.
     #' @return \code{self} invisibly.
-    subtract_ = function(other) {
+    subtract_ = function(other, mask = NULL) {
+      .rt_valid_mask(mask, self)
       private$.ptr <- .rt_arith(private$.ptr, other, self$nchan, self$depth,
-                                rt_image_subtract_image, rt_image_subtract_scalar)
+                                rt_image_subtract_image, rt_image_subtract_scalar,
+                                rt_image_subtract_image_masked, rt_image_subtract_scalar_masked,
+                                mask)
       invisible(self)
     },
 
     #' @description Multiply this image element-wise by another image or a scalar.
     #' @param other An \code{Image} or a numeric vector (length 1 or \code{nchan}).
+    #' @param mask Optional single-channel CV_8U \code{Image} mask.
     #' @return A new \code{Image}.
-    multiply = function(other) {
+    multiply = function(other, mask = NULL) {
+      .rt_valid_mask(mask, self)
       Image$new(.rt_arith(private$.ptr, other, self$nchan, self$depth,
-                          rt_image_multiply_image, rt_image_multiply_scalar))
+                          rt_image_multiply_image, rt_image_multiply_scalar,
+                          rt_image_multiply_image_masked, rt_image_multiply_scalar_masked,
+                          mask))
     },
 
     #' @description Multiply in place.
     #' @param other An \code{Image} or a numeric vector (length 1 or \code{nchan}).
+    #' @param mask Optional single-channel CV_8U \code{Image} mask.
     #' @return \code{self} invisibly.
-    multiply_ = function(other) {
+    multiply_ = function(other, mask = NULL) {
+      .rt_valid_mask(mask, self)
       private$.ptr <- .rt_arith(private$.ptr, other, self$nchan, self$depth,
-                                rt_image_multiply_image, rt_image_multiply_scalar)
+                                rt_image_multiply_image, rt_image_multiply_scalar,
+                                rt_image_multiply_image_masked, rt_image_multiply_scalar_masked,
+                                mask)
       invisible(self)
     },
 
     #' @description Divide this image element-wise by another image or a scalar.
     #' @param other An \code{Image} or a numeric vector (length 1 or \code{nchan}).
+    #' @param mask Optional single-channel CV_8U \code{Image} mask.
     #' @return A new \code{Image}.
-    divide = function(other) {
+    divide = function(other, mask = NULL) {
+      .rt_valid_mask(mask, self)
       Image$new(.rt_arith(private$.ptr, other, self$nchan, self$depth,
-                          rt_image_divide_image, rt_image_divide_scalar))
+                          rt_image_divide_image, rt_image_divide_scalar,
+                          rt_image_divide_image_masked, rt_image_divide_scalar_masked,
+                          mask))
     },
 
     #' @description Divide in place.
     #' @param other An \code{Image} or a numeric vector (length 1 or \code{nchan}).
+    #' @param mask Optional single-channel CV_8U \code{Image} mask.
     #' @return \code{self} invisibly.
-    divide_ = function(other) {
+    divide_ = function(other, mask = NULL) {
+      .rt_valid_mask(mask, self)
       private$.ptr <- .rt_arith(private$.ptr, other, self$nchan, self$depth,
-                                rt_image_divide_image, rt_image_divide_scalar)
+                                rt_image_divide_image, rt_image_divide_scalar,
+                                rt_image_divide_image_masked, rt_image_divide_scalar_masked,
+                                mask)
       invisible(self)
     },
 
     #' @description Compute the absolute difference with another image or a scalar.
     #' @param other An \code{Image} or a numeric vector (length 1 or \code{nchan}).
+    #' @param mask Optional single-channel CV_8U \code{Image} mask.
     #' @return A new \code{Image}.
-    absdiff = function(other) {
+    absdiff = function(other, mask = NULL) {
+      .rt_valid_mask(mask, self)
       Image$new(.rt_arith(private$.ptr, other, self$nchan, self$depth,
-                          rt_image_absdiff_image, rt_image_absdiff_scalar))
+                          rt_image_absdiff_image, rt_image_absdiff_scalar,
+                          rt_image_absdiff_image_masked, rt_image_absdiff_scalar_masked,
+                          mask))
     },
 
     #' @description Absolute difference in place.
     #' @param other An \code{Image} or a numeric vector (length 1 or \code{nchan}).
+    #' @param mask Optional single-channel CV_8U \code{Image} mask.
     #' @return \code{self} invisibly.
-    absdiff_ = function(other) {
+    absdiff_ = function(other, mask = NULL) {
+      .rt_valid_mask(mask, self)
       private$.ptr <- .rt_arith(private$.ptr, other, self$nchan, self$depth,
-                                rt_image_absdiff_image, rt_image_absdiff_scalar)
+                                rt_image_absdiff_image, rt_image_absdiff_scalar,
+                                rt_image_absdiff_image_masked, rt_image_absdiff_scalar_masked,
+                                mask)
       invisible(self)
     },
 
@@ -400,17 +441,24 @@ Image <- R6::R6Class("Image",
     #' @param w1 Numeric scalar. Weight for this image.
     #' @param w2 Numeric scalar. Weight for \code{other}.
     #' @param gamma Numeric scalar. Brightness offset added after blending. Default 0.
+    #' @param mask Optional single-channel CV_8U \code{Image} mask.
     #' @return A new \code{Image}.
-    add_weighted = function(other, w1, w2, gamma = 0) {
+    add_weighted = function(other, w1, w2, gamma = 0, mask = NULL) {
       if (!inherits(other, "Image"))
         stop("other must be an Image", call. = FALSE)
       if (!is.numeric(w1) || length(w1) != 1L ||
           !is.numeric(w2) || length(w2) != 1L ||
           !is.numeric(gamma) || length(gamma) != 1L)
         stop("w1, w2, and gamma must each be a single numeric value", call. = FALSE)
-      Image$new(rt_image_add_weighted(private$.ptr, as.double(w1),
-                                      .rt_ptr(other), as.double(w2),
-                                      as.double(gamma)))
+      .rt_valid_mask(mask, self)
+      if (is.null(mask))
+        Image$new(rt_image_add_weighted(private$.ptr, as.double(w1),
+                                        .rt_ptr(other), as.double(w2),
+                                        as.double(gamma)))
+      else
+        Image$new(rt_image_add_weighted_masked(private$.ptr, as.double(w1),
+                                               .rt_ptr(other), as.double(w2),
+                                               as.double(gamma), .rt_ptr(mask)))
     },
 
     #' @description Weighted addition in place.
@@ -418,105 +466,146 @@ Image <- R6::R6Class("Image",
     #' @param w1 Numeric scalar. Weight for this image.
     #' @param w2 Numeric scalar. Weight for \code{other}.
     #' @param gamma Numeric scalar. Brightness offset. Default 0.
+    #' @param mask Optional single-channel CV_8U \code{Image} mask.
     #' @return \code{self} invisibly.
-    add_weighted_ = function(other, w1, w2, gamma = 0) {
+    add_weighted_ = function(other, w1, w2, gamma = 0, mask = NULL) {
       if (!inherits(other, "Image"))
         stop("other must be an Image", call. = FALSE)
       if (!is.numeric(w1) || length(w1) != 1L ||
           !is.numeric(w2) || length(w2) != 1L ||
           !is.numeric(gamma) || length(gamma) != 1L)
         stop("w1, w2, and gamma must each be a single numeric value", call. = FALSE)
-      private$.ptr <- rt_image_add_weighted(private$.ptr, as.double(w1),
-                                            .rt_ptr(other), as.double(w2),
-                                            as.double(gamma))
+      .rt_valid_mask(mask, self)
+      if (is.null(mask))
+        private$.ptr <- rt_image_add_weighted(private$.ptr, as.double(w1),
+                                              .rt_ptr(other), as.double(w2),
+                                              as.double(gamma))
+      else
+        private$.ptr <- rt_image_add_weighted_masked(private$.ptr, as.double(w1),
+                                                     .rt_ptr(other), as.double(w2),
+                                                     as.double(gamma), .rt_ptr(mask))
       invisible(self)
     },
 
     #' @description Bitwise AND with another image or a scalar.
     #' @param other An \code{Image} or a numeric vector (length 1 or \code{nchan}).
+    #' @param mask Optional single-channel CV_8U \code{Image} mask.
     #' @return A new \code{Image}.
-    bitwise_and = function(other) {
+    bitwise_and = function(other, mask = NULL) {
       if (!self$depth_name %in% c("CV_8U", "CV_16U", "CV_16S"))
         stop("bitwise operations require an integer depth (CV_8U, CV_16U, or CV_16S)",
              call. = FALSE)
+      .rt_valid_mask(mask, self)
       Image$new(.rt_arith(private$.ptr, other, self$nchan, self$depth,
-                          rt_image_bitwise_and_image, rt_image_bitwise_and_scalar))
+                          rt_image_bitwise_and_image, rt_image_bitwise_and_scalar,
+                          rt_image_bitwise_and_image_masked, rt_image_bitwise_and_scalar_masked,
+                          mask))
     },
 
     #' @description Bitwise AND in place.
     #' @param other An \code{Image} or a numeric vector (length 1 or \code{nchan}).
+    #' @param mask Optional single-channel CV_8U \code{Image} mask.
     #' @return \code{self} invisibly.
-    bitwise_and_ = function(other) {
+    bitwise_and_ = function(other, mask = NULL) {
       if (!self$depth_name %in% c("CV_8U", "CV_16U", "CV_16S"))
         stop("bitwise operations require an integer depth (CV_8U, CV_16U, or CV_16S)",
              call. = FALSE)
+      .rt_valid_mask(mask, self)
       private$.ptr <- .rt_arith(private$.ptr, other, self$nchan, self$depth,
-                                rt_image_bitwise_and_image, rt_image_bitwise_and_scalar)
+                                rt_image_bitwise_and_image, rt_image_bitwise_and_scalar,
+                                rt_image_bitwise_and_image_masked, rt_image_bitwise_and_scalar_masked,
+                                mask)
       invisible(self)
     },
 
     #' @description Bitwise OR with another image or a scalar.
     #' @param other An \code{Image} or a numeric vector (length 1 or \code{nchan}).
+    #' @param mask Optional single-channel CV_8U \code{Image} mask.
     #' @return A new \code{Image}.
-    bitwise_or = function(other) {
+    bitwise_or = function(other, mask = NULL) {
       if (!self$depth_name %in% c("CV_8U", "CV_16U", "CV_16S"))
         stop("bitwise operations require an integer depth (CV_8U, CV_16U, or CV_16S)",
              call. = FALSE)
+      .rt_valid_mask(mask, self)
       Image$new(.rt_arith(private$.ptr, other, self$nchan, self$depth,
-                          rt_image_bitwise_or_image, rt_image_bitwise_or_scalar))
+                          rt_image_bitwise_or_image, rt_image_bitwise_or_scalar,
+                          rt_image_bitwise_or_image_masked, rt_image_bitwise_or_scalar_masked,
+                          mask))
     },
 
     #' @description Bitwise OR in place.
     #' @param other An \code{Image} or a numeric vector (length 1 or \code{nchan}).
+    #' @param mask Optional single-channel CV_8U \code{Image} mask.
     #' @return \code{self} invisibly.
-    bitwise_or_ = function(other) {
+    bitwise_or_ = function(other, mask = NULL) {
       if (!self$depth_name %in% c("CV_8U", "CV_16U", "CV_16S"))
         stop("bitwise operations require an integer depth (CV_8U, CV_16U, or CV_16S)",
              call. = FALSE)
+      .rt_valid_mask(mask, self)
       private$.ptr <- .rt_arith(private$.ptr, other, self$nchan, self$depth,
-                                rt_image_bitwise_or_image, rt_image_bitwise_or_scalar)
+                                rt_image_bitwise_or_image, rt_image_bitwise_or_scalar,
+                                rt_image_bitwise_or_image_masked, rt_image_bitwise_or_scalar_masked,
+                                mask)
       invisible(self)
     },
 
     #' @description Bitwise XOR with another image or a scalar.
     #' @param other An \code{Image} or a numeric vector (length 1 or \code{nchan}).
+    #' @param mask Optional single-channel CV_8U \code{Image} mask.
     #' @return A new \code{Image}.
-    bitwise_xor = function(other) {
+    bitwise_xor = function(other, mask = NULL) {
       if (!self$depth_name %in% c("CV_8U", "CV_16U", "CV_16S"))
         stop("bitwise operations require an integer depth (CV_8U, CV_16U, or CV_16S)",
              call. = FALSE)
+      .rt_valid_mask(mask, self)
       Image$new(.rt_arith(private$.ptr, other, self$nchan, self$depth,
-                          rt_image_bitwise_xor_image, rt_image_bitwise_xor_scalar))
+                          rt_image_bitwise_xor_image, rt_image_bitwise_xor_scalar,
+                          rt_image_bitwise_xor_image_masked, rt_image_bitwise_xor_scalar_masked,
+                          mask))
     },
 
     #' @description Bitwise XOR in place.
     #' @param other An \code{Image} or a numeric vector (length 1 or \code{nchan}).
+    #' @param mask Optional single-channel CV_8U \code{Image} mask.
     #' @return \code{self} invisibly.
-    bitwise_xor_ = function(other) {
+    bitwise_xor_ = function(other, mask = NULL) {
       if (!self$depth_name %in% c("CV_8U", "CV_16U", "CV_16S"))
         stop("bitwise operations require an integer depth (CV_8U, CV_16U, or CV_16S)",
              call. = FALSE)
+      .rt_valid_mask(mask, self)
       private$.ptr <- .rt_arith(private$.ptr, other, self$nchan, self$depth,
-                                rt_image_bitwise_xor_image, rt_image_bitwise_xor_scalar)
+                                rt_image_bitwise_xor_image, rt_image_bitwise_xor_scalar,
+                                rt_image_bitwise_xor_image_masked, rt_image_bitwise_xor_scalar_masked,
+                                mask)
       invisible(self)
     },
 
     #' @description Bitwise NOT (invert all bits).
+    #' @param mask Optional single-channel CV_8U \code{Image} mask.
     #' @return A new \code{Image}.
-    bitwise_not = function() {
+    bitwise_not = function(mask = NULL) {
       if (!self$depth_name %in% c("CV_8U", "CV_16U", "CV_16S"))
         stop("bitwise operations require an integer depth (CV_8U, CV_16U, or CV_16S)",
              call. = FALSE)
-      Image$new(rt_image_bitwise_not(private$.ptr))
+      .rt_valid_mask(mask, self)
+      if (is.null(mask))
+        Image$new(rt_image_bitwise_not(private$.ptr))
+      else
+        Image$new(rt_image_bitwise_not_masked(private$.ptr, .rt_ptr(mask)))
     },
 
     #' @description Bitwise NOT in place.
+    #' @param mask Optional single-channel CV_8U \code{Image} mask.
     #' @return \code{self} invisibly.
-    bitwise_not_ = function() {
+    bitwise_not_ = function(mask = NULL) {
       if (!self$depth_name %in% c("CV_8U", "CV_16U", "CV_16S"))
         stop("bitwise operations require an integer depth (CV_8U, CV_16U, or CV_16S)",
              call. = FALSE)
-      private$.ptr <- rt_image_bitwise_not(private$.ptr)
+      .rt_valid_mask(mask, self)
+      if (is.null(mask))
+        private$.ptr <- rt_image_bitwise_not(private$.ptr)
+      else
+        private$.ptr <- rt_image_bitwise_not_masked(private$.ptr, .rt_ptr(mask))
       invisible(self)
     },
 
@@ -2107,54 +2196,41 @@ Image <- R6::R6Class("Image",
     },
 
     #' @description Set all pixels — or only masked pixels — to a constant value.
-    #' @param value Numeric scalar or vector of length `nchan`. Recycled to
-    #'   `nchan` channels. No NAs.
-    #' @param mask `NULL` (apply to all pixels) or a single-channel `CV_8U`
-    #'   `Image` with the same `nrow` and `ncol`. Non-zero pixels mark where
-    #'   `value` is written.
-    #' @return A new `Image`.
+    #' @param value Numeric scalar or vector of length \code{nchan}. Recycled to
+    #'   \code{nchan} channels. No \code{NA}s.
+    #' @param mask \code{NULL} (apply to all pixels) or a single-channel \code{CV_8U}
+    #'   \code{Image} with the same \code{nrow} and \code{ncol}. Non-zero pixels
+    #'   mark where \code{value} is written.
+    #' @return A new \code{Image}.
     set_to = function(value, mask = NULL) {
       if (!is.numeric(value) || length(value) < 1L || anyNA(value) ||
           !all(is.finite(value)))
         stop("value must be a non-empty finite numeric vector with no NAs", call. = FALSE)
-      if (!is.null(mask)) {
-        if (!inherits(mask, "Image"))
-          stop("mask must be an Image", call. = FALSE)
-        if (mask$nchan != 1L)
-          stop("mask must be a single-channel image", call. = FALSE)
-        if (mask$depth_name != "CV_8U")
-          stop("mask must be CV_8U depth", call. = FALSE)
-        if (mask$nrow != self$nrow || mask$ncol != self$ncol)
-          stop("mask dimensions must match image dimensions", call. = FALSE)
-      }
-      value_v  <- as.double(rep_len(value, self$nchan))
-      mask_ptr <- if (is.null(mask)) NULL else .rt_ptr(mask)
-      Image$new(rt_image_set_to(private$.ptr, value_v, mask_ptr))
+      .rt_valid_mask(mask, self)
+      value_v <- as.double(rep_len(value, self$nchan))
+      if (is.null(mask))
+        Image$new(rt_image_set_to(private$.ptr, value_v))
+      else
+        Image$new(rt_image_set_to_masked(private$.ptr, value_v, .rt_ptr(mask)))
     },
 
     #' @description Set all pixels — or only masked pixels — to a constant
     #'   value, in place.
-    #' @param value Numeric scalar or vector of length `nchan`. Recycled to
-    #'   `nchan` channels. No NAs.
-    #' @param mask `NULL` or a single-channel `CV_8U` `Image` same size as self.
-    #' @return `self` invisibly.
+    #' @param value Numeric scalar or vector of length \code{nchan}. Recycled to
+    #'   \code{nchan} channels. No \code{NA}s.
+    #' @param mask \code{NULL} or a single-channel \code{CV_8U} \code{Image} same
+    #'   size as \code{self}.
+    #' @return \code{self} invisibly.
     set_to_ = function(value, mask = NULL) {
       if (!is.numeric(value) || length(value) < 1L || anyNA(value) ||
           !all(is.finite(value)))
         stop("value must be a non-empty finite numeric vector with no NAs", call. = FALSE)
-      if (!is.null(mask)) {
-        if (!inherits(mask, "Image"))
-          stop("mask must be an Image", call. = FALSE)
-        if (mask$nchan != 1L)
-          stop("mask must be a single-channel image", call. = FALSE)
-        if (mask$depth_name != "CV_8U")
-          stop("mask must be CV_8U depth", call. = FALSE)
-        if (mask$nrow != self$nrow || mask$ncol != self$ncol)
-          stop("mask dimensions must match image dimensions", call. = FALSE)
-      }
-      value_v  <- as.double(rep_len(value, self$nchan))
-      mask_ptr <- if (is.null(mask)) NULL else .rt_ptr(mask)
-      private$.ptr <- rt_image_set_to(private$.ptr, value_v, mask_ptr)
+      .rt_valid_mask(mask, self)
+      value_v <- as.double(rep_len(value, self$nchan))
+      if (is.null(mask))
+        private$.ptr <- rt_image_set_to(private$.ptr, value_v)
+      else
+        private$.ptr <- rt_image_set_to_masked(private$.ptr, value_v, .rt_ptr(mask))
       invisible(self)
     },
 
@@ -3075,7 +3151,7 @@ Image <- R6::R6Class("Image",
       src_cdf  <- cumsum(src_hist$count) / sum(src_hist$count)
       ref_cdf  <- cumsum(ref$count) / sum(ref$count)
       lut <- vapply(src_cdf, \(s) which.min(abs(ref_cdf - s)) - 1L, integer(1L))
-      Image$new(rt_lut(private$.ptr, as.integer(lut)))
+      Image$new(rt_lut(private$.ptr, as.integer(lut), 256L, 1L))
     },
 
     #' @description Match the histogram of this image to a reference, in place.
@@ -3112,7 +3188,7 @@ Image <- R6::R6Class("Image",
       src_cdf  <- cumsum(src_hist$count) / sum(src_hist$count)
       ref_cdf  <- cumsum(ref$count) / sum(ref$count)
       lut <- vapply(src_cdf, \(s) which.min(abs(ref_cdf - s)) - 1L, integer(1L))
-      private$.ptr <- rt_lut(private$.ptr, as.integer(lut))
+      private$.ptr <- rt_lut(private$.ptr, as.integer(lut), 256L, 1L)
       invisible(self)
     },
 
@@ -3249,6 +3325,270 @@ Image <- R6::R6Class("Image",
              "use split_channels() + lapply() for multi-channel images",
              call. = FALSE)
       rt_find_nonzero(private$.ptr)
+    },
+
+    #' @description Raise every pixel to a power element-wise.
+    #'   The image must be \code{CV_32F} or \code{CV_64F} — use
+    #'   \code{$convert_depth("CV_32F")} first for integer images.
+    #'   A negative pixel raised to a fractional exponent produces \code{NaN}.
+    #' @param power Single finite numeric. The exponent. Negative, zero, and
+    #'   fractional values are accepted.
+    #' @return A new \code{Image} with the same depth and colorspace.
+    #' @examples
+    #' \donttest{
+    #' img32 <- Image$new(array(4.0, dim = c(5L, 5L, 1L)), "GRAY", depth = "CV_32F")
+    #' img32$pow(2.0)
+    #' }
+    pow = function(power) {
+      if (!self$depth_name %in% c("CV_32F", "CV_64F"))
+        stop('$pow() requires a float image (CV_32F or CV_64F); use $convert_depth("CV_32F") first',
+             call. = FALSE)
+      if (!is.numeric(power) || length(power) != 1L || !is.finite(power))
+        stop("power must be a single finite numeric value", call. = FALSE)
+      Image$new(rt_pow(private$.ptr, as.double(power)))
+    },
+
+    #' @description Raise every pixel to a power, in place.
+    #' @param power Single finite numeric. The exponent.
+    #' @return \code{self} invisibly.
+    pow_ = function(power) {
+      if (!self$depth_name %in% c("CV_32F", "CV_64F"))
+        stop('$pow_() requires a float image (CV_32F or CV_64F); use $convert_depth("CV_32F") first',
+             call. = FALSE)
+      if (!is.numeric(power) || length(power) != 1L || !is.finite(power))
+        stop("power must be a single finite numeric value", call. = FALSE)
+      private$.ptr <- rt_pow(private$.ptr, as.double(power))
+      invisible(self)
+    },
+
+    #' @description Apply element-wise natural exponential (\eqn{e^x}) to every pixel.
+    #'   The image must be \code{CV_32F} or \code{CV_64F}.
+    #' @return A new \code{Image} with the same depth and colorspace.
+    #' @examples
+    #' \donttest{
+    #' img32 <- Image$new(array(1.0, dim = c(5L, 5L, 1L)), "GRAY", depth = "CV_32F")
+    #' img32$exp()
+    #' }
+    exp = function() {
+      if (!self$depth_name %in% c("CV_32F", "CV_64F"))
+        stop('$exp() requires a float image (CV_32F or CV_64F); use $convert_depth("CV_32F") first',
+             call. = FALSE)
+      Image$new(rt_exp(private$.ptr))
+    },
+
+    #' @description Apply element-wise natural exponential in place.
+    #' @return \code{self} invisibly.
+    exp_ = function() {
+      if (!self$depth_name %in% c("CV_32F", "CV_64F"))
+        stop('$exp_() requires a float image (CV_32F or CV_64F); use $convert_depth("CV_32F") first',
+             call. = FALSE)
+      private$.ptr <- rt_exp(private$.ptr)
+      invisible(self)
+    },
+
+    #' @description Apply element-wise natural logarithm (\eqn{\ln(x)}) to every pixel.
+    #'   The image must be \code{CV_32F} or \code{CV_64F}. Pixels \eqn{\le 0} produce
+    #'   \code{-Inf} or \code{NaN} — sanitise the image first if this may occur.
+    #' @return A new \code{Image} with the same depth and colorspace.
+    #' @examples
+    #' \donttest{
+    #' img32 <- Image$new(array(exp(1), dim = c(5L, 5L, 1L)), "GRAY", depth = "CV_32F")
+    #' img32$log()
+    #' }
+    log = function() {
+      if (!self$depth_name %in% c("CV_32F", "CV_64F"))
+        stop('$log() requires a float image (CV_32F or CV_64F); use $convert_depth("CV_32F") first',
+             call. = FALSE)
+      Image$new(rt_log(private$.ptr))
+    },
+
+    #' @description Apply element-wise natural logarithm in place.
+    #' @return \code{self} invisibly.
+    log_ = function() {
+      if (!self$depth_name %in% c("CV_32F", "CV_64F"))
+        stop('$log_() requires a float image (CV_32F or CV_64F); use $convert_depth("CV_32F") first',
+             call. = FALSE)
+      private$.ptr <- rt_log(private$.ptr)
+      invisible(self)
+    },
+
+    #' @description Apply element-wise square root to every pixel.
+    #'   The image must be \code{CV_32F} or \code{CV_64F}. Pixels \code{< 0} produce
+    #'   \code{NaN} — sanitise the image first if this may occur.
+    #' @return A new \code{Image} with the same depth and colorspace.
+    #' @examples
+    #' \donttest{
+    #' img32 <- Image$new(array(9.0, dim = c(5L, 5L, 1L)), "GRAY", depth = "CV_32F")
+    #' img32$sqrt()
+    #' }
+    sqrt = function() {
+      if (!self$depth_name %in% c("CV_32F", "CV_64F"))
+        stop('$sqrt() requires a float image (CV_32F or CV_64F); use $convert_depth("CV_32F") first',
+             call. = FALSE)
+      Image$new(rt_sqrt(private$.ptr))
+    },
+
+    #' @description Apply element-wise square root in place.
+    #' @return \code{self} invisibly.
+    sqrt_ = function() {
+      if (!self$depth_name %in% c("CV_32F", "CV_64F"))
+        stop('$sqrt_() requires a float image (CV_32F or CV_64F); use $convert_depth("CV_32F") first',
+             call. = FALSE)
+      private$.ptr <- rt_sqrt(private$.ptr)
+      invisible(self)
+    },
+
+    #' @description Extract a single channel as a new single-channel \code{Image}.
+    #' @param k Single integer (1-based). Channel index between 1 and \code{nchan}.
+    #' @return A new single-channel \code{Image} with colorspace \code{"GRAY"}.
+    #' @examples
+    #' \donttest{
+    #' img <- Image$new(array(c(rep(10L, 100L), rep(20L, 100L), rep(30L, 100L)),
+    #'                        dim = c(10L, 10L, 3L)), "BGR")
+    #' img$extract_channel(2L)  # green channel
+    #' }
+    extract_channel = function(k) {
+      if (!is.numeric(k) || length(k) != 1L || is.na(k) ||
+          k < 1L || k > self$nchan)
+        stop("k must be a single integer between 1 and nchan", call. = FALSE)
+      Image$new(rt_extract_channel(private$.ptr, as.integer(k) - 1L))
+    },
+
+    #' @description Insert a single-channel \code{Image} into channel \code{k},
+    #'   returning a new \code{Image}.
+    #' @param ch A single-channel \code{Image} with the same depth, \code{nrow},
+    #'   and \code{ncol} as \code{self}.
+    #' @param k Single integer (1-based). Channel index between 1 and \code{nchan}.
+    #' @return A new \code{Image} with the same colorspace as \code{self}.
+    #' @examples
+    #' \donttest{
+    #' img <- Image$new(array(c(rep(10L, 100L), rep(20L, 100L), rep(30L, 100L)),
+    #'                        dim = c(10L, 10L, 3L)), "BGR")
+    #' new_ch <- Image$new(array(99L, dim = c(10L, 10L, 1L)), "GRAY")
+    #' img$insert_channel(new_ch, 2L)
+    #' }
+    insert_channel = function(ch, k) {
+      if (!inherits(ch, "Image"))
+        stop("ch must be an Image", call. = FALSE)
+      if (ch$nchan != 1L)
+        stop("ch must be a single-channel image", call. = FALSE)
+      if (ch$depth_name != self$depth_name)
+        stop("ch must have the same depth as self", call. = FALSE)
+      if (ch$nrow != self$nrow || ch$ncol != self$ncol)
+        stop("ch must have the same dimensions as self", call. = FALSE)
+      if (!is.numeric(k) || length(k) != 1L || is.na(k) ||
+          k < 1L || k > self$nchan)
+        stop("k must be a single integer between 1 and nchan", call. = FALSE)
+      Image$new(rt_insert_channel(.rt_ptr(ch), private$.ptr, as.integer(k) - 1L))
+    },
+
+    #' @description Insert a single-channel \code{Image} into channel \code{k},
+    #'   in place.
+    #' @param ch A single-channel \code{Image} with the same depth, \code{nrow},
+    #'   and \code{ncol} as \code{self}.
+    #' @param k Single integer (1-based). Channel index between 1 and \code{nchan}.
+    #' @return \code{self} invisibly.
+    #' @examples
+    #' \donttest{
+    #' img <- Image$new(array(c(rep(10L, 100L), rep(20L, 100L), rep(30L, 100L)),
+    #'                        dim = c(10L, 10L, 3L)), "BGR")
+    #' new_ch <- Image$new(array(99L, dim = c(10L, 10L, 1L)), "GRAY")
+    #' img$insert_channel_(new_ch, 2L)
+    #' }
+    insert_channel_ = function(ch, k) {
+      if (!inherits(ch, "Image"))
+        stop("ch must be an Image", call. = FALSE)
+      if (ch$nchan != 1L)
+        stop("ch must be a single-channel image", call. = FALSE)
+      if (ch$depth_name != self$depth_name)
+        stop("ch must have the same depth as self", call. = FALSE)
+      if (ch$nrow != self$nrow || ch$ncol != self$ncol)
+        stop("ch must have the same dimensions as self", call. = FALSE)
+      if (!is.numeric(k) || length(k) != 1L || is.na(k) ||
+          k < 1L || k > self$nchan)
+        stop("k must be a single integer between 1 and nchan", call. = FALSE)
+      private$.ptr <- rt_insert_channel(.rt_ptr(ch), private$.ptr, as.integer(k) - 1L)
+      invisible(self)
+    },
+
+    #' @description Apply a lookup table (LUT) to remap pixel values.
+    #' @param lut A numeric vector of length 256 (\code{CV_8U}) or 65536
+    #'   (\code{CV_16U}/\code{CV_16S}), applied identically to all channels; or
+    #'   a numeric matrix with the same row count and \code{nchan} columns —
+    #'   one column per channel applied in channel order. Values must be
+    #'   non-\code{NA}, finite, and coercible to integer. Only integer-depth images
+    #'   are supported (\code{CV_8U}, \code{CV_16U}, \code{CV_16S}).
+    #'   For \code{CV_16S} sources the LUT index is \code{pixel + 32768}: pixel
+    #'   \code{-32768} maps to row 1 (index 0); pixel \code{0} maps to row 32769.
+    #' @return A new \code{Image}.
+    #' @examples
+    #' \donttest{
+    #' img <- Image$new(array(100L, dim = c(5L, 5L, 1L)), "GRAY")
+    #' img$LUT(as.integer(255:0))  # invert
+    #' }
+    LUT = function(lut) {
+      if (!self$depth_name %in% c("CV_8U", "CV_16U", "CV_16S"))
+        stop("$LUT() requires an integer-depth image (CV_8U, CV_16U, or CV_16S)",
+             call. = FALSE)
+      lut_size <- if (self$depth_name == "CV_8U") 256L else 65536L
+      if (is.matrix(lut)) {
+        if (nrow(lut) != lut_size)
+          stop(paste0("lut matrix must have ", lut_size, " rows for ",
+                      self$depth_name, " images"), call. = FALSE)
+        if (ncol(lut) != self$nchan)
+          stop(paste0("lut matrix must have ncol equal to the number of image ",
+                      "channels (nchan = ", self$nchan, ")"), call. = FALSE)
+        lut_vals  <- as.integer(lut)  # column-major
+        nchan_lut <- self$nchan
+      } else if (is.numeric(lut) || is.integer(lut)) {
+        if (length(lut) != lut_size)
+          stop(paste0("lut vector must have length ", lut_size, " for ",
+                      self$depth_name, " images"), call. = FALSE)
+        lut_vals  <- as.integer(lut)
+        nchan_lut <- 1L
+      } else {
+        stop("lut must be a numeric vector or matrix", call. = FALSE)
+      }
+      if (anyNA(lut_vals))
+        stop("lut values must be non-NA and finite", call. = FALSE)
+      Image$new(rt_lut(private$.ptr, lut_vals, lut_size, nchan_lut))
+    },
+
+    #' @description Apply a lookup table in place.
+    #' @param lut See \code{$LUT()}.
+    #' @return \code{self} invisibly.
+    #' @examples
+    #' \donttest{
+    #' img <- Image$new(array(100L, dim = c(5L, 5L, 1L)), "GRAY")
+    #' img$LUT_(as.integer(255:0))  # invert in place
+    #' }
+    LUT_ = function(lut) {
+      if (!self$depth_name %in% c("CV_8U", "CV_16U", "CV_16S"))
+        stop("$LUT_() requires an integer-depth image (CV_8U, CV_16U, or CV_16S)",
+             call. = FALSE)
+      lut_size <- if (self$depth_name == "CV_8U") 256L else 65536L
+      if (is.matrix(lut)) {
+        if (nrow(lut) != lut_size)
+          stop(paste0("lut matrix must have ", lut_size, " rows for ",
+                      self$depth_name, " images"), call. = FALSE)
+        if (ncol(lut) != self$nchan)
+          stop(paste0("lut matrix must have ncol equal to the number of image ",
+                      "channels (nchan = ", self$nchan, ")"), call. = FALSE)
+        lut_vals  <- as.integer(lut)
+        nchan_lut <- self$nchan
+      } else if (is.numeric(lut) || is.integer(lut)) {
+        if (length(lut) != lut_size)
+          stop(paste0("lut vector must have length ", lut_size, " for ",
+                      self$depth_name, " images"), call. = FALSE)
+        lut_vals  <- as.integer(lut)
+        nchan_lut <- 1L
+      } else {
+        stop("lut must be a numeric vector or matrix", call. = FALSE)
+      }
+      if (anyNA(lut_vals))
+        stop("lut values must be non-NA and finite", call. = FALSE)
+      private$.ptr <- rt_lut(private$.ptr, lut_vals, lut_size, nchan_lut)
+      invisible(self)
     },
 
     #' @description Print a summary of the image.

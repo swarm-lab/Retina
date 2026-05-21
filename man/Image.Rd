@@ -521,6 +521,92 @@ head(coords)
 color_img <- Image$new(img_path)
 all_coords <- lapply(split_channels(color_img), \(ch) ch$find_nonzero())
 }
+
+## ------------------------------------------------
+## Method `Image$pow`
+## ------------------------------------------------
+
+\donttest{
+img32 <- Image$new(array(4.0, dim = c(5L, 5L, 1L)), "GRAY", depth = "CV_32F")
+img32$pow(2.0)
+}
+
+## ------------------------------------------------
+## Method `Image$exp`
+## ------------------------------------------------
+
+\donttest{
+img32 <- Image$new(array(1.0, dim = c(5L, 5L, 1L)), "GRAY", depth = "CV_32F")
+img32$exp()
+}
+
+## ------------------------------------------------
+## Method `Image$log`
+## ------------------------------------------------
+
+\donttest{
+img32 <- Image$new(array(exp(1), dim = c(5L, 5L, 1L)), "GRAY", depth = "CV_32F")
+img32$log()
+}
+
+## ------------------------------------------------
+## Method `Image$sqrt`
+## ------------------------------------------------
+
+\donttest{
+img32 <- Image$new(array(9.0, dim = c(5L, 5L, 1L)), "GRAY", depth = "CV_32F")
+img32$sqrt()
+}
+
+## ------------------------------------------------
+## Method `Image$extract_channel`
+## ------------------------------------------------
+
+\donttest{
+img <- Image$new(array(c(rep(10L, 100L), rep(20L, 100L), rep(30L, 100L)),
+                       dim = c(10L, 10L, 3L)), "BGR")
+img$extract_channel(2L)  # green channel
+}
+
+## ------------------------------------------------
+## Method `Image$insert_channel`
+## ------------------------------------------------
+
+\donttest{
+img <- Image$new(array(c(rep(10L, 100L), rep(20L, 100L), rep(30L, 100L)),
+                       dim = c(10L, 10L, 3L)), "BGR")
+new_ch <- Image$new(array(99L, dim = c(10L, 10L, 1L)), "GRAY")
+img$insert_channel(new_ch, 2L)
+}
+
+## ------------------------------------------------
+## Method `Image$insert_channel_`
+## ------------------------------------------------
+
+\donttest{
+img <- Image$new(array(c(rep(10L, 100L), rep(20L, 100L), rep(30L, 100L)),
+                       dim = c(10L, 10L, 3L)), "BGR")
+new_ch <- Image$new(array(99L, dim = c(10L, 10L, 1L)), "GRAY")
+img$insert_channel_(new_ch, 2L)
+}
+
+## ------------------------------------------------
+## Method `Image$LUT`
+## ------------------------------------------------
+
+\donttest{
+img <- Image$new(array(100L, dim = c(5L, 5L, 1L)), "GRAY")
+img$LUT(as.integer(255:0))  # invert
+}
+
+## ------------------------------------------------
+## Method `Image$LUT_`
+## ------------------------------------------------
+
+\donttest{
+img <- Image$new(array(100L, dim = c(5L, 5L, 1L)), "GRAY")
+img$LUT_(as.integer(255:0))  # invert in place
+}
 }
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
@@ -666,6 +752,19 @@ all_coords <- lapply(split_channels(color_img), \(ch) ch$find_nonzero())
 \item \href{#method-Image-minmax_loc}{\code{Image$minmax_loc()}}
 \item \href{#method-Image-count_nonzero}{\code{Image$count_nonzero()}}
 \item \href{#method-Image-find_nonzero}{\code{Image$find_nonzero()}}
+\item \href{#method-Image-pow}{\code{Image$pow()}}
+\item \href{#method-Image-pow_}{\code{Image$pow_()}}
+\item \href{#method-Image-exp}{\code{Image$exp()}}
+\item \href{#method-Image-exp_}{\code{Image$exp_()}}
+\item \href{#method-Image-log}{\code{Image$log()}}
+\item \href{#method-Image-log_}{\code{Image$log_()}}
+\item \href{#method-Image-sqrt}{\code{Image$sqrt()}}
+\item \href{#method-Image-sqrt_}{\code{Image$sqrt_()}}
+\item \href{#method-Image-extract_channel}{\code{Image$extract_channel()}}
+\item \href{#method-Image-insert_channel}{\code{Image$insert_channel()}}
+\item \href{#method-Image-insert_channel_}{\code{Image$insert_channel_()}}
+\item \href{#method-Image-LUT}{\code{Image$LUT()}}
+\item \href{#method-Image-LUT_}{\code{Image$LUT_()}}
 \item \href{#method-Image-print}{\code{Image$print()}}
 }
 }
@@ -1120,13 +1219,16 @@ A matrix with \code{length(probs)} rows and \code{nchan} columns.
 \subsection{Method \code{add()}}{
 Add another image or a scalar to this image.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Image$add(other)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Image$add(other, mask = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{other}}{An \code{Image} or a numeric vector (length 1 or \code{nchan}).}
+
+\item{\code{mask}}{Optional single-channel CV_8U \code{Image} mask. Only pixels
+where mask is non-zero are updated; others retain \code{self}'s values.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1140,13 +1242,15 @@ A new \code{Image}.
 \subsection{Method \code{add_()}}{
 Add in place.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Image$add_(other)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Image$add_(other, mask = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{other}}{An \code{Image} or a numeric vector (length 1 or \code{nchan}).}
+
+\item{\code{mask}}{Optional single-channel CV_8U \code{Image} mask.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1160,13 +1264,15 @@ Add in place.
 \subsection{Method \code{subtract()}}{
 Subtract another image or a scalar from this image.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Image$subtract(other)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Image$subtract(other, mask = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{other}}{An \code{Image} or a numeric vector (length 1 or \code{nchan}).}
+
+\item{\code{mask}}{Optional single-channel CV_8U \code{Image} mask.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1180,13 +1286,15 @@ A new \code{Image}.
 \subsection{Method \code{subtract_()}}{
 Subtract in place.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Image$subtract_(other)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Image$subtract_(other, mask = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{other}}{An \code{Image} or a numeric vector (length 1 or \code{nchan}).}
+
+\item{\code{mask}}{Optional single-channel CV_8U \code{Image} mask.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1200,13 +1308,15 @@ Subtract in place.
 \subsection{Method \code{multiply()}}{
 Multiply this image element-wise by another image or a scalar.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Image$multiply(other)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Image$multiply(other, mask = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{other}}{An \code{Image} or a numeric vector (length 1 or \code{nchan}).}
+
+\item{\code{mask}}{Optional single-channel CV_8U \code{Image} mask.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1220,13 +1330,15 @@ A new \code{Image}.
 \subsection{Method \code{multiply_()}}{
 Multiply in place.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Image$multiply_(other)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Image$multiply_(other, mask = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{other}}{An \code{Image} or a numeric vector (length 1 or \code{nchan}).}
+
+\item{\code{mask}}{Optional single-channel CV_8U \code{Image} mask.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1240,13 +1352,15 @@ Multiply in place.
 \subsection{Method \code{divide()}}{
 Divide this image element-wise by another image or a scalar.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Image$divide(other)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Image$divide(other, mask = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{other}}{An \code{Image} or a numeric vector (length 1 or \code{nchan}).}
+
+\item{\code{mask}}{Optional single-channel CV_8U \code{Image} mask.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1260,13 +1374,15 @@ A new \code{Image}.
 \subsection{Method \code{divide_()}}{
 Divide in place.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Image$divide_(other)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Image$divide_(other, mask = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{other}}{An \code{Image} or a numeric vector (length 1 or \code{nchan}).}
+
+\item{\code{mask}}{Optional single-channel CV_8U \code{Image} mask.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1280,13 +1396,15 @@ Divide in place.
 \subsection{Method \code{absdiff()}}{
 Compute the absolute difference with another image or a scalar.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Image$absdiff(other)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Image$absdiff(other, mask = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{other}}{An \code{Image} or a numeric vector (length 1 or \code{nchan}).}
+
+\item{\code{mask}}{Optional single-channel CV_8U \code{Image} mask.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1300,13 +1418,15 @@ A new \code{Image}.
 \subsection{Method \code{absdiff_()}}{
 Absolute difference in place.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Image$absdiff_(other)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Image$absdiff_(other, mask = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{other}}{An \code{Image} or a numeric vector (length 1 or \code{nchan}).}
+
+\item{\code{mask}}{Optional single-channel CV_8U \code{Image} mask.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1320,7 +1440,7 @@ Absolute difference in place.
 \subsection{Method \code{add_weighted()}}{
 Weighted addition of two images: \code{w1*self + w2*other + gamma}.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Image$add_weighted(other, w1, w2, gamma = 0)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Image$add_weighted(other, w1, w2, gamma = 0, mask = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -1333,6 +1453,8 @@ Weighted addition of two images: \code{w1*self + w2*other + gamma}.
 \item{\code{w2}}{Numeric scalar. Weight for \code{other}.}
 
 \item{\code{gamma}}{Numeric scalar. Brightness offset added after blending. Default 0.}
+
+\item{\code{mask}}{Optional single-channel CV_8U \code{Image} mask.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1346,7 +1468,7 @@ A new \code{Image}.
 \subsection{Method \code{add_weighted_()}}{
 Weighted addition in place.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Image$add_weighted_(other, w1, w2, gamma = 0)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Image$add_weighted_(other, w1, w2, gamma = 0, mask = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -1359,6 +1481,8 @@ Weighted addition in place.
 \item{\code{w2}}{Numeric scalar. Weight for \code{other}.}
 
 \item{\code{gamma}}{Numeric scalar. Brightness offset. Default 0.}
+
+\item{\code{mask}}{Optional single-channel CV_8U \code{Image} mask.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1372,13 +1496,15 @@ Weighted addition in place.
 \subsection{Method \code{bitwise_and()}}{
 Bitwise AND with another image or a scalar.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Image$bitwise_and(other)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Image$bitwise_and(other, mask = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{other}}{An \code{Image} or a numeric vector (length 1 or \code{nchan}).}
+
+\item{\code{mask}}{Optional single-channel CV_8U \code{Image} mask.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1392,13 +1518,15 @@ A new \code{Image}.
 \subsection{Method \code{bitwise_and_()}}{
 Bitwise AND in place.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Image$bitwise_and_(other)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Image$bitwise_and_(other, mask = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{other}}{An \code{Image} or a numeric vector (length 1 or \code{nchan}).}
+
+\item{\code{mask}}{Optional single-channel CV_8U \code{Image} mask.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1412,13 +1540,15 @@ Bitwise AND in place.
 \subsection{Method \code{bitwise_or()}}{
 Bitwise OR with another image or a scalar.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Image$bitwise_or(other)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Image$bitwise_or(other, mask = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{other}}{An \code{Image} or a numeric vector (length 1 or \code{nchan}).}
+
+\item{\code{mask}}{Optional single-channel CV_8U \code{Image} mask.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1432,13 +1562,15 @@ A new \code{Image}.
 \subsection{Method \code{bitwise_or_()}}{
 Bitwise OR in place.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Image$bitwise_or_(other)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Image$bitwise_or_(other, mask = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{other}}{An \code{Image} or a numeric vector (length 1 or \code{nchan}).}
+
+\item{\code{mask}}{Optional single-channel CV_8U \code{Image} mask.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1452,13 +1584,15 @@ Bitwise OR in place.
 \subsection{Method \code{bitwise_xor()}}{
 Bitwise XOR with another image or a scalar.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Image$bitwise_xor(other)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Image$bitwise_xor(other, mask = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{other}}{An \code{Image} or a numeric vector (length 1 or \code{nchan}).}
+
+\item{\code{mask}}{Optional single-channel CV_8U \code{Image} mask.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1472,13 +1606,15 @@ A new \code{Image}.
 \subsection{Method \code{bitwise_xor_()}}{
 Bitwise XOR in place.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Image$bitwise_xor_(other)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Image$bitwise_xor_(other, mask = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{other}}{An \code{Image} or a numeric vector (length 1 or \code{nchan}).}
+
+\item{\code{mask}}{Optional single-channel CV_8U \code{Image} mask.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1492,9 +1628,16 @@ Bitwise XOR in place.
 \subsection{Method \code{bitwise_not()}}{
 Bitwise NOT (invert all bits).
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Image$bitwise_not()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Image$bitwise_not(mask = NULL)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{mask}}{Optional single-channel CV_8U \code{Image} mask.}
+}
+\if{html}{\out{</div>}}
+}
 \subsection{Returns}{
 A new \code{Image}.
 }
@@ -1505,9 +1648,16 @@ A new \code{Image}.
 \subsection{Method \code{bitwise_not_()}}{
 Bitwise NOT in place.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Image$bitwise_not_()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Image$bitwise_not_(mask = NULL)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{mask}}{Optional single-channel CV_8U \code{Image} mask.}
+}
+\if{html}{\out{</div>}}
+}
 \subsection{Returns}{
 \code{self} invisibly.
 }
@@ -3288,17 +3438,17 @@ Set all pixels — or only masked pixels — to a constant value.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{value}}{Numeric scalar or vector of length `nchan`. Recycled to
-`nchan` channels. No NAs.}
+\item{\code{value}}{Numeric scalar or vector of length \code{nchan}. Recycled to
+\code{nchan} channels. No \code{NA}s.}
 
-\item{\code{mask}}{`NULL` (apply to all pixels) or a single-channel `CV_8U`
-`Image` with the same `nrow` and `ncol`. Non-zero pixels mark where
-`value` is written.}
+\item{\code{mask}}{\code{NULL} (apply to all pixels) or a single-channel \code{CV_8U}
+\code{Image} with the same \code{nrow} and \code{ncol}. Non-zero pixels
+mark where \code{value} is written.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A new `Image`.
+A new \code{Image}.
 }
 }
 \if{html}{\out{<hr>}}
@@ -3314,15 +3464,16 @@ Set all pixels — or only masked pixels — to a constant
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{value}}{Numeric scalar or vector of length `nchan`. Recycled to
-`nchan` channels. No NAs.}
+\item{\code{value}}{Numeric scalar or vector of length \code{nchan}. Recycled to
+\code{nchan} channels. No \code{NA}s.}
 
-\item{\code{mask}}{`NULL` or a single-channel `CV_8U` `Image` same size as self.}
+\item{\code{mask}}{\code{NULL} or a single-channel \code{CV_8U} \code{Image} same
+size as \code{self}.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-`self` invisibly.
+\code{self} invisibly.
 }
 }
 \if{html}{\out{<hr>}}
@@ -4733,6 +4884,352 @@ head(coords)
 # Multi-channel: split then apply
 color_img <- Image$new(img_path)
 all_coords <- lapply(split_channels(color_img), \(ch) ch$find_nonzero())
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-pow"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-pow}{}}}
+\subsection{Method \code{pow()}}{
+Raise every pixel to a power element-wise.
+  The image must be \code{CV_32F} or \code{CV_64F} — use
+  \code{$convert_depth("CV_32F")} first for integer images.
+  A negative pixel raised to a fractional exponent produces \code{NaN}.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$pow(power)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{power}}{Single finite numeric. The exponent. Negative, zero, and
+fractional values are accepted.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A new \code{Image} with the same depth and colorspace.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img32 <- Image$new(array(4.0, dim = c(5L, 5L, 1L)), "GRAY", depth = "CV_32F")
+img32$pow(2.0)
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-pow_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-pow_}{}}}
+\subsection{Method \code{pow_()}}{
+Raise every pixel to a power, in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$pow_(power)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{power}}{Single finite numeric. The exponent.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{self} invisibly.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-exp"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-exp}{}}}
+\subsection{Method \code{exp()}}{
+Apply element-wise natural exponential (\eqn{e^x}) to every pixel.
+  The image must be \code{CV_32F} or \code{CV_64F}.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$exp()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+A new \code{Image} with the same depth and colorspace.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img32 <- Image$new(array(1.0, dim = c(5L, 5L, 1L)), "GRAY", depth = "CV_32F")
+img32$exp()
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-exp_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-exp_}{}}}
+\subsection{Method \code{exp_()}}{
+Apply element-wise natural exponential in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$exp_()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+\code{self} invisibly.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-log"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-log}{}}}
+\subsection{Method \code{log()}}{
+Apply element-wise natural logarithm (\eqn{\ln(x)}) to every pixel.
+  The image must be \code{CV_32F} or \code{CV_64F}. Pixels \eqn{\le 0} produce
+  \code{-Inf} or \code{NaN} — sanitise the image first if this may occur.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$log()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+A new \code{Image} with the same depth and colorspace.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img32 <- Image$new(array(exp(1), dim = c(5L, 5L, 1L)), "GRAY", depth = "CV_32F")
+img32$log()
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-log_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-log_}{}}}
+\subsection{Method \code{log_()}}{
+Apply element-wise natural logarithm in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$log_()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+\code{self} invisibly.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-sqrt"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-sqrt}{}}}
+\subsection{Method \code{sqrt()}}{
+Apply element-wise square root to every pixel.
+  The image must be \code{CV_32F} or \code{CV_64F}. Pixels \code{< 0} produce
+  \code{NaN} — sanitise the image first if this may occur.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$sqrt()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+A new \code{Image} with the same depth and colorspace.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img32 <- Image$new(array(9.0, dim = c(5L, 5L, 1L)), "GRAY", depth = "CV_32F")
+img32$sqrt()
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-sqrt_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-sqrt_}{}}}
+\subsection{Method \code{sqrt_()}}{
+Apply element-wise square root in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$sqrt_()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+\code{self} invisibly.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-extract_channel"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-extract_channel}{}}}
+\subsection{Method \code{extract_channel()}}{
+Extract a single channel as a new single-channel \code{Image}.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$extract_channel(k)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{k}}{Single integer (1-based). Channel index between 1 and \code{nchan}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A new single-channel \code{Image} with colorspace \code{"GRAY"}.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img <- Image$new(array(c(rep(10L, 100L), rep(20L, 100L), rep(30L, 100L)),
+                       dim = c(10L, 10L, 3L)), "BGR")
+img$extract_channel(2L)  # green channel
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-insert_channel"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-insert_channel}{}}}
+\subsection{Method \code{insert_channel()}}{
+Insert a single-channel \code{Image} into channel \code{k},
+  returning a new \code{Image}.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$insert_channel(ch, k)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{ch}}{A single-channel \code{Image} with the same depth, \code{nrow},
+and \code{ncol} as \code{self}.}
+
+\item{\code{k}}{Single integer (1-based). Channel index between 1 and \code{nchan}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A new \code{Image} with the same colorspace as \code{self}.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img <- Image$new(array(c(rep(10L, 100L), rep(20L, 100L), rep(30L, 100L)),
+                       dim = c(10L, 10L, 3L)), "BGR")
+new_ch <- Image$new(array(99L, dim = c(10L, 10L, 1L)), "GRAY")
+img$insert_channel(new_ch, 2L)
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-insert_channel_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-insert_channel_}{}}}
+\subsection{Method \code{insert_channel_()}}{
+Insert a single-channel \code{Image} into channel \code{k},
+  in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$insert_channel_(ch, k)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{ch}}{A single-channel \code{Image} with the same depth, \code{nrow},
+and \code{ncol} as \code{self}.}
+
+\item{\code{k}}{Single integer (1-based). Channel index between 1 and \code{nchan}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{self} invisibly.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img <- Image$new(array(c(rep(10L, 100L), rep(20L, 100L), rep(30L, 100L)),
+                       dim = c(10L, 10L, 3L)), "BGR")
+new_ch <- Image$new(array(99L, dim = c(10L, 10L, 1L)), "GRAY")
+img$insert_channel_(new_ch, 2L)
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-LUT"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-LUT}{}}}
+\subsection{Method \code{LUT()}}{
+Apply a lookup table (LUT) to remap pixel values.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$LUT(lut)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{lut}}{A numeric vector of length 256 (\code{CV_8U}) or 65536
+(\code{CV_16U}/\code{CV_16S}), applied identically to all channels; or
+a numeric matrix with the same row count and \code{nchan} columns —
+one column per channel applied in channel order. Values must be
+non-\code{NA}, finite, and coercible to integer. Only integer-depth images
+are supported (\code{CV_8U}, \code{CV_16U}, \code{CV_16S}).
+For \code{CV_16S} sources the LUT index is \code{pixel + 32768}: pixel
+\code{-32768} maps to row 1 (index 0); pixel \code{0} maps to row 32769.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A new \code{Image}.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img <- Image$new(array(100L, dim = c(5L, 5L, 1L)), "GRAY")
+img$LUT(as.integer(255:0))  # invert
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Image-LUT_"></a>}}
+\if{latex}{\out{\hypertarget{method-Image-LUT_}{}}}
+\subsection{Method \code{LUT_()}}{
+Apply a lookup table in place.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Image$LUT_(lut)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{lut}}{See \code{$LUT()}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{self} invisibly.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\donttest{
+img <- Image$new(array(100L, dim = c(5L, 5L, 1L)), "GRAY")
+img$LUT_(as.integer(255:0))  # invert in place
 }
 }
 \if{html}{\out{</div>}}

@@ -42,3 +42,25 @@ external_pointer<RtImage> rt_image_merge_channels(
   cv::merge(mats, merged);
   return {new RtImage(std::move(merged), colorspace)};
 }
+
+// ── extract_channel ───────────────────────────────────────────────────────────
+
+[[cpp11::register]]
+external_pointer<RtImage> rt_extract_channel(
+    external_pointer<RtImage> img, int k) {  // k is 0-based
+  cv::Mat dst;
+  cv::extractChannel(get_cpu_mat(img), dst, k);
+  return {new RtImage(std::move(dst), std::string("GRAY"))};
+}
+
+// ── insert_channel ────────────────────────────────────────────────────────────
+
+[[cpp11::register]]
+external_pointer<RtImage> rt_insert_channel(
+    external_pointer<RtImage> ch,
+    external_pointer<RtImage> dst_img,
+    int k) {  // k is 0-based
+  cv::Mat dst = get_cpu_mat(dst_img).clone();
+  cv::insertChannel(get_cpu_mat(ch), dst, k);
+  return {new RtImage(std::move(dst), dst_img->colorspace)};
+}

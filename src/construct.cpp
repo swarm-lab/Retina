@@ -100,20 +100,27 @@ external_pointer<RtImage> rt_image_tile(external_pointer<RtImage> img,
 [[cpp11::register]]
 external_pointer<RtImage> rt_image_set_to(
     external_pointer<RtImage> img,
-    doubles value,
-    SEXP mask_ptr) {
+    doubles value) {
   cv::Scalar scalar(value.size() > 0 ? value[0] : 0.0,
                     value.size() > 1 ? value[1] : 0.0,
                     value.size() > 2 ? value[2] : 0.0,
                     value.size() > 3 ? value[3] : 0.0);
   cv::Mat dst = get_cpu_mat(img).clone();
-  if (mask_ptr == R_NilValue) {
-    dst.setTo(scalar);
-  } else {
-    external_pointer<RtImage> mask_img(mask_ptr);
-    cv::Mat mask_mat = get_cpu_mat(mask_img);
-    dst.setTo(scalar, mask_mat);
-  }
+  dst.setTo(scalar);
+  return {new RtImage(std::move(dst), img->colorspace)};
+}
+
+[[cpp11::register]]
+external_pointer<RtImage> rt_image_set_to_masked(
+    external_pointer<RtImage> img,
+    doubles value,
+    external_pointer<RtImage> mask) {
+  cv::Scalar scalar(value.size() > 0 ? value[0] : 0.0,
+                    value.size() > 1 ? value[1] : 0.0,
+                    value.size() > 2 ? value[2] : 0.0,
+                    value.size() > 3 ? value[3] : 0.0);
+  cv::Mat dst = get_cpu_mat(img).clone();
+  dst.setTo(scalar, get_cpu_mat(mask));
   return {new RtImage(std::move(dst), img->colorspace)};
 }
 

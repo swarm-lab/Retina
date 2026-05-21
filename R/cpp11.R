@@ -72,6 +72,78 @@ rt_image_bitwise_not <- function(img) {
   .Call(`_Retina_rt_image_bitwise_not`, img)
 }
 
+rt_image_add_image_masked <- function(img1, img2, mask) {
+  .Call(`_Retina_rt_image_add_image_masked`, img1, img2, mask)
+}
+
+rt_image_add_scalar_masked <- function(img, values, mask) {
+  .Call(`_Retina_rt_image_add_scalar_masked`, img, values, mask)
+}
+
+rt_image_subtract_image_masked <- function(img1, img2, mask) {
+  .Call(`_Retina_rt_image_subtract_image_masked`, img1, img2, mask)
+}
+
+rt_image_subtract_scalar_masked <- function(img, values, mask) {
+  .Call(`_Retina_rt_image_subtract_scalar_masked`, img, values, mask)
+}
+
+rt_image_multiply_image_masked <- function(img1, img2, mask) {
+  .Call(`_Retina_rt_image_multiply_image_masked`, img1, img2, mask)
+}
+
+rt_image_multiply_scalar_masked <- function(img, values, mask) {
+  .Call(`_Retina_rt_image_multiply_scalar_masked`, img, values, mask)
+}
+
+rt_image_divide_image_masked <- function(img1, img2, mask) {
+  .Call(`_Retina_rt_image_divide_image_masked`, img1, img2, mask)
+}
+
+rt_image_divide_scalar_masked <- function(img, values, mask) {
+  .Call(`_Retina_rt_image_divide_scalar_masked`, img, values, mask)
+}
+
+rt_image_absdiff_image_masked <- function(img1, img2, mask) {
+  .Call(`_Retina_rt_image_absdiff_image_masked`, img1, img2, mask)
+}
+
+rt_image_absdiff_scalar_masked <- function(img, values, mask) {
+  .Call(`_Retina_rt_image_absdiff_scalar_masked`, img, values, mask)
+}
+
+rt_image_add_weighted_masked <- function(img1, alpha, img2, beta, gamma_val, mask) {
+  .Call(`_Retina_rt_image_add_weighted_masked`, img1, alpha, img2, beta, gamma_val, mask)
+}
+
+rt_image_bitwise_and_image_masked <- function(img1, img2, mask) {
+  .Call(`_Retina_rt_image_bitwise_and_image_masked`, img1, img2, mask)
+}
+
+rt_image_bitwise_and_scalar_masked <- function(img, values, mask) {
+  .Call(`_Retina_rt_image_bitwise_and_scalar_masked`, img, values, mask)
+}
+
+rt_image_bitwise_or_image_masked <- function(img1, img2, mask) {
+  .Call(`_Retina_rt_image_bitwise_or_image_masked`, img1, img2, mask)
+}
+
+rt_image_bitwise_or_scalar_masked <- function(img, values, mask) {
+  .Call(`_Retina_rt_image_bitwise_or_scalar_masked`, img, values, mask)
+}
+
+rt_image_bitwise_xor_image_masked <- function(img1, img2, mask) {
+  .Call(`_Retina_rt_image_bitwise_xor_image_masked`, img1, img2, mask)
+}
+
+rt_image_bitwise_xor_scalar_masked <- function(img, values, mask) {
+  .Call(`_Retina_rt_image_bitwise_xor_scalar_masked`, img, values, mask)
+}
+
+rt_image_bitwise_not_masked <- function(img, mask) {
+  .Call(`_Retina_rt_image_bitwise_not_masked`, img, mask)
+}
+
 rt_has_module <- function(module_name) {
   .Call(`_Retina_rt_has_module`, module_name)
 }
@@ -86,6 +158,14 @@ rt_image_split_channels <- function(img) {
 
 rt_image_merge_channels <- function(channel_ptrs, colorspace) {
   .Call(`_Retina_rt_image_merge_channels`, channel_ptrs, colorspace)
+}
+
+rt_extract_channel <- function(img, k) {
+  .Call(`_Retina_rt_extract_channel`, img, k)
+}
+
+rt_insert_channel <- function(ch, dst_img, k) {
+  .Call(`_Retina_rt_insert_channel`, ch, dst_img, k)
 }
 
 rt_image_convert_color <- function(img, from_cs, to_cs) {
@@ -112,8 +192,12 @@ rt_image_tile <- function(img, nrow_rep, ncol_rep) {
   .Call(`_Retina_rt_image_tile`, img, nrow_rep, ncol_rep)
 }
 
-rt_image_set_to <- function(img, value, mask_ptr) {
-  .Call(`_Retina_rt_image_set_to`, img, value, mask_ptr)
+rt_image_set_to <- function(img, value) {
+  .Call(`_Retina_rt_image_set_to`, img, value)
+}
+
+rt_image_set_to_masked <- function(img, value, mask) {
+  .Call(`_Retina_rt_image_set_to_masked`, img, value, mask)
 }
 
 rt_concatenate <- function(img_ptrs, axis) {
@@ -236,8 +320,8 @@ rt_hist_eq <- function(img) {
   .Call(`_Retina_rt_hist_eq`, img)
 }
 
-rt_lut <- function(img, lut_vals) {
-  .Call(`_Retina_rt_lut`, img, lut_vals)
+rt_lut <- function(img, lut_vals, lut_size, nchan_lut) {
+  .Call(`_Retina_rt_lut`, img, lut_vals, lut_size, nchan_lut)
 }
 
 rt_clahe <- function(img, clip_limit, tile_w, tile_h) {
@@ -326,6 +410,22 @@ rt_image_set_colorspace <- function(img, cs) {
 
 rt_image_convert_depth <- function(img, depth) {
   .Call(`_Retina_rt_image_convert_depth`, img, depth)
+}
+
+rt_pow <- function(img, power) {
+  .Call(`_Retina_rt_pow`, img, power)
+}
+
+rt_exp <- function(img) {
+  .Call(`_Retina_rt_exp`, img)
+}
+
+rt_log <- function(img) {
+  .Call(`_Retina_rt_log`, img)
+}
+
+rt_sqrt <- function(img) {
+  .Call(`_Retina_rt_sqrt`, img)
 }
 
 rt_image_morph <- function(img, op, shape, size, iterations, border_type) {

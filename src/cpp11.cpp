@@ -131,6 +131,132 @@ extern "C" SEXP _Retina_rt_image_bitwise_not(SEXP img) {
     return cpp11::as_sexp(rt_image_bitwise_not(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img)));
   END_CPP11
 }
+// arithmetic.cpp
+external_pointer<RtImage> rt_image_add_image_masked(external_pointer<RtImage> img1, external_pointer<RtImage> img2, external_pointer<RtImage> mask);
+extern "C" SEXP _Retina_rt_image_add_image_masked(SEXP img1, SEXP img2, SEXP mask) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_image_add_image_masked(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img1), cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img2), cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(mask)));
+  END_CPP11
+}
+// arithmetic.cpp
+external_pointer<RtImage> rt_image_add_scalar_masked(external_pointer<RtImage> img, doubles values, external_pointer<RtImage> mask);
+extern "C" SEXP _Retina_rt_image_add_scalar_masked(SEXP img, SEXP values, SEXP mask) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_image_add_scalar_masked(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<doubles>>(values), cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(mask)));
+  END_CPP11
+}
+// arithmetic.cpp
+external_pointer<RtImage> rt_image_subtract_image_masked(external_pointer<RtImage> img1, external_pointer<RtImage> img2, external_pointer<RtImage> mask);
+extern "C" SEXP _Retina_rt_image_subtract_image_masked(SEXP img1, SEXP img2, SEXP mask) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_image_subtract_image_masked(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img1), cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img2), cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(mask)));
+  END_CPP11
+}
+// arithmetic.cpp
+external_pointer<RtImage> rt_image_subtract_scalar_masked(external_pointer<RtImage> img, doubles values, external_pointer<RtImage> mask);
+extern "C" SEXP _Retina_rt_image_subtract_scalar_masked(SEXP img, SEXP values, SEXP mask) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_image_subtract_scalar_masked(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<doubles>>(values), cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(mask)));
+  END_CPP11
+}
+// arithmetic.cpp
+external_pointer<RtImage> rt_image_multiply_image_masked(external_pointer<RtImage> img1, external_pointer<RtImage> img2, external_pointer<RtImage> mask);
+extern "C" SEXP _Retina_rt_image_multiply_image_masked(SEXP img1, SEXP img2, SEXP mask) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_image_multiply_image_masked(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img1), cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img2), cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(mask)));
+  END_CPP11
+}
+// arithmetic.cpp
+external_pointer<RtImage> rt_image_multiply_scalar_masked(external_pointer<RtImage> img, doubles values, external_pointer<RtImage> mask);
+extern "C" SEXP _Retina_rt_image_multiply_scalar_masked(SEXP img, SEXP values, SEXP mask) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_image_multiply_scalar_masked(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<doubles>>(values), cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(mask)));
+  END_CPP11
+}
+// arithmetic.cpp
+external_pointer<RtImage> rt_image_divide_image_masked(external_pointer<RtImage> img1, external_pointer<RtImage> img2, external_pointer<RtImage> mask);
+extern "C" SEXP _Retina_rt_image_divide_image_masked(SEXP img1, SEXP img2, SEXP mask) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_image_divide_image_masked(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img1), cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img2), cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(mask)));
+  END_CPP11
+}
+// arithmetic.cpp
+external_pointer<RtImage> rt_image_divide_scalar_masked(external_pointer<RtImage> img, doubles values, external_pointer<RtImage> mask);
+extern "C" SEXP _Retina_rt_image_divide_scalar_masked(SEXP img, SEXP values, SEXP mask) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_image_divide_scalar_masked(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<doubles>>(values), cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(mask)));
+  END_CPP11
+}
+// arithmetic.cpp
+external_pointer<RtImage> rt_image_absdiff_image_masked(external_pointer<RtImage> img1, external_pointer<RtImage> img2, external_pointer<RtImage> mask);
+extern "C" SEXP _Retina_rt_image_absdiff_image_masked(SEXP img1, SEXP img2, SEXP mask) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_image_absdiff_image_masked(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img1), cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img2), cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(mask)));
+  END_CPP11
+}
+// arithmetic.cpp
+external_pointer<RtImage> rt_image_absdiff_scalar_masked(external_pointer<RtImage> img, doubles values, external_pointer<RtImage> mask);
+extern "C" SEXP _Retina_rt_image_absdiff_scalar_masked(SEXP img, SEXP values, SEXP mask) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_image_absdiff_scalar_masked(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<doubles>>(values), cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(mask)));
+  END_CPP11
+}
+// arithmetic.cpp
+external_pointer<RtImage> rt_image_add_weighted_masked(external_pointer<RtImage> img1, double alpha, external_pointer<RtImage> img2, double beta, double gamma_val, external_pointer<RtImage> mask);
+extern "C" SEXP _Retina_rt_image_add_weighted_masked(SEXP img1, SEXP alpha, SEXP img2, SEXP beta, SEXP gamma_val, SEXP mask) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_image_add_weighted_masked(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img1), cpp11::as_cpp<cpp11::decay_t<double>>(alpha), cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img2), cpp11::as_cpp<cpp11::decay_t<double>>(beta), cpp11::as_cpp<cpp11::decay_t<double>>(gamma_val), cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(mask)));
+  END_CPP11
+}
+// arithmetic.cpp
+external_pointer<RtImage> rt_image_bitwise_and_image_masked(external_pointer<RtImage> img1, external_pointer<RtImage> img2, external_pointer<RtImage> mask);
+extern "C" SEXP _Retina_rt_image_bitwise_and_image_masked(SEXP img1, SEXP img2, SEXP mask) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_image_bitwise_and_image_masked(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img1), cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img2), cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(mask)));
+  END_CPP11
+}
+// arithmetic.cpp
+external_pointer<RtImage> rt_image_bitwise_and_scalar_masked(external_pointer<RtImage> img, doubles values, external_pointer<RtImage> mask);
+extern "C" SEXP _Retina_rt_image_bitwise_and_scalar_masked(SEXP img, SEXP values, SEXP mask) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_image_bitwise_and_scalar_masked(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<doubles>>(values), cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(mask)));
+  END_CPP11
+}
+// arithmetic.cpp
+external_pointer<RtImage> rt_image_bitwise_or_image_masked(external_pointer<RtImage> img1, external_pointer<RtImage> img2, external_pointer<RtImage> mask);
+extern "C" SEXP _Retina_rt_image_bitwise_or_image_masked(SEXP img1, SEXP img2, SEXP mask) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_image_bitwise_or_image_masked(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img1), cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img2), cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(mask)));
+  END_CPP11
+}
+// arithmetic.cpp
+external_pointer<RtImage> rt_image_bitwise_or_scalar_masked(external_pointer<RtImage> img, doubles values, external_pointer<RtImage> mask);
+extern "C" SEXP _Retina_rt_image_bitwise_or_scalar_masked(SEXP img, SEXP values, SEXP mask) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_image_bitwise_or_scalar_masked(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<doubles>>(values), cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(mask)));
+  END_CPP11
+}
+// arithmetic.cpp
+external_pointer<RtImage> rt_image_bitwise_xor_image_masked(external_pointer<RtImage> img1, external_pointer<RtImage> img2, external_pointer<RtImage> mask);
+extern "C" SEXP _Retina_rt_image_bitwise_xor_image_masked(SEXP img1, SEXP img2, SEXP mask) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_image_bitwise_xor_image_masked(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img1), cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img2), cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(mask)));
+  END_CPP11
+}
+// arithmetic.cpp
+external_pointer<RtImage> rt_image_bitwise_xor_scalar_masked(external_pointer<RtImage> img, doubles values, external_pointer<RtImage> mask);
+extern "C" SEXP _Retina_rt_image_bitwise_xor_scalar_masked(SEXP img, SEXP values, SEXP mask) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_image_bitwise_xor_scalar_masked(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<doubles>>(values), cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(mask)));
+  END_CPP11
+}
+// arithmetic.cpp
+external_pointer<RtImage> rt_image_bitwise_not_masked(external_pointer<RtImage> img, external_pointer<RtImage> mask);
+extern "C" SEXP _Retina_rt_image_bitwise_not_masked(SEXP img, SEXP mask) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_image_bitwise_not_masked(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(mask)));
+  END_CPP11
+}
 // capabilities.cpp
 bool rt_has_module(std::string module_name);
 extern "C" SEXP _Retina_rt_has_module(SEXP module_name) {
@@ -157,6 +283,20 @@ external_pointer<RtImage> rt_image_merge_channels(cpp11::list channel_ptrs, std:
 extern "C" SEXP _Retina_rt_image_merge_channels(SEXP channel_ptrs, SEXP colorspace) {
   BEGIN_CPP11
     return cpp11::as_sexp(rt_image_merge_channels(cpp11::as_cpp<cpp11::decay_t<cpp11::list>>(channel_ptrs), cpp11::as_cpp<cpp11::decay_t<std::string>>(colorspace)));
+  END_CPP11
+}
+// channels.cpp
+external_pointer<RtImage> rt_extract_channel(external_pointer<RtImage> img, int k);
+extern "C" SEXP _Retina_rt_extract_channel(SEXP img, SEXP k) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_extract_channel(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<int>>(k)));
+  END_CPP11
+}
+// channels.cpp
+external_pointer<RtImage> rt_insert_channel(external_pointer<RtImage> ch, external_pointer<RtImage> dst_img, int k);
+extern "C" SEXP _Retina_rt_insert_channel(SEXP ch, SEXP dst_img, SEXP k) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_insert_channel(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(ch), cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(dst_img), cpp11::as_cpp<cpp11::decay_t<int>>(k)));
   END_CPP11
 }
 // colorspace.cpp
@@ -202,10 +342,17 @@ extern "C" SEXP _Retina_rt_image_tile(SEXP img, SEXP nrow_rep, SEXP ncol_rep) {
   END_CPP11
 }
 // construct.cpp
-external_pointer<RtImage> rt_image_set_to(external_pointer<RtImage> img, doubles value, SEXP mask_ptr);
-extern "C" SEXP _Retina_rt_image_set_to(SEXP img, SEXP value, SEXP mask_ptr) {
+external_pointer<RtImage> rt_image_set_to(external_pointer<RtImage> img, doubles value);
+extern "C" SEXP _Retina_rt_image_set_to(SEXP img, SEXP value) {
   BEGIN_CPP11
-    return cpp11::as_sexp(rt_image_set_to(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<doubles>>(value), cpp11::as_cpp<cpp11::decay_t<SEXP>>(mask_ptr)));
+    return cpp11::as_sexp(rt_image_set_to(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<doubles>>(value)));
+  END_CPP11
+}
+// construct.cpp
+external_pointer<RtImage> rt_image_set_to_masked(external_pointer<RtImage> img, doubles value, external_pointer<RtImage> mask);
+extern "C" SEXP _Retina_rt_image_set_to_masked(SEXP img, SEXP value, SEXP mask) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_image_set_to_masked(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<doubles>>(value), cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(mask)));
   END_CPP11
 }
 // construct.cpp
@@ -419,10 +566,10 @@ extern "C" SEXP _Retina_rt_hist_eq(SEXP img) {
   END_CPP11
 }
 // histogram.cpp
-external_pointer<RtImage> rt_lut(external_pointer<RtImage> img, integers lut_vals);
-extern "C" SEXP _Retina_rt_lut(SEXP img, SEXP lut_vals) {
+external_pointer<RtImage> rt_lut(external_pointer<RtImage> img, integers lut_vals, int lut_size, int nchan_lut);
+extern "C" SEXP _Retina_rt_lut(SEXP img, SEXP lut_vals, SEXP lut_size, SEXP nchan_lut) {
   BEGIN_CPP11
-    return cpp11::as_sexp(rt_lut(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<integers>>(lut_vals)));
+    return cpp11::as_sexp(rt_lut(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<integers>>(lut_vals), cpp11::as_cpp<cpp11::decay_t<int>>(lut_size), cpp11::as_cpp<cpp11::decay_t<int>>(nchan_lut)));
   END_CPP11
 }
 // histogram.cpp
@@ -581,6 +728,34 @@ external_pointer<RtImage> rt_image_convert_depth(external_pointer<RtImage> img, 
 extern "C" SEXP _Retina_rt_image_convert_depth(SEXP img, SEXP depth) {
   BEGIN_CPP11
     return cpp11::as_sexp(rt_image_convert_depth(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<std::string>>(depth)));
+  END_CPP11
+}
+// math.cpp
+external_pointer<RtImage> rt_pow(external_pointer<RtImage> img, double power);
+extern "C" SEXP _Retina_rt_pow(SEXP img, SEXP power) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_pow(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img), cpp11::as_cpp<cpp11::decay_t<double>>(power)));
+  END_CPP11
+}
+// math.cpp
+external_pointer<RtImage> rt_exp(external_pointer<RtImage> img);
+extern "C" SEXP _Retina_rt_exp(SEXP img) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_exp(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img)));
+  END_CPP11
+}
+// math.cpp
+external_pointer<RtImage> rt_log(external_pointer<RtImage> img);
+extern "C" SEXP _Retina_rt_log(SEXP img) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_log(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img)));
+  END_CPP11
+}
+// math.cpp
+external_pointer<RtImage> rt_sqrt(external_pointer<RtImage> img);
+extern "C" SEXP _Retina_rt_sqrt(SEXP img) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(rt_sqrt(cpp11::as_cpp<cpp11::decay_t<external_pointer<RtImage>>>(img)));
   END_CPP11
 }
 // morphology.cpp
@@ -749,111 +924,136 @@ extern "C" SEXP _Retina_rt_perspective_from_points(SEXP src, SEXP dst) {
 
 extern "C" {
 static const R_CallMethodDef CallEntries[] = {
-    {"_Retina_rt_affine_from_points",       (DL_FUNC) &_Retina_rt_affine_from_points,        2},
-    {"_Retina_rt_affine_rotate",            (DL_FUNC) &_Retina_rt_affine_rotate,             4},
-    {"_Retina_rt_autothreshold_value",      (DL_FUNC) &_Retina_rt_autothreshold_value,       3},
-    {"_Retina_rt_build_ok",                 (DL_FUNC) &_Retina_rt_build_ok,                  0},
-    {"_Retina_rt_clahe",                    (DL_FUNC) &_Retina_rt_clahe,                     4},
-    {"_Retina_rt_concatenate",              (DL_FUNC) &_Retina_rt_concatenate,               2},
-    {"_Retina_rt_count_nonzero",            (DL_FUNC) &_Retina_rt_count_nonzero,             1},
-    {"_Retina_rt_draw_arc",                 (DL_FUNC) &_Retina_rt_draw_arc,                 11},
-    {"_Retina_rt_draw_arrow",               (DL_FUNC) &_Retina_rt_draw_arrow,                9},
-    {"_Retina_rt_draw_circle",              (DL_FUNC) &_Retina_rt_draw_circle,               7},
-    {"_Retina_rt_draw_ellipse",             (DL_FUNC) &_Retina_rt_draw_ellipse,              9},
-    {"_Retina_rt_draw_line",                (DL_FUNC) &_Retina_rt_draw_line,                 8},
-    {"_Retina_rt_draw_polyline",            (DL_FUNC) &_Retina_rt_draw_polyline,             7},
-    {"_Retina_rt_draw_rectangle",           (DL_FUNC) &_Retina_rt_draw_rectangle,            8},
-    {"_Retina_rt_draw_text",                (DL_FUNC) &_Retina_rt_draw_text,                10},
-    {"_Retina_rt_fill",                     (DL_FUNC) &_Retina_rt_fill,                      6},
-    {"_Retina_rt_fill_poly",                (DL_FUNC) &_Retina_rt_fill_poly,                 5},
-    {"_Retina_rt_find_nonzero",             (DL_FUNC) &_Retina_rt_find_nonzero,              1},
-    {"_Retina_rt_get_gabor_kernel",         (DL_FUNC) &_Retina_rt_get_gabor_kernel,          8},
-    {"_Retina_rt_get_structuring_element",  (DL_FUNC) &_Retina_rt_get_structuring_element,   3},
-    {"_Retina_rt_get_text_size",            (DL_FUNC) &_Retina_rt_get_text_size,             5},
-    {"_Retina_rt_has_cuda",                 (DL_FUNC) &_Retina_rt_has_cuda,                  0},
-    {"_Retina_rt_has_module",               (DL_FUNC) &_Retina_rt_has_module,                1},
-    {"_Retina_rt_hist",                     (DL_FUNC) &_Retina_rt_hist,                      4},
-    {"_Retina_rt_hist_eq",                  (DL_FUNC) &_Retina_rt_hist_eq,                   1},
-    {"_Retina_rt_image_absdiff_image",      (DL_FUNC) &_Retina_rt_image_absdiff_image,       2},
-    {"_Retina_rt_image_absdiff_scalar",     (DL_FUNC) &_Retina_rt_image_absdiff_scalar,      2},
-    {"_Retina_rt_image_adaptive_threshold", (DL_FUNC) &_Retina_rt_image_adaptive_threshold,  6},
-    {"_Retina_rt_image_add_image",          (DL_FUNC) &_Retina_rt_image_add_image,           2},
-    {"_Retina_rt_image_add_scalar",         (DL_FUNC) &_Retina_rt_image_add_scalar,          2},
-    {"_Retina_rt_image_add_weighted",       (DL_FUNC) &_Retina_rt_image_add_weighted,        5},
-    {"_Retina_rt_image_bilateral_filter",   (DL_FUNC) &_Retina_rt_image_bilateral_filter,    4},
-    {"_Retina_rt_image_bitwise_and_image",  (DL_FUNC) &_Retina_rt_image_bitwise_and_image,   2},
-    {"_Retina_rt_image_bitwise_and_scalar", (DL_FUNC) &_Retina_rt_image_bitwise_and_scalar,  2},
-    {"_Retina_rt_image_bitwise_not",        (DL_FUNC) &_Retina_rt_image_bitwise_not,         1},
-    {"_Retina_rt_image_bitwise_or_image",   (DL_FUNC) &_Retina_rt_image_bitwise_or_image,    2},
-    {"_Retina_rt_image_bitwise_or_scalar",  (DL_FUNC) &_Retina_rt_image_bitwise_or_scalar,   2},
-    {"_Retina_rt_image_bitwise_xor_image",  (DL_FUNC) &_Retina_rt_image_bitwise_xor_image,   2},
-    {"_Retina_rt_image_bitwise_xor_scalar", (DL_FUNC) &_Retina_rt_image_bitwise_xor_scalar,  2},
-    {"_Retina_rt_image_blur",               (DL_FUNC) &_Retina_rt_image_blur,                3},
-    {"_Retina_rt_image_border",             (DL_FUNC) &_Retina_rt_image_border,              7},
-    {"_Retina_rt_image_canny",              (DL_FUNC) &_Retina_rt_image_canny,               5},
-    {"_Retina_rt_image_clone",              (DL_FUNC) &_Retina_rt_image_clone,               1},
-    {"_Retina_rt_image_colorspace",         (DL_FUNC) &_Retina_rt_image_colorspace,          1},
-    {"_Retina_rt_image_convert_color",      (DL_FUNC) &_Retina_rt_image_convert_color,       3},
-    {"_Retina_rt_image_convert_depth",      (DL_FUNC) &_Retina_rt_image_convert_depth,       2},
-    {"_Retina_rt_image_copy_roi",           (DL_FUNC) &_Retina_rt_image_copy_roi,            4},
-    {"_Retina_rt_image_crop",               (DL_FUNC) &_Retina_rt_image_crop,                5},
-    {"_Retina_rt_image_depth",              (DL_FUNC) &_Retina_rt_image_depth,               1},
-    {"_Retina_rt_image_divide_image",       (DL_FUNC) &_Retina_rt_image_divide_image,        2},
-    {"_Retina_rt_image_divide_scalar",      (DL_FUNC) &_Retina_rt_image_divide_scalar,       2},
-    {"_Retina_rt_image_extract_region",     (DL_FUNC) &_Retina_rt_image_extract_region,      5},
-    {"_Retina_rt_image_filter2d",           (DL_FUNC) &_Retina_rt_image_filter2d,            9},
-    {"_Retina_rt_image_flip",               (DL_FUNC) &_Retina_rt_image_flip,                2},
-    {"_Retina_rt_image_from_double_array",  (DL_FUNC) &_Retina_rt_image_from_double_array,   3},
-    {"_Retina_rt_image_from_integer_array", (DL_FUNC) &_Retina_rt_image_from_integer_array,  3},
-    {"_Retina_rt_image_gaussian_blur",      (DL_FUNC) &_Retina_rt_image_gaussian_blur,       5},
-    {"_Retina_rt_image_get_pixel",          (DL_FUNC) &_Retina_rt_image_get_pixel,           3},
-    {"_Retina_rt_image_in_range",           (DL_FUNC) &_Retina_rt_image_in_range,            3},
-    {"_Retina_rt_image_is_gpu",             (DL_FUNC) &_Retina_rt_image_is_gpu,              1},
-    {"_Retina_rt_image_laplacian",          (DL_FUNC) &_Retina_rt_image_laplacian,           6},
-    {"_Retina_rt_image_max",                (DL_FUNC) &_Retina_rt_image_max,                 1},
-    {"_Retina_rt_image_mean",               (DL_FUNC) &_Retina_rt_image_mean,                1},
-    {"_Retina_rt_image_median",             (DL_FUNC) &_Retina_rt_image_median,              1},
-    {"_Retina_rt_image_median_blur",        (DL_FUNC) &_Retina_rt_image_median_blur,         2},
-    {"_Retina_rt_image_merge_channels",     (DL_FUNC) &_Retina_rt_image_merge_channels,      2},
-    {"_Retina_rt_image_min",                (DL_FUNC) &_Retina_rt_image_min,                 1},
-    {"_Retina_rt_image_morph",              (DL_FUNC) &_Retina_rt_image_morph,               6},
-    {"_Retina_rt_image_morph_custom",       (DL_FUNC) &_Retina_rt_image_morph_custom,        5},
-    {"_Retina_rt_image_multiply_image",     (DL_FUNC) &_Retina_rt_image_multiply_image,      2},
-    {"_Retina_rt_image_multiply_scalar",    (DL_FUNC) &_Retina_rt_image_multiply_scalar,     2},
-    {"_Retina_rt_image_nchan",              (DL_FUNC) &_Retina_rt_image_nchan,               1},
-    {"_Retina_rt_image_ncol",               (DL_FUNC) &_Retina_rt_image_ncol,                1},
-    {"_Retina_rt_image_nrow",               (DL_FUNC) &_Retina_rt_image_nrow,                1},
-    {"_Retina_rt_image_quantile",           (DL_FUNC) &_Retina_rt_image_quantile,            2},
-    {"_Retina_rt_image_read",               (DL_FUNC) &_Retina_rt_image_read,                1},
-    {"_Retina_rt_image_resize",             (DL_FUNC) &_Retina_rt_image_resize,              6},
-    {"_Retina_rt_image_rotate",             (DL_FUNC) &_Retina_rt_image_rotate,              7},
-    {"_Retina_rt_image_scharr",             (DL_FUNC) &_Retina_rt_image_scharr,              7},
-    {"_Retina_rt_image_sd",                 (DL_FUNC) &_Retina_rt_image_sd,                  1},
-    {"_Retina_rt_image_sep_filter2d",       (DL_FUNC) &_Retina_rt_image_sep_filter2d,        8},
-    {"_Retina_rt_image_set_colorspace",     (DL_FUNC) &_Retina_rt_image_set_colorspace,      2},
-    {"_Retina_rt_image_set_pixel",          (DL_FUNC) &_Retina_rt_image_set_pixel,           4},
-    {"_Retina_rt_image_set_to",             (DL_FUNC) &_Retina_rt_image_set_to,              3},
-    {"_Retina_rt_image_sobel",              (DL_FUNC) &_Retina_rt_image_sobel,               8},
-    {"_Retina_rt_image_split_channels",     (DL_FUNC) &_Retina_rt_image_split_channels,      1},
-    {"_Retina_rt_image_subtract_image",     (DL_FUNC) &_Retina_rt_image_subtract_image,      2},
-    {"_Retina_rt_image_subtract_scalar",    (DL_FUNC) &_Retina_rt_image_subtract_scalar,     2},
-    {"_Retina_rt_image_sum",                (DL_FUNC) &_Retina_rt_image_sum,                 1},
-    {"_Retina_rt_image_threshold",          (DL_FUNC) &_Retina_rt_image_threshold,           4},
-    {"_Retina_rt_image_tile",               (DL_FUNC) &_Retina_rt_image_tile,                3},
-    {"_Retina_rt_image_to_cpu",             (DL_FUNC) &_Retina_rt_image_to_cpu,              1},
-    {"_Retina_rt_image_to_double_array",    (DL_FUNC) &_Retina_rt_image_to_double_array,     1},
-    {"_Retina_rt_image_to_gpu",             (DL_FUNC) &_Retina_rt_image_to_gpu,              1},
-    {"_Retina_rt_image_to_integer_array",   (DL_FUNC) &_Retina_rt_image_to_integer_array,    1},
-    {"_Retina_rt_image_to_native_raster",   (DL_FUNC) &_Retina_rt_image_to_native_raster,    1},
-    {"_Retina_rt_image_var",                (DL_FUNC) &_Retina_rt_image_var,                 1},
-    {"_Retina_rt_image_warp_affine",        (DL_FUNC) &_Retina_rt_image_warp_affine,         6},
-    {"_Retina_rt_image_warp_perspective",   (DL_FUNC) &_Retina_rt_image_warp_perspective,    6},
-    {"_Retina_rt_image_write",              (DL_FUNC) &_Retina_rt_image_write,               2},
-    {"_Retina_rt_lut",                      (DL_FUNC) &_Retina_rt_lut,                       2},
-    {"_Retina_rt_minmax_loc",               (DL_FUNC) &_Retina_rt_minmax_loc,                1},
-    {"_Retina_rt_perspective_from_points",  (DL_FUNC) &_Retina_rt_perspective_from_points,   2},
-    {"_Retina_rt_randn",                    (DL_FUNC) &_Retina_rt_randn,                     7},
-    {"_Retina_rt_randu",                    (DL_FUNC) &_Retina_rt_randu,                     7},
+    {"_Retina_rt_affine_from_points",              (DL_FUNC) &_Retina_rt_affine_from_points,               2},
+    {"_Retina_rt_affine_rotate",                   (DL_FUNC) &_Retina_rt_affine_rotate,                    4},
+    {"_Retina_rt_autothreshold_value",             (DL_FUNC) &_Retina_rt_autothreshold_value,              3},
+    {"_Retina_rt_build_ok",                        (DL_FUNC) &_Retina_rt_build_ok,                         0},
+    {"_Retina_rt_clahe",                           (DL_FUNC) &_Retina_rt_clahe,                            4},
+    {"_Retina_rt_concatenate",                     (DL_FUNC) &_Retina_rt_concatenate,                      2},
+    {"_Retina_rt_count_nonzero",                   (DL_FUNC) &_Retina_rt_count_nonzero,                    1},
+    {"_Retina_rt_draw_arc",                        (DL_FUNC) &_Retina_rt_draw_arc,                        11},
+    {"_Retina_rt_draw_arrow",                      (DL_FUNC) &_Retina_rt_draw_arrow,                       9},
+    {"_Retina_rt_draw_circle",                     (DL_FUNC) &_Retina_rt_draw_circle,                      7},
+    {"_Retina_rt_draw_ellipse",                    (DL_FUNC) &_Retina_rt_draw_ellipse,                     9},
+    {"_Retina_rt_draw_line",                       (DL_FUNC) &_Retina_rt_draw_line,                        8},
+    {"_Retina_rt_draw_polyline",                   (DL_FUNC) &_Retina_rt_draw_polyline,                    7},
+    {"_Retina_rt_draw_rectangle",                  (DL_FUNC) &_Retina_rt_draw_rectangle,                   8},
+    {"_Retina_rt_draw_text",                       (DL_FUNC) &_Retina_rt_draw_text,                       10},
+    {"_Retina_rt_exp",                             (DL_FUNC) &_Retina_rt_exp,                              1},
+    {"_Retina_rt_extract_channel",                 (DL_FUNC) &_Retina_rt_extract_channel,                  2},
+    {"_Retina_rt_fill",                            (DL_FUNC) &_Retina_rt_fill,                             6},
+    {"_Retina_rt_fill_poly",                       (DL_FUNC) &_Retina_rt_fill_poly,                        5},
+    {"_Retina_rt_find_nonzero",                    (DL_FUNC) &_Retina_rt_find_nonzero,                     1},
+    {"_Retina_rt_get_gabor_kernel",                (DL_FUNC) &_Retina_rt_get_gabor_kernel,                 8},
+    {"_Retina_rt_get_structuring_element",         (DL_FUNC) &_Retina_rt_get_structuring_element,          3},
+    {"_Retina_rt_get_text_size",                   (DL_FUNC) &_Retina_rt_get_text_size,                    5},
+    {"_Retina_rt_has_cuda",                        (DL_FUNC) &_Retina_rt_has_cuda,                         0},
+    {"_Retina_rt_has_module",                      (DL_FUNC) &_Retina_rt_has_module,                       1},
+    {"_Retina_rt_hist",                            (DL_FUNC) &_Retina_rt_hist,                             4},
+    {"_Retina_rt_hist_eq",                         (DL_FUNC) &_Retina_rt_hist_eq,                          1},
+    {"_Retina_rt_image_absdiff_image",             (DL_FUNC) &_Retina_rt_image_absdiff_image,              2},
+    {"_Retina_rt_image_absdiff_image_masked",      (DL_FUNC) &_Retina_rt_image_absdiff_image_masked,       3},
+    {"_Retina_rt_image_absdiff_scalar",            (DL_FUNC) &_Retina_rt_image_absdiff_scalar,             2},
+    {"_Retina_rt_image_absdiff_scalar_masked",     (DL_FUNC) &_Retina_rt_image_absdiff_scalar_masked,      3},
+    {"_Retina_rt_image_adaptive_threshold",        (DL_FUNC) &_Retina_rt_image_adaptive_threshold,         6},
+    {"_Retina_rt_image_add_image",                 (DL_FUNC) &_Retina_rt_image_add_image,                  2},
+    {"_Retina_rt_image_add_image_masked",          (DL_FUNC) &_Retina_rt_image_add_image_masked,           3},
+    {"_Retina_rt_image_add_scalar",                (DL_FUNC) &_Retina_rt_image_add_scalar,                 2},
+    {"_Retina_rt_image_add_scalar_masked",         (DL_FUNC) &_Retina_rt_image_add_scalar_masked,          3},
+    {"_Retina_rt_image_add_weighted",              (DL_FUNC) &_Retina_rt_image_add_weighted,               5},
+    {"_Retina_rt_image_add_weighted_masked",       (DL_FUNC) &_Retina_rt_image_add_weighted_masked,        6},
+    {"_Retina_rt_image_bilateral_filter",          (DL_FUNC) &_Retina_rt_image_bilateral_filter,           4},
+    {"_Retina_rt_image_bitwise_and_image",         (DL_FUNC) &_Retina_rt_image_bitwise_and_image,          2},
+    {"_Retina_rt_image_bitwise_and_image_masked",  (DL_FUNC) &_Retina_rt_image_bitwise_and_image_masked,   3},
+    {"_Retina_rt_image_bitwise_and_scalar",        (DL_FUNC) &_Retina_rt_image_bitwise_and_scalar,         2},
+    {"_Retina_rt_image_bitwise_and_scalar_masked", (DL_FUNC) &_Retina_rt_image_bitwise_and_scalar_masked,  3},
+    {"_Retina_rt_image_bitwise_not",               (DL_FUNC) &_Retina_rt_image_bitwise_not,                1},
+    {"_Retina_rt_image_bitwise_not_masked",        (DL_FUNC) &_Retina_rt_image_bitwise_not_masked,         2},
+    {"_Retina_rt_image_bitwise_or_image",          (DL_FUNC) &_Retina_rt_image_bitwise_or_image,           2},
+    {"_Retina_rt_image_bitwise_or_image_masked",   (DL_FUNC) &_Retina_rt_image_bitwise_or_image_masked,    3},
+    {"_Retina_rt_image_bitwise_or_scalar",         (DL_FUNC) &_Retina_rt_image_bitwise_or_scalar,          2},
+    {"_Retina_rt_image_bitwise_or_scalar_masked",  (DL_FUNC) &_Retina_rt_image_bitwise_or_scalar_masked,   3},
+    {"_Retina_rt_image_bitwise_xor_image",         (DL_FUNC) &_Retina_rt_image_bitwise_xor_image,          2},
+    {"_Retina_rt_image_bitwise_xor_image_masked",  (DL_FUNC) &_Retina_rt_image_bitwise_xor_image_masked,   3},
+    {"_Retina_rt_image_bitwise_xor_scalar",        (DL_FUNC) &_Retina_rt_image_bitwise_xor_scalar,         2},
+    {"_Retina_rt_image_bitwise_xor_scalar_masked", (DL_FUNC) &_Retina_rt_image_bitwise_xor_scalar_masked,  3},
+    {"_Retina_rt_image_blur",                      (DL_FUNC) &_Retina_rt_image_blur,                       3},
+    {"_Retina_rt_image_border",                    (DL_FUNC) &_Retina_rt_image_border,                     7},
+    {"_Retina_rt_image_canny",                     (DL_FUNC) &_Retina_rt_image_canny,                      5},
+    {"_Retina_rt_image_clone",                     (DL_FUNC) &_Retina_rt_image_clone,                      1},
+    {"_Retina_rt_image_colorspace",                (DL_FUNC) &_Retina_rt_image_colorspace,                 1},
+    {"_Retina_rt_image_convert_color",             (DL_FUNC) &_Retina_rt_image_convert_color,              3},
+    {"_Retina_rt_image_convert_depth",             (DL_FUNC) &_Retina_rt_image_convert_depth,              2},
+    {"_Retina_rt_image_copy_roi",                  (DL_FUNC) &_Retina_rt_image_copy_roi,                   4},
+    {"_Retina_rt_image_crop",                      (DL_FUNC) &_Retina_rt_image_crop,                       5},
+    {"_Retina_rt_image_depth",                     (DL_FUNC) &_Retina_rt_image_depth,                      1},
+    {"_Retina_rt_image_divide_image",              (DL_FUNC) &_Retina_rt_image_divide_image,               2},
+    {"_Retina_rt_image_divide_image_masked",       (DL_FUNC) &_Retina_rt_image_divide_image_masked,        3},
+    {"_Retina_rt_image_divide_scalar",             (DL_FUNC) &_Retina_rt_image_divide_scalar,              2},
+    {"_Retina_rt_image_divide_scalar_masked",      (DL_FUNC) &_Retina_rt_image_divide_scalar_masked,       3},
+    {"_Retina_rt_image_extract_region",            (DL_FUNC) &_Retina_rt_image_extract_region,             5},
+    {"_Retina_rt_image_filter2d",                  (DL_FUNC) &_Retina_rt_image_filter2d,                   9},
+    {"_Retina_rt_image_flip",                      (DL_FUNC) &_Retina_rt_image_flip,                       2},
+    {"_Retina_rt_image_from_double_array",         (DL_FUNC) &_Retina_rt_image_from_double_array,          3},
+    {"_Retina_rt_image_from_integer_array",        (DL_FUNC) &_Retina_rt_image_from_integer_array,         3},
+    {"_Retina_rt_image_gaussian_blur",             (DL_FUNC) &_Retina_rt_image_gaussian_blur,              5},
+    {"_Retina_rt_image_get_pixel",                 (DL_FUNC) &_Retina_rt_image_get_pixel,                  3},
+    {"_Retina_rt_image_in_range",                  (DL_FUNC) &_Retina_rt_image_in_range,                   3},
+    {"_Retina_rt_image_is_gpu",                    (DL_FUNC) &_Retina_rt_image_is_gpu,                     1},
+    {"_Retina_rt_image_laplacian",                 (DL_FUNC) &_Retina_rt_image_laplacian,                  6},
+    {"_Retina_rt_image_max",                       (DL_FUNC) &_Retina_rt_image_max,                        1},
+    {"_Retina_rt_image_mean",                      (DL_FUNC) &_Retina_rt_image_mean,                       1},
+    {"_Retina_rt_image_median",                    (DL_FUNC) &_Retina_rt_image_median,                     1},
+    {"_Retina_rt_image_median_blur",               (DL_FUNC) &_Retina_rt_image_median_blur,                2},
+    {"_Retina_rt_image_merge_channels",            (DL_FUNC) &_Retina_rt_image_merge_channels,             2},
+    {"_Retina_rt_image_min",                       (DL_FUNC) &_Retina_rt_image_min,                        1},
+    {"_Retina_rt_image_morph",                     (DL_FUNC) &_Retina_rt_image_morph,                      6},
+    {"_Retina_rt_image_morph_custom",              (DL_FUNC) &_Retina_rt_image_morph_custom,               5},
+    {"_Retina_rt_image_multiply_image",            (DL_FUNC) &_Retina_rt_image_multiply_image,             2},
+    {"_Retina_rt_image_multiply_image_masked",     (DL_FUNC) &_Retina_rt_image_multiply_image_masked,      3},
+    {"_Retina_rt_image_multiply_scalar",           (DL_FUNC) &_Retina_rt_image_multiply_scalar,            2},
+    {"_Retina_rt_image_multiply_scalar_masked",    (DL_FUNC) &_Retina_rt_image_multiply_scalar_masked,     3},
+    {"_Retina_rt_image_nchan",                     (DL_FUNC) &_Retina_rt_image_nchan,                      1},
+    {"_Retina_rt_image_ncol",                      (DL_FUNC) &_Retina_rt_image_ncol,                       1},
+    {"_Retina_rt_image_nrow",                      (DL_FUNC) &_Retina_rt_image_nrow,                       1},
+    {"_Retina_rt_image_quantile",                  (DL_FUNC) &_Retina_rt_image_quantile,                   2},
+    {"_Retina_rt_image_read",                      (DL_FUNC) &_Retina_rt_image_read,                       1},
+    {"_Retina_rt_image_resize",                    (DL_FUNC) &_Retina_rt_image_resize,                     6},
+    {"_Retina_rt_image_rotate",                    (DL_FUNC) &_Retina_rt_image_rotate,                     7},
+    {"_Retina_rt_image_scharr",                    (DL_FUNC) &_Retina_rt_image_scharr,                     7},
+    {"_Retina_rt_image_sd",                        (DL_FUNC) &_Retina_rt_image_sd,                         1},
+    {"_Retina_rt_image_sep_filter2d",              (DL_FUNC) &_Retina_rt_image_sep_filter2d,               8},
+    {"_Retina_rt_image_set_colorspace",            (DL_FUNC) &_Retina_rt_image_set_colorspace,             2},
+    {"_Retina_rt_image_set_pixel",                 (DL_FUNC) &_Retina_rt_image_set_pixel,                  4},
+    {"_Retina_rt_image_set_to",                    (DL_FUNC) &_Retina_rt_image_set_to,                     2},
+    {"_Retina_rt_image_set_to_masked",             (DL_FUNC) &_Retina_rt_image_set_to_masked,              3},
+    {"_Retina_rt_image_sobel",                     (DL_FUNC) &_Retina_rt_image_sobel,                      8},
+    {"_Retina_rt_image_split_channels",            (DL_FUNC) &_Retina_rt_image_split_channels,             1},
+    {"_Retina_rt_image_subtract_image",            (DL_FUNC) &_Retina_rt_image_subtract_image,             2},
+    {"_Retina_rt_image_subtract_image_masked",     (DL_FUNC) &_Retina_rt_image_subtract_image_masked,      3},
+    {"_Retina_rt_image_subtract_scalar",           (DL_FUNC) &_Retina_rt_image_subtract_scalar,            2},
+    {"_Retina_rt_image_subtract_scalar_masked",    (DL_FUNC) &_Retina_rt_image_subtract_scalar_masked,     3},
+    {"_Retina_rt_image_sum",                       (DL_FUNC) &_Retina_rt_image_sum,                        1},
+    {"_Retina_rt_image_threshold",                 (DL_FUNC) &_Retina_rt_image_threshold,                  4},
+    {"_Retina_rt_image_tile",                      (DL_FUNC) &_Retina_rt_image_tile,                       3},
+    {"_Retina_rt_image_to_cpu",                    (DL_FUNC) &_Retina_rt_image_to_cpu,                     1},
+    {"_Retina_rt_image_to_double_array",           (DL_FUNC) &_Retina_rt_image_to_double_array,            1},
+    {"_Retina_rt_image_to_gpu",                    (DL_FUNC) &_Retina_rt_image_to_gpu,                     1},
+    {"_Retina_rt_image_to_integer_array",          (DL_FUNC) &_Retina_rt_image_to_integer_array,           1},
+    {"_Retina_rt_image_to_native_raster",          (DL_FUNC) &_Retina_rt_image_to_native_raster,           1},
+    {"_Retina_rt_image_var",                       (DL_FUNC) &_Retina_rt_image_var,                        1},
+    {"_Retina_rt_image_warp_affine",               (DL_FUNC) &_Retina_rt_image_warp_affine,                6},
+    {"_Retina_rt_image_warp_perspective",          (DL_FUNC) &_Retina_rt_image_warp_perspective,           6},
+    {"_Retina_rt_image_write",                     (DL_FUNC) &_Retina_rt_image_write,                      2},
+    {"_Retina_rt_insert_channel",                  (DL_FUNC) &_Retina_rt_insert_channel,                   3},
+    {"_Retina_rt_log",                             (DL_FUNC) &_Retina_rt_log,                              1},
+    {"_Retina_rt_lut",                             (DL_FUNC) &_Retina_rt_lut,                              4},
+    {"_Retina_rt_minmax_loc",                      (DL_FUNC) &_Retina_rt_minmax_loc,                       1},
+    {"_Retina_rt_perspective_from_points",         (DL_FUNC) &_Retina_rt_perspective_from_points,          2},
+    {"_Retina_rt_pow",                             (DL_FUNC) &_Retina_rt_pow,                              2},
+    {"_Retina_rt_randn",                           (DL_FUNC) &_Retina_rt_randn,                            7},
+    {"_Retina_rt_randu",                           (DL_FUNC) &_Retina_rt_randu,                            7},
+    {"_Retina_rt_sqrt",                            (DL_FUNC) &_Retina_rt_sqrt,                             1},
     {NULL, NULL, 0}
 };
 }
