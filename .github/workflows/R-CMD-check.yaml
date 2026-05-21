@@ -49,10 +49,6 @@ jobs:
           sudo apt install -y libgstreamer-plugins-base1.0-dev libgstreamer1.0-dev
           sudo apt install -y libpng-dev libjpeg-dev libtiff-dev
 
-      - name: Install macOS dependencies
-        if: runner.os == 'macOS'
-        run: brew install ffmpeg
-
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::rcmdcheck
