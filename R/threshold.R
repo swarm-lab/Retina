@@ -19,7 +19,7 @@
 #' @param bins Integer >= 2. Histogram bin count used when the image depth is
 #'   not \code{CV_8U}. Ignored for \code{CV_8U} images (always 256 bins).
 #'   Default \code{256}.
-#' @return A single numeric (double) — the threshold in the image's native
+#' @return A single numeric (double) -- the threshold in the image's native
 #'   intensity units.
 #' @export
 autothreshold_value <- function(img, method, bins = 256L) {

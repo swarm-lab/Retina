@@ -977,7 +977,7 @@ Image <- R6::R6Class("Image",
     canny = function(low_threshold, high_threshold,
                      aperture_size = 3, L2_gradient = FALSE) {
       if (self$nchan != 1L)
-        stop("canny requires a single-channel (grayscale) image — use convert_color('GRAY') first",
+        stop("canny requires a single-channel (grayscale) image -- use convert_color('GRAY') first",
              call. = FALSE)
       if (!is.numeric(low_threshold) || length(low_threshold) != 1L || low_threshold < 0)
         stop("low_threshold must be a single non-negative numeric value", call. = FALSE)
@@ -1014,7 +1014,7 @@ Image <- R6::R6Class("Image",
     canny_ = function(low_threshold, high_threshold,
                       aperture_size = 3, L2_gradient = FALSE) {
       if (self$nchan != 1L)
-        stop("canny requires a single-channel (grayscale) image — use convert_color('GRAY') first",
+        stop("canny requires a single-channel (grayscale) image -- use convert_color('GRAY') first",
              call. = FALSE)
       if (!is.numeric(low_threshold) || length(low_threshold) != 1L || low_threshold < 0)
         stop("low_threshold must be a single non-negative numeric value", call. = FALSE)
@@ -1385,11 +1385,11 @@ Image <- R6::R6Class("Image",
     #' @description Apply a morphological operation. Returns a new Image.
     #' @param operation Character. One of \code{"erode"} (shrinks bright
     #'   regions), \code{"dilate"} (expands bright regions), \code{"open"}
-    #'   (erode then dilate — removes small bright spots), \code{"close"}
-    #'   (dilate then erode — fills small dark holes), \code{"gradient"}
-    #'   (dilate minus erode — highlights edges), \code{"tophat"} (image minus
-    #'   open — isolates bright features smaller than the kernel),
-    #'   \code{"blackhat"} (close minus image — isolates dark features smaller
+    #'   (erode then dilate -- removes small bright spots), \code{"close"}
+    #'   (dilate then erode -- fills small dark holes), \code{"gradient"}
+    #'   (dilate minus erode -- highlights edges), \code{"tophat"} (image minus
+    #'   open -- isolates bright features smaller than the kernel),
+    #'   \code{"blackhat"} (close minus image -- isolates dark features smaller
     #'   than the kernel).
     #' @param shape Character. Structuring element shape: \code{"rect"},
     #'   \code{"cross"}, or \code{"ellipse"}. Ignored when \code{kernel} is
@@ -1462,11 +1462,11 @@ Image <- R6::R6Class("Image",
     #' @description Apply a morphological operation in place.
     #' @param operation Character. One of \code{"erode"} (shrinks bright
     #'   regions), \code{"dilate"} (expands bright regions), \code{"open"}
-    #'   (erode then dilate — removes small bright spots), \code{"close"}
-    #'   (dilate then erode — fills small dark holes), \code{"gradient"}
-    #'   (dilate minus erode — highlights edges), \code{"tophat"} (image minus
-    #'   open — isolates bright features smaller than the kernel),
-    #'   \code{"blackhat"} (close minus image — isolates dark features smaller
+    #'   (erode then dilate -- removes small bright spots), \code{"close"}
+    #'   (dilate then erode -- fills small dark holes), \code{"gradient"}
+    #'   (dilate minus erode -- highlights edges), \code{"tophat"} (image minus
+    #'   open -- isolates bright features smaller than the kernel),
+    #'   \code{"blackhat"} (close minus image -- isolates dark features smaller
     #'   than the kernel).
     #' @param shape Character. Structuring element shape: \code{"rect"},
     #'   \code{"cross"}, or \code{"ellipse"}. Ignored when \code{kernel} is
@@ -2101,7 +2101,7 @@ Image <- R6::R6Class("Image",
     #' from the CSS shorthand (`top, right, bottom, left`) and from OpenCV's
     #' `copyMakeBorder` (`top, bottom, left, right`). With this order, the
     #' two-argument form `$border(v, h)` adds `v` pixels vertically (top and
-    #' bottom) and `h` pixels horizontally (left and right) — the most natural
+    #' bottom) and `h` pixels horizontally (left and right) -- the most natural
     #' two-argument case for symmetric borders.
     #'
     #' @param top Integer. Border width in pixels on the top edge.
@@ -2195,7 +2195,7 @@ Image <- R6::R6Class("Image",
       invisible(self)
     },
 
-    #' @description Set all pixels — or only masked pixels — to a constant value.
+    #' @description Set all pixels -- or only masked pixels -- to a constant value.
     #' @param value Numeric scalar or vector of length \code{nchan}. Recycled to
     #'   \code{nchan} channels. No \code{NA}s.
     #' @param mask \code{NULL} (apply to all pixels) or a single-channel \code{CV_8U}
@@ -2214,7 +2214,7 @@ Image <- R6::R6Class("Image",
         Image$new(rt_image_set_to_masked(private$.ptr, value_v, .rt_ptr(mask)))
     },
 
-    #' @description Set all pixels — or only masked pixels — to a constant
+    #' @description Set all pixels -- or only masked pixels -- to a constant
     #'   value, in place.
     #' @param value Numeric scalar or vector of length \code{nchan}. Recycled to
     #'   \code{nchan} channels. No \code{NA}s.
@@ -2241,11 +2241,11 @@ Image <- R6::R6Class("Image",
     #' @param maxval Single finite numeric. Value assigned to above-threshold
     #'   pixels in `"binary"` and `"binary_inv"` modes. Default `255`.
     #' @param type Character. How pixel values are mapped relative to the
-    #'   threshold `T`. `"binary"` (default): above `T` → `maxval`, at or
-    #'   below → 0. `"binary_inv"`: above `T` → 0, at or below → `maxval`.
-    #'   `"trunc"`: above `T` → `T`, at or below → unchanged (acts as a
-    #'   ceiling). `"tozero"`: at or below `T` → 0, above → unchanged.
-    #'   `"tozero_inv"`: above `T` → 0, at or below → unchanged. `maxval` is
+    #'   threshold `T`. `"binary"` (default): above `T` -> `maxval`, at or
+    #'   below -> 0. `"binary_inv"`: above `T` -> 0, at or below -> `maxval`.
+    #'   `"trunc"`: above `T` -> `T`, at or below -> unchanged (acts as a
+    #'   ceiling). `"tozero"`: at or below `T` -> 0, above -> unchanged.
+    #'   `"tozero_inv"`: above `T` -> 0, at or below -> unchanged. `maxval` is
     #'   only used by `"binary"` and `"binary_inv"`.
     #' @param bins Single integer >= 2. Histogram bins for auto-threshold on
     #'   non-`CV_8U` images. Ignored when `thresh` is numeric or for `CV_8U`.
@@ -2323,9 +2323,9 @@ Image <- R6::R6Class("Image",
     #'   Default `255`.
     #' @param method `"mean"` (local neighbourhood mean) or `"gaussian"`
     #'   (Gaussian-weighted neighbourhood). Default `"mean"`.
-    #' @param type `"binary"` (default): pixels above the local threshold →
-    #'   `maxval`, others → 0. `"binary_inv"`: inverted — pixels above → 0,
-    #'   others → `maxval`.
+    #' @param type `"binary"` (default): pixels above the local threshold ->
+    #'   `maxval`, others -> 0. `"binary_inv"`: inverted -- pixels above -> 0,
+    #'   others -> `maxval`.
     #' @param block_size Single odd integer >= 3. Neighbourhood size.
     #'   Default `11`.
     #' @param offset Single finite numeric. Constant subtracted from the local
@@ -3005,7 +3005,7 @@ Image <- R6::R6Class("Image",
       invisible(self)
     },
 
-    # ── Histogram ─────────────────────────────────────────────────────────────
+    # -- Histogram -------------------------------------------------------------
 
     #' @description Compute a per-channel histogram of pixel values.
     #' @param bins Single positive integer. Number of histogram bins. Default
@@ -3044,7 +3044,7 @@ Image <- R6::R6Class("Image",
         r <- .depth_ranges[[self$depth_name]]
         if (is.null(r))
           stop("No default range for depth '", self$depth_name,
-               "' — provide range explicitly.", call. = FALSE)
+               "' -- provide range explicitly.", call. = FALSE)
         range <- r
         message("range not specified; using [", range[1], ", ", range[2],
                 "] for ", self$depth_name, " image.")
@@ -3196,7 +3196,7 @@ Image <- R6::R6Class("Image",
     #'   (CLAHE). Returns a new Image. Requires a single-channel \code{CV_8U}
     #'   or \code{CV_16U} image.
     #' @param clip_limit Single positive numeric. Threshold for contrast
-    #'   limiting — higher values allow more contrast enhancement, lower values
+    #'   limiting -- higher values allow more contrast enhancement, lower values
     #'   reduce noise amplification. Default \code{40.0}.
     #' @param tile_grid_size Length-1 or length-2 positive integer vector
     #'   \code{c(width, height)}. Number of tiles in each direction. A scalar
@@ -3328,7 +3328,7 @@ Image <- R6::R6Class("Image",
     },
 
     #' @description Raise every pixel to a power element-wise.
-    #'   The image must be \code{CV_32F} or \code{CV_64F} — use
+    #'   The image must be \code{CV_32F} or \code{CV_64F} -- use
     #'   \code{$convert_depth("CV_32F")} first for integer images.
     #'   A negative pixel raised to a fractional exponent produces \code{NaN}.
     #' @param power Single finite numeric. The exponent. Negative, zero, and
@@ -3388,7 +3388,7 @@ Image <- R6::R6Class("Image",
 
     #' @description Apply element-wise natural logarithm (\eqn{\ln(x)}) to every pixel.
     #'   The image must be \code{CV_32F} or \code{CV_64F}. Pixels \eqn{\le 0} produce
-    #'   \code{-Inf} or \code{NaN} — sanitise the image first if this may occur.
+    #'   \code{-Inf} or \code{NaN} -- sanitise the image first if this may occur.
     #' @return A new \code{Image} with the same depth and colorspace.
     #' @examples
     #' \donttest{
@@ -3414,7 +3414,7 @@ Image <- R6::R6Class("Image",
 
     #' @description Apply element-wise square root to every pixel.
     #'   The image must be \code{CV_32F} or \code{CV_64F}. Pixels \code{< 0} produce
-    #'   \code{NaN} — sanitise the image first if this may occur.
+    #'   \code{NaN} -- sanitise the image first if this may occur.
     #' @return A new \code{Image} with the same depth and colorspace.
     #' @examples
     #' \donttest{
@@ -3514,7 +3514,7 @@ Image <- R6::R6Class("Image",
     #' @description Apply a lookup table (LUT) to remap pixel values.
     #' @param lut A numeric vector of length 256 (\code{CV_8U}) or 65536
     #'   (\code{CV_16U}/\code{CV_16S}), applied identically to all channels; or
-    #'   a numeric matrix with the same row count and \code{nchan} columns —
+    #'   a numeric matrix with the same row count and \code{nchan} columns --
     #'   one column per channel applied in channel order. Values must be
     #'   non-\code{NA}, finite, and coercible to integer. Only integer-depth images
     #'   are supported (\code{CV_8U}, \code{CV_16U}, \code{CV_16S}).
@@ -3606,7 +3606,7 @@ Image <- R6::R6Class("Image",
   )
 )
 
-# ── S3 indexing operators ──────────────────────────────────────────────────────
+# -- S3 indexing operators ------------------------------------------------------
 
 #' @export
 `[.Image` <- function(x, i, j, k, drop = TRUE) {
@@ -3734,9 +3734,9 @@ Image <- R6::R6Class("Image",
   x
 }
 
-# ── Image class-level constructors ────────────────────────────────────────────
+# -- Image class-level constructors --------------------------------------------
 # These are attached to the Image class generator so they are called as
-# Image$zeros(), Image$ones(), etc. — analogous to Image$new().
+# Image$zeros(), Image$ones(), etc. -- analogous to Image$new().
 
 .rt_valid_depths <- c("CV_8U", "CV_16U", "CV_16S", "CV_32F", "CV_64F")
 
@@ -3754,7 +3754,7 @@ Image <- R6::R6Class("Image",
     stop("colorspace must be a single character string", call. = FALSE)
 }
 
-# General fill constructor — all other constructors delegate to this one.
+# General fill constructor -- all other constructors delegate to this one.
 # value: numeric scalar (recycled) or vector of length nchan. No NAs.
 Image$fill <- function(value, nrow, ncol, nchan = 1L, depth = "CV_8U",
                        colorspace = "GRAY") {
@@ -3800,7 +3800,7 @@ Image$randu <- function(nrow, ncol, nchan = 1L, depth = "CV_8U",
       CV_64F = c(0,        1)
     )
     d <- .defaults[[depth]]
-    if (is.null(d)) stop("No default range for depth '", depth, "' — please provide 'low' and 'high' explicitly.", call. = FALSE)
+    if (is.null(d)) stop("No default range for depth '", depth, "' -- please provide 'low' and 'high' explicitly.", call. = FALSE)
     if (missing(low))  low  <- d[1]
     if (missing(high)) high <- d[2]
     message("Using default range [", low, ", ", high, "] for ", depth,
@@ -3831,7 +3831,7 @@ Image$randn <- function(nrow, ncol, nchan = 1L, depth = "CV_8U",
       CV_64F = c(0.5,   0.167)
     )
     d <- .defaults[[depth]]
-    if (is.null(d)) stop("No default mean/sd for depth '", depth, "' — please provide 'mean' and 'sd' explicitly.", call. = FALSE)
+    if (is.null(d)) stop("No default mean/sd for depth '", depth, "' -- please provide 'mean' and 'sd' explicitly.", call. = FALSE)
     if (missing(mean)) mean <- d[1]
     if (missing(sd))   sd   <- d[2]
     message("Using default mean/sd [", mean, ", ", sd, "] for ", depth,

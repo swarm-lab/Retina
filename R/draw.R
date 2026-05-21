@@ -1,4 +1,4 @@
-# ── col2bgr ───────────────────────────────────────────────────────────────────
+# -- col2bgr -------------------------------------------------------------------
 
 #' Convert an R color to a BGR(A) numeric vector
 #'
@@ -39,7 +39,7 @@ col2bgr <- function(color, alpha = FALSE) {
   }
 }
 
-# ── shared validation helper ──────────────────────────────────────────────────
+# -- shared validation helper --------------------------------------------------
 
 .rt_valid_draw_common <- function(color, thickness, line_type, filled = FALSE) {
   .color <- as.double(col2bgr(color)[1:3])
@@ -58,7 +58,7 @@ col2bgr <- function(color, alpha = FALSE) {
   )
 }
 
-# ── get_text_size ─────────────────────────────────────────────────────────────
+# -- get_text_size -------------------------------------------------------------
 
 #' Measure the bounding box of a text string
 #'
