@@ -72,6 +72,78 @@ rt_image_bitwise_not <- function(img) {
   .Call(`_Retina_rt_image_bitwise_not`, img)
 }
 
+rt_image_add_image_masked <- function(img1, img2, mask) {
+  .Call(`_Retina_rt_image_add_image_masked`, img1, img2, mask)
+}
+
+rt_image_add_scalar_masked <- function(img, values, mask) {
+  .Call(`_Retina_rt_image_add_scalar_masked`, img, values, mask)
+}
+
+rt_image_subtract_image_masked <- function(img1, img2, mask) {
+  .Call(`_Retina_rt_image_subtract_image_masked`, img1, img2, mask)
+}
+
+rt_image_subtract_scalar_masked <- function(img, values, mask) {
+  .Call(`_Retina_rt_image_subtract_scalar_masked`, img, values, mask)
+}
+
+rt_image_multiply_image_masked <- function(img1, img2, mask) {
+  .Call(`_Retina_rt_image_multiply_image_masked`, img1, img2, mask)
+}
+
+rt_image_multiply_scalar_masked <- function(img, values, mask) {
+  .Call(`_Retina_rt_image_multiply_scalar_masked`, img, values, mask)
+}
+
+rt_image_divide_image_masked <- function(img1, img2, mask) {
+  .Call(`_Retina_rt_image_divide_image_masked`, img1, img2, mask)
+}
+
+rt_image_divide_scalar_masked <- function(img, values, mask) {
+  .Call(`_Retina_rt_image_divide_scalar_masked`, img, values, mask)
+}
+
+rt_image_absdiff_image_masked <- function(img1, img2, mask) {
+  .Call(`_Retina_rt_image_absdiff_image_masked`, img1, img2, mask)
+}
+
+rt_image_absdiff_scalar_masked <- function(img, values, mask) {
+  .Call(`_Retina_rt_image_absdiff_scalar_masked`, img, values, mask)
+}
+
+rt_image_add_weighted_masked <- function(img1, alpha, img2, beta, gamma_val, mask) {
+  .Call(`_Retina_rt_image_add_weighted_masked`, img1, alpha, img2, beta, gamma_val, mask)
+}
+
+rt_image_bitwise_and_image_masked <- function(img1, img2, mask) {
+  .Call(`_Retina_rt_image_bitwise_and_image_masked`, img1, img2, mask)
+}
+
+rt_image_bitwise_and_scalar_masked <- function(img, values, mask) {
+  .Call(`_Retina_rt_image_bitwise_and_scalar_masked`, img, values, mask)
+}
+
+rt_image_bitwise_or_image_masked <- function(img1, img2, mask) {
+  .Call(`_Retina_rt_image_bitwise_or_image_masked`, img1, img2, mask)
+}
+
+rt_image_bitwise_or_scalar_masked <- function(img, values, mask) {
+  .Call(`_Retina_rt_image_bitwise_or_scalar_masked`, img, values, mask)
+}
+
+rt_image_bitwise_xor_image_masked <- function(img1, img2, mask) {
+  .Call(`_Retina_rt_image_bitwise_xor_image_masked`, img1, img2, mask)
+}
+
+rt_image_bitwise_xor_scalar_masked <- function(img, values, mask) {
+  .Call(`_Retina_rt_image_bitwise_xor_scalar_masked`, img, values, mask)
+}
+
+rt_image_bitwise_not_masked <- function(img, mask) {
+  .Call(`_Retina_rt_image_bitwise_not_masked`, img, mask)
+}
+
 rt_has_module <- function(module_name) {
   .Call(`_Retina_rt_has_module`, module_name)
 }

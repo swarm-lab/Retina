@@ -58,94 +58,56 @@ external_pointer<RtImage> rt_hist_eq(external_pointer<RtImage> img) {
 // lut_size: 256 (for CV_8U) or 65536 (for CV_16U / CV_16S)
 // nchan_lut: 1 = broadcast to all source channels; else = source nchan
 //
-// For CV_8U images, cv::LUT is used directly (requires 256-entry table).
-// For CV_16U/CV_16S images, manual per-pixel mapping is used because
-// cv::LUT only accepts 256-entry LUTs in OpenCV < 4.13.
+// CV_8U / CV_16U: cv::LUT is used (d = 0; index = pixel value).
+// CV_16S: manual mapping with index = pixel + 32768, matching the R-API contract.
+//   cv::LUT indexes CV_16S by raw uint16 bit pattern (not pixel + 32768), which
+//   would reorder negative and non-negative entries relative to the R-API contract.
+// Output: same depth as lut (CV_8U for 256-entry, CV_16U for 65536-entry).
 [[cpp11::register]]
 external_pointer<RtImage> rt_lut(external_pointer<RtImage> img,
                                   integers lut_vals,
                                   int lut_size,
                                   int nchan_lut) {
   cv::Mat mat = get_cpu_mat(img);
+  int src_nchan = mat.channels();
 
-  if (lut_size == 256) {
-    // CV_8U path: use cv::LUT (fast).
-    if (nchan_lut == 1) {
-      cv::Mat lut(1, 256, CV_8U);
-      for (int i = 0; i < 256; i++)
-        lut.at<uchar>(0, i) = static_cast<uchar>(lut_vals[i]);
-      cv::Mat out;
-      cv::LUT(mat, lut, out);
-      return {new RtImage(std::move(out), img->colorspace)};
-    } else {
-      // Per-channel: split, apply each channel's LUT, merge.
-      int src_nchan = mat.channels();
-      std::vector<cv::Mat> channels;
-      cv::split(mat, channels);
-      std::vector<cv::Mat> results(src_nchan);
-      for (int c = 0; c < src_nchan; c++) {
-        cv::Mat lut(1, 256, CV_8U);
-        for (int i = 0; i < 256; i++)
-          lut.at<uchar>(0, i) = static_cast<uchar>(lut_vals[c * 256 + i]);
-        cv::LUT(channels[c], lut, results[c]);
-      }
-      cv::Mat out;
-      cv::merge(results, out);
-      return {new RtImage(std::move(out), img->colorspace)};
-    }
-  } else {
-    // CV_16U / CV_16S path: manual per-pixel mapping.
-    // Build a flat C++ lookup table for each channel.
-    int src_nchan = mat.channels();
-    bool is_signed = (mat.depth() == CV_16S);
-
-    // Build per-channel uint16 lookup tables from lut_vals.
-    std::vector<std::vector<uint16_t>> tables(
-      nchan_lut == 1 ? 1 : src_nchan);
-    for (int c = 0; c < (int)tables.size(); c++) {
-      tables[c].resize(65536);
-      for (int i = 0; i < 65536; i++)
-        tables[c][i] = static_cast<uint16_t>(lut_vals[c * 65536 + i]);
-    }
-
-    // Output is always CV_16U regardless of whether input is CV_16U or CV_16S.
-    int out_type = CV_MAKETYPE(CV_16U, mat.channels());
-    cv::Mat out(mat.size(), out_type);
-    int rows = mat.rows;
-    int cols = mat.cols;
-
-    if (!is_signed) {
-      // CV_16U
-      for (int r = 0; r < rows; r++) {
-        const uint16_t* src_row = mat.ptr<uint16_t>(r);
-        uint16_t*       dst_row = out.ptr<uint16_t>(r);
-        for (int col = 0; col < cols; col++) {
-          for (int c = 0; c < src_nchan; c++) {
-            int idx = col * src_nchan + c;
-            uint16_t pix = src_row[idx];
-            int tbl_idx = (nchan_lut == 1) ? 0 : c;
-            dst_row[idx] = tables[tbl_idx][pix];
-          }
-        }
-      }
-    } else {
-      // CV_16S — LUT index = pixel + 32768; output written as-is (uint16_t).
-      for (int r = 0; r < rows; r++) {
-        const int16_t* src_row = mat.ptr<int16_t>(r);
-        uint16_t*      dst_row = out.ptr<uint16_t>(r);
-        for (int col = 0; col < cols; col++) {
-          for (int c = 0; c < src_nchan; c++) {
-            int idx = col * src_nchan + c;
-            int16_t pix   = src_row[idx];
-            int     lut_i = static_cast<int>(pix) + 32768;
-            int tbl_idx = (nchan_lut == 1) ? 0 : c;
-            dst_row[idx] = tables[tbl_idx][lut_i];
-          }
+  if (mat.depth() == CV_16S) {
+    // Manual per-pixel mapping: index = pixel + 32768.
+    cv::Mat out(mat.size(), CV_MAKETYPE(CV_16U, src_nchan));
+    for (int r = 0; r < mat.rows; r++) {
+      const int16_t* src_row = mat.ptr<int16_t>(r);
+      uint16_t*      dst_row = out.ptr<uint16_t>(r);
+      for (int col = 0; col < mat.cols; col++) {
+        for (int c = 0; c < src_nchan; c++) {
+          int px_idx  = col * src_nchan + c;
+          int lut_c   = (nchan_lut == 1) ? 0 : c;
+          int lut_i   = static_cast<int>(src_row[px_idx]) + 32768;
+          dst_row[px_idx] = static_cast<uint16_t>(lut_vals[lut_c * lut_size + lut_i]);
         }
       }
     }
     return {new RtImage(std::move(out), img->colorspace)};
   }
+
+  // CV_8U and CV_16U: build a (possibly multi-channel) LUT Mat and call cv::LUT.
+  // lut_vals is column-major; OpenCV uses interleaved storage, so transpose.
+  int lut_depth = (lut_size == 256) ? CV_8U : CV_16U;
+  int lut_chans = (nchan_lut == 1) ? 1 : src_nchan;
+  cv::Mat lut(1, lut_size, CV_MAKETYPE(lut_depth, lut_chans));
+  if (lut_depth == CV_8U) {
+    uchar* p = lut.ptr<uchar>(0);
+    for (int c = 0; c < lut_chans; c++)
+      for (int i = 0; i < lut_size; i++)
+        p[i * lut_chans + c] = static_cast<uchar>(lut_vals[c * lut_size + i]);
+  } else {
+    uint16_t* p = lut.ptr<uint16_t>(0);
+    for (int c = 0; c < lut_chans; c++)
+      for (int i = 0; i < lut_size; i++)
+        p[i * lut_chans + c] = static_cast<uint16_t>(lut_vals[c * lut_size + i]);
+  }
+  cv::Mat out;
+  cv::LUT(mat, lut, out);
+  return {new RtImage(std::move(out), img->colorspace)};
 }
 
 // ── rt_clahe ─────────────────────────────────────────────────────────────────
