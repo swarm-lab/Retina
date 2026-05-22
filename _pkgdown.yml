@@ -36,6 +36,23 @@ reference:
       - affine_from_points
       - perspective_from_points
 
+  - title: Arithmetic and bitwise operators
+    desc: S3 generics for arithmetic and bitwise operations on images.
+    contents:
+      - bitwAnd
+
+  - title: Statistical utilities
+    desc: S3 generics for image statistics.
+    contents:
+      - sd
+      - var
+
+  - title: Filter utilities
+    desc: Construct kernel matrices for filtering and morphology operations.
+    contents:
+      - get_gabor_kernel
+      - get_structuring_element
+
   - title: Thresholding utilities
     desc: Compute threshold values without modifying the image.
     contents:
